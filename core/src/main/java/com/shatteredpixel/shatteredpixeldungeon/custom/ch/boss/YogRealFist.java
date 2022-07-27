@@ -65,7 +65,7 @@ public abstract class YogRealFist extends Mob {
         properties.add(Property.DEMONIC);
     }
 
-    private float rangedCooldown;
+    protected float rangedCooldown;
     protected boolean canRangedInMelee = true;
 
     protected void incrementRangedCooldown(){
@@ -141,12 +141,12 @@ public abstract class YogRealFist extends Mob {
 
     @Override
     public int damageRoll() {
-        return (Random.NormalIntRange( 20, 39 ) +  (isNearYog()?12:0)) ;
+        return (Random.NormalIntRange( 24, 40 ) +  (isNearYog()?50:0)) ;
     }
 
     @Override
     public int drRoll() {
-        return Random.NormalIntRange(0, 15);
+        return Random.NormalIntRange(6, 16);
     }
 
     @Override
@@ -174,6 +174,11 @@ public abstract class YogRealFist extends Mob {
             spriteClass = YogRealFistSprite.Burning.class;
 
             properties.add(Property.FIERY);
+        }
+
+        @Override
+        protected void incrementRangedCooldown() {
+            rangedCooldown += Random.NormalFloat(2, 3);
         }
 
         @Override
@@ -214,6 +219,10 @@ public abstract class YogRealFist extends Mob {
 
         }
 
+        @Override
+        public int attackProc(Char enemy, int damage) {
+            return super.attackProc(enemy, damage);
+        }
     }
 
     public static class SoiledFist extends YogRealFist {
@@ -222,6 +231,11 @@ public abstract class YogRealFist extends Mob {
             spriteClass = YogRealFistSprite.Soiled.class;
 
             immunities.add(Burning.class);
+        }
+
+        @Override
+        protected void incrementRangedCooldown() {
+            rangedCooldown += Random.NormalFloat(4, 6);
         }
 
         @Override
@@ -315,6 +329,11 @@ public abstract class YogRealFist extends Mob {
         }
 
         @Override
+        protected void incrementRangedCooldown() {
+            rangedCooldown += Random.NormalFloat(5, 7);
+        }
+
+        @Override
         protected boolean act() {
             //ensures toxic gas acts at the appropriate time when added
             GameScene.add(Blob.seed(pos, 0, ToxicGas.class));
@@ -380,8 +399,13 @@ public abstract class YogRealFist extends Mob {
         }
 
         @Override
+        protected void incrementRangedCooldown() {
+            rangedCooldown += Random.NormalFloat(5, 7);
+        }
+
+        @Override
         public int damageRoll() {
-            return super.damageRoll()+Random.NormalIntRange(5, 10);
+            return super.damageRoll()+Random.NormalIntRange(10, 20);
         }
 
         @Override

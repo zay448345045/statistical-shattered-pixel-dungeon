@@ -10,6 +10,7 @@ import com.shatteredpixel.shatteredpixeldungeon.custom.buffs.IgnoreArmor;
 import com.shatteredpixel.shatteredpixeldungeon.custom.buffs.PositiveBuffProhibition;
 import com.shatteredpixel.shatteredpixeldungeon.custom.buffs.ThornsShield;
 import com.shatteredpixel.shatteredpixeldungeon.custom.buffs.ZeroAttack;
+import com.shatteredpixel.shatteredpixeldungeon.custom.buffs.ZeroDefense;
 import com.shatteredpixel.shatteredpixeldungeon.custom.ch.boss.HDKItem;
 import com.shatteredpixel.shatteredpixeldungeon.custom.messages.M;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.ImmortalShieldAffecter;
@@ -41,6 +42,9 @@ public enum CombatModifier {
             dr = modifier.affectDef(dr);
         }
         if(attacker.buff(IgnoreArmor.class) != null) {
+            dr = 0;
+        }
+        if(defender.buff(ZeroDefense.class)!=null){
             dr = 0;
         }
         return dr;

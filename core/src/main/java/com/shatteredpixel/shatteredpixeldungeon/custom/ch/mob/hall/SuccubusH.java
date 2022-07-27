@@ -53,10 +53,18 @@ public class SuccubusH extends Mob {
 
         immunities.add(AllyBuff.class);
     }
+
+    @Override
+    public int damageRoll(){
+        if(enemy != null){
+            return Random.IntRange(25, 30) + (enemy.drRoll()+enemy.drRoll())/3;
+        }else{
+            return Random.IntRange(25, 30);
+        }
+    }
+
     @Override
     public int attackProc(Char enemy, int damage){
-        Charm charm = enemy.buff(Charm.class);
-        boolean armorBreak = true;
         int dmg = super.attackProc(enemy, damage);
 
         //super content
@@ -82,10 +90,6 @@ public class SuccubusH extends Mob {
             }
         }
 
-        if(armorBreak){
-            //avoid extreme cases
-            dmg += (enemy.drRoll()+enemy.drRoll())/3;
-        }
         for(Char ch: Actor.chars()){
             if(ch.alignment == Alignment.ENEMY){
                 if(ch!=this){
@@ -113,11 +117,6 @@ public class SuccubusH extends Mob {
         RipperH rh = new RipperH();
         rh.pos = Dungeon.level.randomRespawnCell(rh);
         GameScene.add(rh);
-    }
-
-    @Override
-    public int damageRoll() {
-        return Random.NormalIntRange( 25, 30 );
     }
 
     @Override

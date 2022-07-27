@@ -143,6 +143,11 @@ public class DM100H extends Mob implements Callback {
 
     }
 
+    @Override
+    public void die(Object cause) {
+        super.die(cause);
+    }
+
     public static class SkyLightning{}
 
     public static class LightningPrediction extends CounterBuff{

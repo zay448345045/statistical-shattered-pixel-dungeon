@@ -5,7 +5,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
 
-public class ZeroAttack extends FlavourBuff {
+public class ZeroDefense extends FlavourBuff {
     {
         type = buffType.NEUTRAL;
         announced = true;
@@ -13,7 +13,7 @@ public class ZeroAttack extends FlavourBuff {
 
     @Override
     public int icon() {
-        return BuffIndicator.WEAKNESS;
+        return BuffIndicator.VULNERABLE;
     }
 
     @Override

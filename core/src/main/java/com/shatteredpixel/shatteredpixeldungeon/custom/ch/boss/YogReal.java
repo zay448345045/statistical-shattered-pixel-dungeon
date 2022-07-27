@@ -16,13 +16,18 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Sleep;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Bee;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RipperDemon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Scorpio;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Succubus;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Sheep;
+import com.shatteredpixel.shatteredpixeldungeon.custom.buffs.ZeroAttack;
+import com.shatteredpixel.shatteredpixeldungeon.custom.buffs.ZeroDefense;
 import com.shatteredpixel.shatteredpixeldungeon.custom.messages.M;
 import com.shatteredpixel.shatteredpixeldungeon.custom.utils.BallisticaReal;
 import com.shatteredpixel.shatteredpixeldungeon.custom.utils.HitBack;
@@ -379,6 +384,15 @@ public class YogReal extends Boss{
             regularSummons.add(YogRealRipper.class);
         }
 
+        if(phase >= 1){
+            for(Mob m: Dungeon.level.mobs.toArray(new Mob[0])){
+                if(m instanceof Sheep || m instanceof Bee){
+                    CellEmitter.get(m.pos).burst(ElmoParticle.FACTORY, 10);
+                    m.die(this);
+                }
+            }
+        }
+
         spend(TICK);
         return true;
     }
@@ -392,7 +406,7 @@ public class YogReal extends Boss{
         }
 
         if(src instanceof Buff || src instanceof Blob){
-            damage = Math.max(0, damage-1);
+            damage = Math.max(0, damage-2);
         }
 
         int preHP = HP;
@@ -562,6 +576,11 @@ public class YogReal extends Boss{
             super.damage(dmg, src);
         }
 
+        @Override
+        public int attackProc(Char enemy, int damage) {
+            Buff.affect(enemy, Poison.class).extend(Random.Float(3f, 6f));
+            return super.attackProc(enemy, damage);
+        }
     }
 
     //used so death to yog's ripper demons have their own rankings description and are more aggro
@@ -716,9 +735,10 @@ public class YogReal extends Boss{
             ch.damage( Random.Int(50, 80), YogReal.class );
             ch.sprite.centerEmitter().burst( PurpleParticle.BURST, Random.IntRange( 5, 10 ) );
             ch.sprite.flash();
+            Buff.affect(ch, ZeroAttack.class, 50f);
             if(ch == Dungeon.hero){
                 Sample.INSTANCE.play(Assets.Sounds.BLAST, Random.Float(1.1f, 1.5f));
-                Buff.affect(ch, Degrade.class, 50f);
+                Buff.affect(ch, Degrade.class, 100f);
                 if(!ch.isAlive()) Dungeon.fail(getClass());
             }
             return 1;
@@ -800,7 +820,8 @@ public class YogReal extends Boss{
             ch.damage(Random.Int(40, 70), YogReal.class);
             ch.sprite.centerEmitter().burst(RainbowParticle.BURST, Random.Int(20, 35));
             ch.sprite.flash();
-            Buff.affect(ch, Blindness.class, 50f);
+            Buff.affect(ch, Blindness.class, 100f);
+            Buff.affect(ch, ZeroDefense.class, 50f);
             if (ch == Dungeon.hero) {
                 Sample.INSTANCE.play(Assets.Sounds.BLAST, Random.Float(1.1f, 1.5f));
                 if (!ch.isAlive()) Dungeon.fail(getClass());

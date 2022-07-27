@@ -19,6 +19,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Healing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSight;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSleep;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Sleep;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Slow;
@@ -26,11 +28,13 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Stamina;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Bee;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Ghoul;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Golem;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Monk;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Warlock;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Sheep;
 import com.shatteredpixel.shatteredpixeldungeon.custom.buffs.AttributeModifier;
 import com.shatteredpixel.shatteredpixeldungeon.custom.buffs.DeathCounter;
 import com.shatteredpixel.shatteredpixeldungeon.custom.buffs.IgnoreArmor;
@@ -46,6 +50,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.KingsCrown;
@@ -117,6 +122,14 @@ public class NewHardDK extends Boss{
 
     @Override
     protected boolean act() {
+        for(Mob m: Dungeon.level.mobs.toArray(new Mob[0])){
+            if(m.state == m.SLEEPING){
+                if(m != this){
+                    m.damage(0, this);
+                }
+            }
+        }
+
         if(phase == 0 || phase == 1) {
             if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()) {
                 fieldOfView = new boolean[Dungeon.level.length()];
@@ -347,6 +360,14 @@ public class NewHardDK extends Boss{
                 });
             });
         }
+        if(power > 9){
+            RepeatedCallback.executeChain(new float[]{5f}, ()->{
+                MagicMissile.boltFromChar(sprite.parent, MagicMissile.ELMO, sprite, Dungeon.hero.pos, ()->{
+                    Dungeon.hero.HP = 1;
+                    GameScene.flash(0x80ff0000);
+                });
+            });
+        }
 
         VirtualActor.delay(power * 0.5f + 0.5f);
 
@@ -398,6 +419,7 @@ public class NewHardDK extends Boss{
 
     @Override
     public void notice() {
+        super.notice();
         if (!BossHealthBar.isAssigned()) {
             BossHealthBar.assignBoss(this);
             for (Char ch : Actor.chars()){
@@ -405,11 +427,10 @@ public class NewHardDK extends Boss{
                     ((DriedRose.GhostHero) ch).sayBoss();
                 }
             }
-            yell(M.L(this, "notice"));
             if (phase == 0) {
+                yell(M.L(this, "notice"));
                 shiftPhase();
             }
-
         }
 
     }
@@ -734,6 +755,10 @@ public class NewHardDK extends Boss{
 
     @Override
     public void damage(int dmg, Object src) {
+        if(!BossHealthBar.isAssigned()){
+            BossHealthBar.assignBoss(this);
+        }
+
         if(dmg > HT / 4){
             dmg = (dmg - HT / 4) / 4 + HT / 4;
         }
@@ -810,6 +835,8 @@ public class NewHardDK extends Boss{
         Dungeon.level.drop(gkey, pos).sprite.drop();
         Dungeon.level.drop(new KingsCrown(), pos).sprite.drop();
         yell(M.L(this, "defeated"));
+        Buff.detach(Dungeon.hero, ZeroAttack.class);
+        Buff.detach(Dungeon.hero, PositiveBuffProhibition.class);
     }
 
     @Override

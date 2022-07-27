@@ -105,6 +105,7 @@ public class SwarmH extends Mob {
                     clone.pos = Random.element(candidates);
                     candidates.remove((Integer) clone.pos);
                     clone.state = clone.HUNTING;
+                    clone.maxLvl = -9999;
 
                     Dungeon.level.occupyCell(clone);
 
