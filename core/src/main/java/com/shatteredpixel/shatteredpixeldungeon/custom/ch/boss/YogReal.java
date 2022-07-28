@@ -70,8 +70,8 @@ import java.util.LinkedList;
 public class YogReal extends Boss{
     {
         initProperty();
-        initBaseStatus(0, 0, 1, 0, 1200, 0, 0);
-        initStatus(666);
+        initBaseStatus(0, 0, 1, 0, 1600, 0, 0);
+        initStatus(999);
 
         spriteClass = YogSprite.class;
         properties.add(Property.IMMOVABLE);
@@ -98,6 +98,7 @@ public class YogReal extends Boss{
     private float summonCD = 15f;
     private int beamCD = 23;
     private float[] skillBalance = new float[]{100f, 100f, 100f};
+    private static final int HP_PER_PHASE = 400;
 
     private static final int SUMMON_DECK_SIZE = 4;
     private ArrayList<Class> regularSummons = new ArrayList<>();
@@ -216,18 +217,18 @@ public class YogReal extends Boss{
                     direction += (direction > 0 ? (dy > 0 ? 1 : 0) : (dx > 0 ? 1 : 0));
                     Buff.affect(this, YogScanHalf.class).setPos(pos, direction);
                     skillBalance[skill] /= 1.75f;
-                    beamCD = 20 + 8 - (phase == 5?19:0);
+                    beamCD = 16 + 8 - (phase == 5?15:0);
                 }else if(skill == 1){
                     Buff.affect(this, YogScanRound.class).setPos(pos);
                     skillBalance[skill] /= 2f;
-                    beamCD = 20 + 10 - (phase == 5?19:0);
+                    beamCD = 16 + 10 - (phase == 5?15:0);
                 }else if(skill == 2){
-                    int count = 4 + (phase == 5 ? 3 : 0);
+                    int count = 3 + (phase == 5 ? 2 : 0);
                     YogContinuousBeam b = Buff.affect(this, YogContinuousBeam.class);
                     b.setLeft(count);
                     b.setRage(phase == 5);
-                    beamCD = 20 + count - (phase == 5?19:0);
-                    skillBalance[skill] /= 2.25f;
+                    beamCD = 16 + count - (phase == 5?15:0);
+                    skillBalance[skill] /= 2.5f;
                 }
                 Dungeon.hero.interrupt();
                 if(skillBalance[0] < 0.1f){
@@ -277,7 +278,7 @@ public class YogReal extends Boss{
     // 6, 9, 12 enemies on destroy.
     private static final int[] destroySummon_1 = {3, 2, 0};
     private static final int[] destroySummon_2 = {3, 2, 2};
-    private static final int[] destroySummon_3 = {2, 4, 4};
+    private static final int[] destroySummon_3 = {3, 4, 5};
 
     private void actDestroy(){
         if(findFist() == null && phase > destroyed + 1 && phase <= 4) {
@@ -412,8 +413,8 @@ public class YogReal extends Boss{
         int preHP = HP;
         super.damage(damage, src);
         int postHP = HP;
-        int threshold = 1200-300*phase;
-        if(preHP > threshold && postHP<=threshold){
+        int threshold = HT-HP_PER_PHASE*phase;
+        if(preHP > threshold && postHP<=threshold && phase < 5){
             HP = threshold;
             ++phase;
             actSummonFist();
@@ -424,7 +425,7 @@ public class YogReal extends Boss{
             summonCD -= dmgTaken / 8f + 1f;
         }
 
-        if(HP<=600){
+        if(HP<=HT/2){
             BossHealthBar.bleed(true);
         }
 
@@ -531,7 +532,7 @@ public class YogReal extends Boss{
         regularSummons.clear();
         Collections.addAll(regularSummons, b.getClassArray("REGULAR_SUMMONS"));
         if(phase>0) BossHealthBar.assignBoss(this);
-        if (HP < 600) BossHealthBar.bleed(true);
+        if (HP <= HT/2) BossHealthBar.bleed(true);
     }
 
 
@@ -541,7 +542,7 @@ public class YogReal extends Boss{
         {
             spriteClass = LarvaSprite.class;
 
-            HP = HT = 30;
+            HP = HT = 36;
             defenseSkill = 16;
             viewDistance = Light.DISTANCE;
 

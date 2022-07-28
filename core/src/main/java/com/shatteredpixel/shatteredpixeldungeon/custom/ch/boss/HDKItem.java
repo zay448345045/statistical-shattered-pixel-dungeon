@@ -5,26 +5,35 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Statue;
 import com.shatteredpixel.shatteredpixeldungeon.custom.messages.M;
 import com.shatteredpixel.shatteredpixeldungeon.custom.utils.GME;
 import com.shatteredpixel.shatteredpixeldungeon.custom.utils.timing.VirtualActor;
+import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Lightning;
 import com.shatteredpixel.shatteredpixeldungeon.effects.ShieldHalo;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SparkParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.quest.DarkGold;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
+import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
+import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
@@ -36,6 +45,67 @@ public class HDKItem {
         {
             tier = 1;
             image = ItemSpriteSheet.PICKAXE;
+            defaultAction = AC_DIG;
+        }
+
+        private static String AC_DIG = "dig";
+
+        @Override
+        public ArrayList<String> actions(Hero hero) {
+            ArrayList<String> action = super.actions(hero);
+            action.add(AC_DIG);
+            return action;
+        }
+
+        @Override
+        public void execute(Hero hero, String action) {
+            super.execute(hero, action);
+            if(action.equals(AC_DIG)){
+                if(isEquipped(hero)){
+                    GLog.w(M.L(this, "need_equip"));
+                } else if(Dungeon.bossLevel()){
+                    GLog.w(M.L(this, "not_allowed"));
+                }else{
+                    GameScene.selectCell(
+                        new CellSelector.Listener() {
+                            @Override
+                            public void onSelect(Integer target) {
+                                if(target == null){
+
+                                } else if (Dungeon.level.adjacent(hero.pos, target)) {
+                                    if (Dungeon.level.insideMap(target)) {
+                                        if (Dungeon.level.solid[target] && !Dungeon.level.flamable[target]) {
+                                            hero.spend( 6f );
+                                            hero.busy();
+                                            hero.sprite.attack( target, new Callback() {
+                                                @Override
+                                                public void call() {
+                                                    Sample.INSTANCE.play( Assets.Sounds.EVOKE );
+                                                    Level.set(target, Terrain.EMPTY);
+                                                    Dungeon.level.discoverable[target] = true;
+                                                    Dungeon.level.updateFieldOfView(hero, hero.fieldOfView);
+                                                    GameScene.updateMap(target);
+                                                    CellEmitter.get(target).burst(Speck.factory(Speck.STAR), 12);
+                                                    hero.onOperateComplete();
+                                                }
+                                            } );
+
+                                        }
+                                    } else {
+                                        GLog.w(M.L(StatuePickaxe.class, "out_map"));
+                                    }
+                                } else {
+                                    GLog.w(M.L(StatuePickaxe.class, "not_adjacent"));
+                                }
+                            }
+
+                            @Override
+                            public String prompt() {
+                                return M.L(StatuePickaxe.class, "prompt");
+                            }
+                        });
+                }
+            }
         }
 
         @Override

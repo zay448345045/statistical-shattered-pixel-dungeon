@@ -174,8 +174,7 @@ public class NewHDKLevel extends Level {
     public void occupyCell( Char ch ) {
         super.occupyCell( ch );
 
-        if ( map[DOOR_IN] == Terrain.DOOR
-            && ch == Dungeon.hero && ch.pos < DOOR_IN && !sealed) {
+        if ( ch == Dungeon.hero && ch.pos < DOOR_IN && !sealed) {
             seal();
             sealed = true;
         }
