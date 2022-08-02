@@ -22,7 +22,7 @@ public class Invisible extends CountInscription {
                 new FlavourBuff(){
                     @Override
                     public boolean act() {
-                        Buff.affect(attacker, Invisibility.class, 6f + weapon.buffedLvl() * 1.5f);
+                        Buff.affect(attacker, Invisibility.class, 6f + weapon.buffedLvl() * 1.2f);
                         detach();
                         return true;
                     }
@@ -36,7 +36,14 @@ public class Invisible extends CountInscription {
 
     @Override
     public void useUp(Weapon w, Char attacker) {
-        Buff.affect(attacker, Invisibility.class, 75f + 8.5f * Math.min(w.buffedLvl(), 15));
+        new FlavourBuff(){
+            @Override
+            public boolean act() {
+                Buff.affect(attacker, Invisibility.class, 50f + 8.5f * Math.min(w.buffedLvl(), 15));
+                detach();
+                return true;
+            }
+        }.attachTo(attacker);
         super.useUp(w, attacker);
     }
 }

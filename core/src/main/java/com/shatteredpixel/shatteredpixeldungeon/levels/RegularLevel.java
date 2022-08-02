@@ -353,7 +353,7 @@ public abstract class RegularLevel extends Level {
 			Heap.Type type = null;
 			if (Dungeon.isChallenged(Challenges.MIMIC_DUNGEON)) {
 				if(findMob(cell) == null) {
-					if (toDrop instanceof Artifact || (toDrop.isUpgradable() && toDrop.level() > 1) || Random.Int(10)==0) {
+					if (toDrop instanceof Artifact || (toDrop.isUpgradable() && toDrop.level() > 1) || Random.Int(8)==0) {
 						mobs.add(GoldenMimicForChallenge.spawnAt(cell, toDrop, GoldenMimicForChallenge.class));
 					}else{
 						mobs.add(MimicForChallenge.spawnAt(cell, toDrop));

@@ -3,10 +3,12 @@
  import com.shatteredpixel.shatteredpixeldungeon.Assets;
  import com.shatteredpixel.shatteredpixeldungeon.Chrome;
  import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
  import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
  import com.shatteredpixel.shatteredpixeldungeon.custom.ch.ChallengeItem;
  import com.shatteredpixel.shatteredpixeldungeon.custom.messages.M;
  import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+ import com.shatteredpixel.shatteredpixeldungeon.items.LiquidMetal;
  import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
  import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
  import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -28,6 +30,7 @@
  import com.watabou.noosa.NinePatch;
  import com.watabou.noosa.audio.Sample;
  import com.watabou.noosa.ui.Component;
+ import com.watabou.utils.Bundlable;
  import com.watabou.utils.Reflection;
 
  import java.util.ArrayList;
@@ -75,6 +78,8 @@ public class Enchanter extends ChallengeItem {
         private final ItemButton[] inputs = new ItemButton[3];
         private final ItemButton toEnchant;
         private final RedButton execute;
+
+        private static float currentScroll;
 
         private EnchRecipe currentAvailableRecipe;
 
@@ -348,6 +353,191 @@ public class Enchanter extends ChallengeItem {
             }
         };
 
+        public class WndInfoInscription extends Window {
+            private static final int WIDTH = 120;
+            private static final int HEIGHT = 160;
+            private static final int BTN_HEIGHT = 16;
+            private static final int GAP = 4;
+            private static final int TEXT_SIZE = 6;
+
+            private final ArrayList<Float> upperBoundary;
+            private final ArrayList<Float> bottomBoundary;
+            private final ArrayList<Class<? extends Inscription>> storedInscription;
+            private final ArrayList<Integer> triggers;
+            private ScrollPane sp;
+            public WndInfoInscription(){
+                super(0, 0, Chrome.get(Chrome.Type.WINDOW_SILVER));
+                upperBoundary = new ArrayList<>(50);
+                bottomBoundary = new ArrayList<>(50);
+                storedInscription = new ArrayList<>(50);
+                triggers = new ArrayList<>(50);
+                resize(WIDTH, HEIGHT);
+                sp = new ScrollPane(new Component()){
+                    @Override
+                    public void onClick(float x, float y) {
+                        super.onClick(x, y);
+                        for(int i=0; i<upperBoundary.size(); ++i){
+                            if(y>upperBoundary.get(i) && y < bottomBoundary.get(i)){
+                                Inscription inscription = Reflection.newInstance(storedInscription.get(i));
+                                if(inscription instanceof CountInscription){
+                                    ((CountInscription) inscription).setTriggers(triggers.get(i));
+                                }
+                                StringBuilder sb = new StringBuilder();
+                                sb.append('_').append(inscription.name()).append("_\n\n");
+                                sb.append(inscription.desc());
+                                GameScene.show(new WndFastEnchantInfo(sb.toString(), EnchRecipe.values()[i].input));
+                            }
+                        }
+                    }
+                };
+                add(sp);
+                Component content = sp.content();
+                float pos = GAP * 2;
+                RenderedTextBlock hint = PixelScene.renderTextBlock(M.L(Enchanter.class, "hint")+"\n\n", TEXT_SIZE);
+                hint.maxWidth(WIDTH);
+                content.add(hint);
+                hint.setPos(0, pos);
+                PixelScene.align(hint);
+                pos += GAP + hint.height();
+                int i = 1;
+                for(EnchRecipe recipe: EnchRecipe.values()){
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(i);
+                    sb.append(')');
+                    for(int k = 0; k < recipe.input.size(); ++k){
+                        sb.append(Reflection.newInstance(recipe.input.get(k)).trueName());
+                        if(k+1<recipe.input.size()) {
+                            sb.append('+');
+                        }
+                    }
+                    sb.append("\n");
+                    Inscription insc = Reflection.newInstance(recipe.inscription);
+                    sb.append('_').append(insc.name()).append('_');
+                    if(insc instanceof CountInscription){
+                        sb.append('(').append(recipe.triggers).append(')');
+                    }
+                    sb.append('\n');
+                    RenderedTextBlock rtb = PixelScene.renderTextBlock(sb.toString(), TEXT_SIZE);
+                    rtb.maxWidth(WIDTH - 2);
+                    rtb.setPos(0, pos);
+                    PixelScene.align(rtb);
+                    pos += rtb.height() + TEXT_SIZE;
+                    ++i;
+
+                    upperBoundary.add(rtb.top());
+                    bottomBoundary.add(rtb.bottom());
+                    storedInscription.add(recipe.inscription);
+                    triggers.add(recipe.triggers);
+
+                    content.add(rtb);
+                }
+
+                content.setSize(WIDTH, pos + GAP);
+                sp.setRect(0, 0, WIDTH, HEIGHT - GAP - BTN_HEIGHT);
+
+                sp.scrollTo(0, currentScroll);
+
+                RedButton pageUp = new RedButton(M.L(Enchanter.class, "page_up"), 9){
+                    @Override
+                    protected void onClick() {
+                        super.onClick();
+                        sp.scrollTo(0, Math.max(sp.content().camera().scroll.y - sp.height() + TEXT_SIZE, 0));
+                    }
+                };
+                add(pageUp);
+                pageUp.setRect(0, HEIGHT - BTN_HEIGHT, WIDTH/2f - GAP / 2f, BTN_HEIGHT);
+
+                RedButton pageDown = new RedButton(M.L(Enchanter.class, "page_down"), 9){
+                    @Override
+                    protected void onClick() {
+                        super.onClick();
+                        sp.scrollTo(0, Math.min(sp.content().camera().scroll.y + sp.height() - TEXT_SIZE, sp.content().height() - sp.height()));
+                    }
+                };
+                add(pageDown);
+                pageDown.setRect(GAP/ 2f + WIDTH / 2f, HEIGHT - BTN_HEIGHT, WIDTH/2f - GAP / 2f, BTN_HEIGHT);
+
+            }
+
+            @Override
+            public void onBackPressed() {
+                super.onBackPressed();
+                currentScroll = sp.content().camera().scroll.y;
+            }
+
+            public class WndFastEnchantInfo extends Window{
+                private static final int WIDTH = 120;
+                private static final int MARGIN = 4;
+                public WndFastEnchantInfo(String text, ArrayList<Class<? extends Item>> recipe){
+                    super();
+
+                    ArrayList<Class<? extends Item>> lack = new ArrayList<>();
+                    Belongings inv = Dungeon.hero.belongings;
+                    for (Class<? extends Item> finding : recipe){
+                        boolean found = false;
+                        for(Item item: inv){
+                            if(item.getClass().equals(finding)){
+                                found = true;
+                                break;
+                            }
+                        }
+                        if(!found){
+                            lack.add(finding);
+                        }
+                    }
+
+                    if(lack.isEmpty()) {
+                        text += M.L(Enchanter.class, "can_enchant");
+                    }else {
+                        text += M.L(Enchanter.class, "lack_item");
+                        StringBuilder textBuilder = new StringBuilder(text);
+                        for (Class<? extends Item> lackClass : lack) {
+                            textBuilder.append(Reflection.newInstance(lackClass).trueName());
+                            textBuilder.append("  ");
+                        }
+                        text = textBuilder.toString();
+                    }
+
+                    RenderedTextBlock info = PixelScene.renderTextBlock( text, 6 );
+                    info.maxWidth(WIDTH - MARGIN * 2);
+                    info.setPos(MARGIN, MARGIN);
+                    add( info );
+
+                    RedButton rb = new RedButton(M.L(Enchanter.class, "quick_enchant")){
+                        @Override
+                        protected void onClick() {
+                            super.onClick();
+                            slotReset();
+
+                            Belongings inventory = Dungeon.hero.belongings;
+                            int curslot = 0;
+                            for (Class<? extends Item> finding : recipe){
+                                for(Item item: inventory){
+                                    if(item.getClass().equals(finding)){
+                                        Item toUse = item.detach(inventory.backpack);
+                                        inputs[curslot].item(toUse);
+                                        ++curslot;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            updateState();
+                            onBackPressed();
+                            WndInfoInscription.this.onBackPressed();
+                        }
+                    };
+                    add(rb);
+                    rb.setRect(MARGIN, info.bottom() + MARGIN, WIDTH - 2 * MARGIN, 18);
+                    rb.active = lack.isEmpty();
+                    rb.alpha(lack.isEmpty()?1f:0.4f);
+
+                    resize(WIDTH, (int)rb.bottom() + MARGIN );
+                }
+            }
+
+        }
+
         /*
         protected WndBag.ItemSelector inputSelector = item -> {
             synchronized (inputs) {
@@ -368,121 +558,6 @@ public class Enchanter extends ChallengeItem {
         };#
 
          */
-    }
-
-    public static class WndInfoInscription extends Window{
-        private static final int WIDTH = 120;
-        private static final int HEIGHT = 160;
-        private static final int BTN_HEIGHT = 16;
-        private static final int GAP = 4;
-        private static final int TEXT_SIZE = 6;
-
-        private static float currentScroll;
-
-        private final ArrayList<Float> upperBoundary;
-        private final ArrayList<Float> bottomBoundary;
-        private final ArrayList<Class<? extends Inscription>> storedInscription;
-        private final ArrayList<Integer> triggers;
-        private ScrollPane sp;
-        public WndInfoInscription(){
-            super(0, 0, Chrome.get(Chrome.Type.WINDOW_SILVER));
-            upperBoundary = new ArrayList<>(50);
-            bottomBoundary = new ArrayList<>(50);
-            storedInscription = new ArrayList<>(50);
-            triggers = new ArrayList<>(50);
-            resize(WIDTH, HEIGHT);
-            sp = new ScrollPane(new Component()){
-                @Override
-                public void onClick(float x, float y) {
-                    super.onClick(x, y);
-                    for(int i=0; i<upperBoundary.size(); ++i){
-                        if(y>upperBoundary.get(i) && y < bottomBoundary.get(i)){
-                            Inscription inscription = Reflection.newInstance(storedInscription.get(i));
-                            if(inscription instanceof CountInscription){
-                                ((CountInscription) inscription).setTriggers(triggers.get(i));
-                            }
-                            StringBuilder sb = new StringBuilder();
-                            sb.append('_').append(inscription.name()).append("_\n\n");
-                            sb.append(inscription.desc());
-                            GameScene.show(new WndMessage( sb.toString()));
-                        }
-                    }
-                }
-            };
-            add(sp);
-            Component content = sp.content();
-            float pos = GAP * 2;
-            RenderedTextBlock hint = PixelScene.renderTextBlock(M.L(Enchanter.class, "hint")+"\n\n", TEXT_SIZE);
-            hint.maxWidth(WIDTH);
-            content.add(hint);
-            hint.setPos(0, pos);
-            PixelScene.align(hint);
-            pos += GAP + hint.height();
-            int i = 1;
-            for(EnchRecipe recipe: EnchRecipe.values()){
-                StringBuilder sb = new StringBuilder();
-                sb.append(i);
-                sb.append(')');
-                for(int k = 0; k < recipe.input.size(); ++k){
-                    sb.append(Reflection.newInstance(recipe.input.get(k)).trueName());
-                    if(k+1<recipe.input.size()) {
-                        sb.append('+');
-                    }
-                }
-                sb.append("\n");
-                Inscription insc = Reflection.newInstance(recipe.inscription);
-                sb.append('_').append(insc.name()).append('_');
-                if(insc instanceof CountInscription){
-                    sb.append('(').append(recipe.triggers).append(')');
-                }
-                sb.append('\n');
-                RenderedTextBlock rtb = PixelScene.renderTextBlock(sb.toString(), TEXT_SIZE);
-                rtb.maxWidth(WIDTH - 2);
-                rtb.setPos(0, pos);
-                PixelScene.align(rtb);
-                pos += rtb.height() + TEXT_SIZE;
-                ++i;
-
-                upperBoundary.add(rtb.top());
-                bottomBoundary.add(rtb.bottom());
-                storedInscription.add(recipe.inscription);
-                triggers.add(recipe.triggers);
-
-                content.add(rtb);
-            }
-
-            content.setSize(WIDTH, pos + GAP);
-            sp.setRect(0, 0, WIDTH, HEIGHT - GAP - BTN_HEIGHT);
-
-            sp.scrollTo(0, currentScroll);
-
-            RedButton pageUp = new RedButton(M.L(Enchanter.class, "page_up"), 9){
-                @Override
-                protected void onClick() {
-                    super.onClick();
-                    sp.scrollTo(0, Math.max(sp.content().camera().scroll.y - sp.height() + TEXT_SIZE, 0));
-                }
-            };
-            add(pageUp);
-            pageUp.setRect(0, HEIGHT - BTN_HEIGHT, WIDTH/2f - GAP / 2f, BTN_HEIGHT);
-
-            RedButton pageDown = new RedButton(M.L(Enchanter.class, "page_down"), 9){
-                @Override
-                protected void onClick() {
-                    super.onClick();
-                    sp.scrollTo(0, Math.min(sp.content().camera().scroll.y + sp.height() - TEXT_SIZE, sp.content().height() - sp.height()));
-                }
-            };
-            add(pageDown);
-            pageDown.setRect(GAP/ 2f + WIDTH / 2f, HEIGHT - BTN_HEIGHT, WIDTH/2f - GAP / 2f, BTN_HEIGHT);
-
-        }
-
-        @Override
-        public void onBackPressed() {
-            super.onBackPressed();
-            currentScroll = sp.content().camera().scroll.y;
-        }
     }
 
     public static class ItemButton extends Component {
@@ -543,4 +618,5 @@ public class Enchanter extends ChallengeItem {
            slot.item( this.item = item );
        }
     }
+
 }

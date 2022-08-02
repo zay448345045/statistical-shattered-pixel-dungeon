@@ -61,7 +61,7 @@ public class HDKItem {
         public void execute(Hero hero, String action) {
             super.execute(hero, action);
             if(action.equals(AC_DIG)){
-                if(isEquipped(hero)){
+                if(!isEquipped(hero)){
                     GLog.w(M.L(this, "need_equip"));
                 } else if(Dungeon.bossLevel()){
                     GLog.w(M.L(this, "not_allowed"));

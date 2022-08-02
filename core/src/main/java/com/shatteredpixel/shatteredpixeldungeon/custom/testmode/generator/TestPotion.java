@@ -12,6 +12,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Honeypot;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.KingsCrown;
 import com.shatteredpixel.shatteredpixeldungeon.items.LiquidMetal;
+import com.shatteredpixel.shatteredpixeldungeon.items.Stylus;
 import com.shatteredpixel.shatteredpixeldungeon.items.TengusMask;
 import com.shatteredpixel.shatteredpixeldungeon.items.Torch;
 import com.shatteredpixel.shatteredpixeldungeon.items.Waterskin;
@@ -464,7 +465,7 @@ public class TestPotion extends TestGenerator {
             case 3: return Honeypot.class;
             case 4: return Ankh.class;
             case 5: return Waterskin.class;
-            case 6: return Dewdrop.class;
+            case 6: return Stylus.class;
             case 7: default: return KingsCrown.class;
             case 8: return TengusMask.class;
             case 9: return LiquidMetal.class;

@@ -48,19 +48,24 @@ public class ScrollOfUpgradeEater extends InventoryScroll {
     @Override
     protected void onItemSelected(Item item) {
         if(!eaten){
-            GameScene.show(new WndOptions(M.L(this, "eat_confirm_title"), M.L(this, "eat_confirm_body", item.name()), M.L(this, "sure"), M.L(this, "no")){
-                @Override
-                protected void onSelect(int index) {
-                    super.onSelect(index);
-                    if(index == 0){
-                        eaten = true;
-                        level_stored = item.level();
-                        level_stored = Math.min(3, level_stored);
-                        item.detach(Dungeon.hero.belongings.backpack);
-                        GLog.p(M.L(ScrollOfUpgradeEater.class, "eaten", item.name()));
+            if(item.isEquipped(Dungeon.hero)){
+                GLog.w(M.L(ScrollOfUpgradeEater.class, "cant_eat_equipped"));
+            }else {
+                GameScene.show(new WndOptions(M.L(this, "eat_confirm_title"), M.L(this, "eat_confirm_body", item.name()), M.L(this, "sure"), M.L(this, "no")) {
+                    @Override
+                    protected void onSelect(int index) {
+                        super.onSelect(index);
+                        if (index == 0) {
+                            eaten = true;
+                            level_stored = item.level();
+                            level_stored = Math.min(3, level_stored);
+
+                            item.detach(Dungeon.hero.belongings.backpack);
+                            GLog.p(M.L(ScrollOfUpgradeEater.class, "eaten", item.name()));
+                        }
                     }
-                }
-            });
+                });
+            }
             collect();
         }else{
             for(int i = 0; i < level_stored; ++i){

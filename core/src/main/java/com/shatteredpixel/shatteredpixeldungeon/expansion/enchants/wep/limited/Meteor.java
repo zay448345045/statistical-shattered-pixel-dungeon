@@ -13,7 +13,6 @@ import com.shatteredpixel.shatteredpixeldungeon.custom.utils.timing.VirtualTimer
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BlastParticle;
-import com.shatteredpixel.shatteredpixeldungeon.expansion.alctech.enhancedPotion.PotionFireEX;
 import com.shatteredpixel.shatteredpixeldungeon.expansion.enchants.baseclasses.CountInscription;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;

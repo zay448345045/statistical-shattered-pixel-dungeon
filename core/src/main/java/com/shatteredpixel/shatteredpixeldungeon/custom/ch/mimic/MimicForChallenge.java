@@ -819,8 +819,6 @@ public class MimicForChallenge extends Mimic {
            power*=specialModPower(lvl);
        }
 
-       if(power > 50f) power = 50f;
-
        return power;
 
    }
@@ -1076,7 +1074,7 @@ public class MimicForChallenge extends Mimic {
             generateLevelTwoConsumable(power, items);
             generateLevelThreeConsumable(power, items);
             generateLevelFourConsumable(power, items);
-            if(Random.Float()<0.05f+(power-8f)*0.025f){
+            if(Random.Float()<0.15f+(power-8f)*0.025f){
                 do{
                     switch(Random.Int(3)){
                         case 0:
@@ -1097,7 +1095,7 @@ public class MimicForChallenge extends Mimic {
                     reward.cursed = false;
                     reward.level(1);
                     for(int i=0; i<5; ++i){
-                        if(Random.Float()<0.16f+(power-8f)*0.02f){
+                        if(Random.Float()<0.2f+(power-8f)*0.0125f){
                             reward.upgrade();
                         }
                     }
@@ -1108,7 +1106,7 @@ public class MimicForChallenge extends Mimic {
             generateLevelTwoConsumable(power, items);
             generateLevelThreeConsumable(power, items);
             generateLevelFourConsumable(power, items);
-            if(Random.Float()<0.33f){
+            if(Random.Float()<0.4f){
                 do{
                     switch(Random.Int(3)){
                         case 0:
@@ -1129,7 +1127,7 @@ public class MimicForChallenge extends Mimic {
                     reward.cursed = false;
                     reward.level(3);
                     for(int i=0; i<6; ++i){
-                        if(Random.Float()<0.32f+(power-16f)*0.0125f){
+                        if(Random.Float()<0.36f+(power-16f)*0.0125f){
                             reward.upgrade();
                         }
                     }

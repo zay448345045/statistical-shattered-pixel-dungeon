@@ -49,7 +49,7 @@ public class MimicScroll extends ChallengeItem {
                         int pos = mob.pos;
 
                         if(mob instanceof Sheep){
-                            if(Random.Int(5)!=0){
+                            if(Random.Int(4)!=0){
                                 continue;
                             }
                         }
@@ -57,7 +57,7 @@ public class MimicScroll extends ChallengeItem {
                         //loot, copied from mimic
                         Item reward = null;
                         MimicForChallenge mimic;
-                        if(Random.Int(10)==0) {
+                        if(Random.Int(8)==0) {
                             mimic = MimicForChallenge.spawnAt(pos, reward, GoldenMimicForChallenge.class);
                         }else {
                             mimic = MimicForChallenge.spawnAt(pos, reward);

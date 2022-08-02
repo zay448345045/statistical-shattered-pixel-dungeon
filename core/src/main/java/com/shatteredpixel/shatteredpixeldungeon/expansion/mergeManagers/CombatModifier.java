@@ -127,7 +127,7 @@ public enum CombatModifier {
             }
             if(src == Dungeon.hero && !((Hero) src).isAlive()){
                 Dungeon.fail(ThornsShield.class);
-                GLog.n(M.L(this, "ondeath"));
+                GLog.n(M.L(ThornsShield.class, "ondeath"));
             }
         }
 
