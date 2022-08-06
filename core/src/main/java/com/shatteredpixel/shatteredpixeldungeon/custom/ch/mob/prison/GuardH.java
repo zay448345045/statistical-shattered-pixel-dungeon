@@ -8,6 +8,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.MobHard;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Chains;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -24,15 +25,11 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
-public class GuardH extends Mob {
+public class GuardH extends MobHard {
 
     //they can only use their chains INFINITELY
     private boolean chainsUsed = false;
-    private static float cd = 8f;
-
-    {
-        immunities.add(AllyBuff.class);
-    }
+    private float cd = 5f;
 
     {
         spriteClass = GuardSprite.class;
@@ -53,11 +50,11 @@ public class GuardH extends Mob {
 
     @Override
     public boolean act(){
-        if(chainsUsed && cd<=0){
+        if(chainsUsed && cd<=0f){
             chainsUsed = false;
-            cd = 8;
+            cd = 5f;
         }else if(chainsUsed){
-            cd -= 1;
+            cd -= 1f;
         }
         return super.act();
     }

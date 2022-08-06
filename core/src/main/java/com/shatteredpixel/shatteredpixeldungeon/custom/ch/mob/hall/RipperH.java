@@ -11,6 +11,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.custom.buffs.ConsistBleeding;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.MobHard;
 import com.shatteredpixel.shatteredpixeldungeon.custom.utils.RangeMap;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
@@ -25,7 +26,7 @@ import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
-public class RipperH extends Mob {
+public class RipperH extends MobHard {
     {
         spriteClass = RipperHSprite.class;
 
@@ -42,10 +43,6 @@ public class RipperH extends Mob {
 
         properties.add(Property.DEMONIC);
         properties.add(Property.UNDEAD);
-    }
-
-    {
-        immunities.add(AllyBuff.class);
     }
 
     @Override

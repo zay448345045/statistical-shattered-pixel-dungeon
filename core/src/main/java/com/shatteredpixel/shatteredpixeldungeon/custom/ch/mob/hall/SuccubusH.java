@@ -12,6 +12,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Healing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.MobHard;
 import com.shatteredpixel.shatteredpixeldungeon.custom.utils.RangeMap;
 import com.shatteredpixel.shatteredpixeldungeon.custom.visuals.effects.BeamCustom;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Effects;
@@ -34,7 +35,7 @@ import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
 
-public class SuccubusH extends Mob {
+public class SuccubusH extends MobHard {
     private int blinkCooldown = 0;
     {
         spriteClass = SuccubusSprite.class;
@@ -50,8 +51,6 @@ public class SuccubusH extends Mob {
         lootChance = 0.33f;
 
         properties.add(Property.DEMONIC);
-
-        immunities.add(AllyBuff.class);
     }
 
     @Override

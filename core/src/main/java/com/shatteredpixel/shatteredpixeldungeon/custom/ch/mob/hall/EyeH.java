@@ -10,6 +10,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.MobHard;
 import com.shatteredpixel.shatteredpixeldungeon.custom.messages.M;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -39,7 +40,7 @@ import com.watabou.utils.Random;
 import java.util.Collections;
 import java.util.List;
 
-public class  EyeH extends Mob {
+public class  EyeH extends MobHard {
 
     {
         spriteClass = EyeHSprite.class;
@@ -59,10 +60,6 @@ public class  EyeH extends Mob {
         lootChance = 1f;
 
         properties.add(Property.DEMONIC);
-    }
-
-    {
-        immunities.add(AllyBuff.class);
     }
 
     @Override

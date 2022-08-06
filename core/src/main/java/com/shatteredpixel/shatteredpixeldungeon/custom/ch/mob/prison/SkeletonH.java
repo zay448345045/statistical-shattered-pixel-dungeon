@@ -8,6 +8,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Skeleton;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.MobHard;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -25,7 +26,7 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
-public class SkeletonH extends Mob {
+public class SkeletonH extends MobHard {
     {
         EXP = 7;
 
@@ -41,10 +42,6 @@ public class SkeletonH extends Mob {
 
         properties.add(Property.UNDEAD);
         properties.add(Property.INORGANIC);
-    }
-
-    {
-        immunities.add(AllyBuff.class);
     }
 
     protected int revived = 0;

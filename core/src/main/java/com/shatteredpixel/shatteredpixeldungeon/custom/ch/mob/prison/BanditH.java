@@ -18,11 +18,6 @@ public class BanditH extends ThiefH{
         EXP = 7;
         lootChance = 1f;
     }
-
-    {
-        immunities.add(AllyBuff.class);
-    }
-
     @Override
     public float speed(){
         return super.speed() * (item != null?1.2f:1f);

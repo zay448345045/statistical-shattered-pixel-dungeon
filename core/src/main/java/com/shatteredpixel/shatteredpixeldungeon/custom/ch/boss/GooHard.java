@@ -98,6 +98,8 @@ public class GooHard extends Boss{
                 HP += 3;
             }
 
+            HP = Math.min(HP, HT);
+
             sprite.emitter().burst( Speck.factory( Speck.HEALING ), surroundingWater() > 7 ? 4:1 );
         }
 

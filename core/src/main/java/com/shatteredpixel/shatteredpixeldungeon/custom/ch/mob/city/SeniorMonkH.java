@@ -40,9 +40,6 @@ public class SeniorMonkH extends MonkH {
 
         hitsToDisarm = 99999;
     }
-    {
-        immunities.add(AllyBuff.class);
-    }
 
     @Override
     public float attackDelay(){return super.attackDelay()*0.94f;}

@@ -9,6 +9,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.MobHard;
 import com.shatteredpixel.shatteredpixeldungeon.custom.messages.M;
 import com.shatteredpixel.shatteredpixeldungeon.custom.utils.BallisticaFloat;
 import com.shatteredpixel.shatteredpixeldungeon.custom.utils.GME;
@@ -29,7 +30,7 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
-public class MonkH extends Mob {
+public class MonkH extends MobHard {
     {
         EXP=13;
 
@@ -44,9 +45,6 @@ public class MonkH extends Mob {
         lootChance = 0.083f;
 
         properties.add(Property.UNDEAD);
-    }
-    {
-        immunities.add(AllyBuff.class);
     }
     @Override
     public float attackDelay(){ return 0.45f*super.attackDelay();}

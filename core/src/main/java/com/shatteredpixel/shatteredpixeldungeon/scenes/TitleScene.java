@@ -27,6 +27,8 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.custom.MiscTextClass;
+import com.shatteredpixel.shatteredpixeldungeon.custom.messages.M;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BannerSprites;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Fireball;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
@@ -270,14 +272,31 @@ public class TitleScene extends PixelScene {
 
 		public ChangesButton( Chrome.Type type, String label ){
 			super(type, label);
-			//if (SPDSettings.updates()) Updates.checkForUpdate();
+		}
+
+		boolean updateShown = false;
+
+		@Override
+		public void update() {
+			super.update();
+
+			if (!updateShown && (Updates.updateAvailable() || Updates.isInstallable())){
+				updateShown = true;
+				if (Updates.isInstallable())    text(Messages.get(TitleScene.class, "install"));
+				else                            text(Messages.get(TitleScene.class, "update"));
+			}
+
+			if (updateShown){
+				textColor(ColorMath.interpolate( 0xFFFFFF, Window.SHPX_COLOR, 0.5f + (float)Math.sin(Game.timeTotal*5)/2f));
+			}
 		}
 
 		@Override
 		protected void onClick() {
 			ChangesScene.changesSelected = 0;
-			ShatteredPixelDungeon.switchNoFade(ChangesScene.class);
+			ShatteredPixelDungeon.switchNoFade( ChangesScene.class );
 		}
+
 	}
 
 	private static class SettingsButton extends StyledButton {

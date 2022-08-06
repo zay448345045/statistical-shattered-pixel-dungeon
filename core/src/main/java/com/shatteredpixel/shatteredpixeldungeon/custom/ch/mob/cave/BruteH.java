@@ -15,6 +15,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ShieldBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Brute;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.MobHard;
 import com.shatteredpixel.shatteredpixeldungeon.custom.utils.HitBack;
 import com.shatteredpixel.shatteredpixeldungeon.custom.visuals.MissileSpriteCustom;
 import com.shatteredpixel.shatteredpixeldungeon.custom.visuals.effects.SpreadWave;
@@ -37,7 +38,7 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
 //should make a template for ai like this, or a ranged attack action class.
-public class BruteH extends Mob {
+public class BruteH extends MobHard {
     {
         spriteClass = BruteSprite.class;
 
@@ -49,9 +50,6 @@ public class BruteH extends Mob {
 
         loot = Gold.class;
         lootChance = 0.5f;
-    }
-    {
-        immunities.add(AllyBuff.class);
     }
 
     protected int revived = 0;

@@ -9,6 +9,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Warlock;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.MobHard;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -32,10 +33,8 @@ import com.watabou.utils.Random;
 
 import static com.shatteredpixel.shatteredpixeldungeon.items.Item.updateQuickslot;
 
-public class WarlockH extends Mob implements Callback {
+public class WarlockH extends MobHard implements Callback {
     {
-        immunities.add(AllyBuff.class);
-
         spriteClass = WarlockHSprite.class;
 
         HP = HT = 70;

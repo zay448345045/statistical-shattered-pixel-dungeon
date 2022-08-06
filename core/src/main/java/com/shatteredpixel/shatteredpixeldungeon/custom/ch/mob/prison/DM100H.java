@@ -12,6 +12,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.CounterBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DM100;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.MobHard;
 import com.shatteredpixel.shatteredpixeldungeon.custom.messages.M;
 import com.shatteredpixel.shatteredpixeldungeon.custom.utils.timing.VirtualActor;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Effects;
@@ -41,7 +42,7 @@ import com.watabou.utils.GameMath;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
-public class DM100H extends Mob implements Callback {
+public class DM100H extends MobHard implements Callback {
     private static final float TIME_TO_ZAP	= 1f;
     {
         EXP = 7;
@@ -58,10 +59,6 @@ public class DM100H extends Mob implements Callback {
 
         properties.add(Property.ELECTRIC);
         properties.add(Property.INORGANIC);
-    }
-
-    {
-        immunities.add(AllyBuff.class);
     }
 
     private float cd = 4f;

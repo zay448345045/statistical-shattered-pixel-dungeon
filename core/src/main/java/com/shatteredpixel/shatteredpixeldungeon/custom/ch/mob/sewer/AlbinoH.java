@@ -8,12 +8,13 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Albino;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.MobHard;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MysteryMeat;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.AlbinoSprite;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
-public class AlbinoH extends Mob {
+public class AlbinoH extends MobHard {
     {
         spriteClass = AlbinoSprite.class;
 
@@ -24,10 +25,6 @@ public class AlbinoH extends Mob {
         loot = new MysteryMeat();
         lootChance = 1f;
         maxLvl = 7;
-    }
-
-    {
-        immunities.add(AllyBuff.class);
     }
     @Override
     public int damageRoll() {

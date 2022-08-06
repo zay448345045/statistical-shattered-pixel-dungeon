@@ -15,6 +15,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vulnerable;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Weakness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.MobHard;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Lightning;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.PoisonParticle;
@@ -42,7 +43,7 @@ import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
-public abstract class ShamanH extends Mob {
+public abstract class ShamanH extends MobHard {
 
     {
         HP = HT = 35;
@@ -53,9 +54,6 @@ public abstract class ShamanH extends Mob {
 
         loot = Generator.Category.WAND;
         lootChance = 0.1f; //initially, see rollToDropLoot
-    }
-    {
-        immunities.add(AllyBuff.class);
     }
     //avoid interfering with existing zaps.
     protected int zapCate = 0;

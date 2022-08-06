@@ -11,6 +11,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Healing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.MobHard;
 import com.shatteredpixel.shatteredpixeldungeon.custom.utils.RangeMap;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -23,7 +24,7 @@ import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
-public class SwarmH extends Mob {
+public class SwarmH extends MobHard {
     {
         spriteClass = SwarmSprite.class;
 
@@ -39,10 +40,6 @@ public class SwarmH extends Mob {
         lootChance = 0.1667f; //by default, see rollToDropLoot()
     }
 
-    {
-        immunities.add(AllyBuff.class);
-    }
-
     @Override
     public void die(Object cause){
         for(int i=1;i<4;++i) {
@@ -52,7 +49,7 @@ public class SwarmH extends Mob {
                 if(ch!=null){
                     if(ch.alignment == Alignment.ENEMY){
                         Buff.affect(ch, Healing.class).setHeal(12-3*i, 1, 0);
-                        ch.sprite.showStatus(CharSprite.POSITIVE, "%d",13-3*i);
+                        ch.sprite.showStatus(CharSprite.POSITIVE, "%d",12-3*i);
                     }
                 }
             }

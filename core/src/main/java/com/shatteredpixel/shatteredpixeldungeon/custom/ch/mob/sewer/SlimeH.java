@@ -6,6 +6,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Slime;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.MobHard;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
@@ -15,7 +16,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.SlimeSprite;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
-public class SlimeH extends Mob {
+public class SlimeH extends MobHard {
     {
         spriteClass = SlimeSprite.class;
 
@@ -26,10 +27,6 @@ public class SlimeH extends Mob {
         maxLvl = 9;
 
         lootChance = 0.4f; //by default, see lootChance()
-    }
-
-    {
-        immunities.add(AllyBuff.class);
     }
 
     @Override

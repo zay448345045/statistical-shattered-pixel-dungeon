@@ -11,6 +11,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Thief;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.MobHard;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -26,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
-public class ThiefH extends Mob{
+public class ThiefH extends MobHard {
     public Item item;
     {
         EXP = 6;
@@ -45,10 +46,6 @@ public class ThiefH extends Mob{
         FLEEING = new ThiefH.Fleeing();
 
         properties.add(Property.UNDEAD);
-    }
-
-    {
-        immunities.add(AllyBuff.class);
     }
 
     @Override

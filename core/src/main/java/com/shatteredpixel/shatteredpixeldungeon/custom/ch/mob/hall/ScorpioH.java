@@ -9,6 +9,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.MobHard;
 import com.shatteredpixel.shatteredpixeldungeon.custom.messages.M;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Wound;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -28,7 +29,7 @@ import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
 //yeah it's already annoying enough
-public class ScorpioH extends Mob {
+public class ScorpioH extends MobHard {
     {
         viewDistance = 99;
 
@@ -44,10 +45,6 @@ public class ScorpioH extends Mob {
         lootChance = 0.5f;
 
         properties.add(Property.DEMONIC);
-    }
-
-    {
-        immunities.add(AllyBuff.class);
     }
 
     private int hasAttacked = 0;

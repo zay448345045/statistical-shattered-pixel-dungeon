@@ -20,6 +20,9 @@ public class Invisible extends CountInscription {
             }
             else{
                 new FlavourBuff(){
+                    {
+                        actPriority = VFX_PRIO;
+                    }
                     @Override
                     public boolean act() {
                         Buff.affect(attacker, Invisibility.class, 6f + weapon.buffedLvl() * 1.2f);
@@ -37,6 +40,9 @@ public class Invisible extends CountInscription {
     @Override
     public void useUp(Weapon w, Char attacker) {
         new FlavourBuff(){
+            {
+                actPriority = VFX_PRIO;
+            }
             @Override
             public boolean act() {
                 Buff.affect(attacker, Invisibility.class, 50f + 8.5f * Math.min(w.buffedLvl(), 15));

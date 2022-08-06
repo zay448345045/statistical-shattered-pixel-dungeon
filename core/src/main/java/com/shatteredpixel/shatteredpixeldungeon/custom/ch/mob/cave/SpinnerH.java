@@ -13,6 +13,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.MobHard;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MysteryMeat;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -26,7 +27,7 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
-public class SpinnerH extends Mob {
+public class SpinnerH extends MobHard {
     {
         baseSpeed  = 1.35f;
         EXP = 11;
@@ -42,9 +43,6 @@ public class SpinnerH extends Mob {
         lootChance = 0.125f;
 
         FLEEING = new SpinnerH.Fleeing();
-    }
-    {
-        immunities.add(AllyBuff.class);
     }
 
     @Override

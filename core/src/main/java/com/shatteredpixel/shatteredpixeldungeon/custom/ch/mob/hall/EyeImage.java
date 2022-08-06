@@ -11,10 +11,6 @@ public class EyeImage extends EyeH{
         spriteClass = EyeImageSprite.class;
     }
 
-    {
-        immunities.add(AllyBuff.class);
-    }
-
     @Override
     protected void createImage(){
 

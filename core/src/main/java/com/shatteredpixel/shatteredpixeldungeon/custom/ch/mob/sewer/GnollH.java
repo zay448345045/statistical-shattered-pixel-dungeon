@@ -7,6 +7,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Gnoll;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.MobHard;
 import com.shatteredpixel.shatteredpixeldungeon.custom.visuals.MissileSpriteCustom;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -17,7 +18,7 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
-public class GnollH extends Mob {
+public class GnollH extends MobHard {
     {
         EXP = 3;
         lootChance = 1f;
@@ -28,11 +29,6 @@ public class GnollH extends Mob {
         loot = Gold.class;
 
     }
-
-    {
-        immunities.add(AllyBuff.class);
-    }
-
     private int dartLeft = 2;
     private boolean rangedAttack = false;
 

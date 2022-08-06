@@ -18,6 +18,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.custom.buffs.AbsoluteBlindness;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.MobHard;
 import com.shatteredpixel.shatteredpixeldungeon.custom.messages.M;
 import com.shatteredpixel.shatteredpixeldungeon.custom.utils.RangeMap;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
@@ -54,7 +55,7 @@ import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
-public abstract class ElementalH extends Mob {
+public abstract class ElementalH extends MobHard {
 
     {
         HP = HT = 66;
@@ -64,9 +65,6 @@ public abstract class ElementalH extends Mob {
         maxLvl = 20;
 
         flying = true;
-    }
-    {
-        immunities.add(AllyBuff.class);
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Bat;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.MobHard;
 import com.shatteredpixel.shatteredpixeldungeon.custom.utils.RangeMap;
 import com.shatteredpixel.shatteredpixeldungeon.custom.utils.timing.VirtualActor;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -28,7 +29,7 @@ import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
-public class BatH extends Mob {
+public class BatH extends MobHard {
     {
         EXP = 10;
         defenseSkill = 20;
@@ -45,9 +46,6 @@ public class BatH extends Mob {
 
         loot = new PotionOfHealing();
         lootChance = 0.1667f; //by default, see lootChance()
-    }
-    {
-        immunities.add(AllyBuff.class);
     }
 
     @Override

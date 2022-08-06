@@ -11,6 +11,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Golem;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.MobHard;
 import com.shatteredpixel.shatteredpixeldungeon.custom.utils.RangeMap;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
@@ -32,7 +33,7 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
-public class GolemH extends Mob {
+public class GolemH extends MobHard {
 
     {
         EXP = 15;
@@ -52,9 +53,6 @@ public class GolemH extends Mob {
 
         WANDERING = new GolemH.Wandering();
         HUNTING = new GolemH.Hunting();
-    }
-    {
-        immunities.add(AllyBuff.class);
     }
 
     private int damageToElemental = 3;
