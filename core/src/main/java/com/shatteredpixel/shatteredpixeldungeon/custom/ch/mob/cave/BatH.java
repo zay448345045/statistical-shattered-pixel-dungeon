@@ -28,6 +28,7 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class BatH extends MobHard {
     {
@@ -144,7 +145,7 @@ public class BatH extends MobHard {
         @Override
         public boolean act( boolean enemyInFOV, boolean justAlerted ) {
             //if can see enemy, keep 2 distance if healthy. if in danger, just fight
-            if(enemy!=null && HP*2>=HT && buff(Amok.class)==null){
+            if(enemy!=null && enemyInFOV && HP*2>=HT){
                 //near, not attacked
                 if(canAttack(enemy)){
                     target = enemy.pos;
@@ -157,8 +158,6 @@ public class BatH extends MobHard {
                     //cache score map. find char is O(k) where k=number of chars, should avoid duplicate calls.
                     int[] allMap = RangeMap.centeredRect(pos, 2, 2);
                     int[] aroundMap = RangeMap.centeredRect(pos, 1, 1);
-                    if(allMap == null) allMap = new int[]{pos};
-                    if(aroundMap == null) aroundMap = new int[]{pos};
 
                     int[] allScoreMap = allMap.clone();
                     int[] aroundScoreMap = aroundMap.clone();
@@ -171,9 +170,7 @@ public class BatH extends MobHard {
                             allScoreMap[i]=0;
                         }
                     }
-                    for (int i = 0; i < aroundScoreMap.length; i++) {
-                        aroundScoreMap[i]=0;
-                    }
+                    Arrays.fill(aroundScoreMap, 0);
                     for(int j=0;j<aroundScoreMap.length;++j){
                         //the most important is to avoid attacks
                         if(canPass(aroundMap[j]) && findChar(aroundMap[j])==null){

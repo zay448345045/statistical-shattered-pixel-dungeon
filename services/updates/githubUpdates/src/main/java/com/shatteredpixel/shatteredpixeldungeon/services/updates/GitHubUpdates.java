@@ -26,7 +26,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.watabou.noosa.Game;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.DeviceCompat;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,8 +34,9 @@ import javax.net.ssl.SSLProtocolException;
 
 public class GitHubUpdates extends UpdateService {
 
-	private static Pattern descPattern = Pattern.compile("(.*?)(\r\n|\n|\r)(\r\n|\n|\r)---", Pattern.DOTALL + Pattern.MULTILINE);
-	private static Pattern versionCodePattern = Pattern.compile("internal version number: ([0-9]*)", Pattern.CASE_INSENSITIVE);
+	private static final Pattern descPattern = Pattern.compile("(.*?)(\r\n|\n|\r)(\r\n|\n|\r)---", Pattern.DOTALL + Pattern.MULTILINE);
+	private static final Pattern versionCodePattern = Pattern.compile("version code: ([0-9]*)", Pattern.CASE_INSENSITIVE);
+	private static final Pattern latestNamePattern = Pattern.compile("latest version: (\\d+(.\\d+)*-\\d+(.\\d+)*)", Pattern.CASE_INSENSITIVE);
 
 	@Override
 	public boolean isUpdateable() {
@@ -67,7 +67,8 @@ public class GitHubUpdates extends UpdateService {
 					Bundle latestRelease = null;
 					int latestVersionCode = Game.versionCode;
 
-					for (Bundle b : Bundle.read( httpResponse.getResultAsStream() ).getBundleArray()){
+					Bundle[] bundles = Bundle.read( httpResponse.getResultAsStream() ).getBundleArray();
+					for (Bundle b : bundles){
 						Matcher m = versionCodePattern.matcher(b.getString("body"));
 
 						if (m.find()){
@@ -86,11 +87,15 @@ public class GitHubUpdates extends UpdateService {
 
 						AvailableUpdateData update = new AvailableUpdateData();
 
-						update.versionName = latestRelease.getString("name");
+						for (Bundle b : bundles){
+							Matcher m = latestNamePattern.matcher(b.getString("body"));
+							if (m.find()){
+								update.versionName = m.group(1);
+							}
+						}
+
+						//update.versionName = latestRelease.getString("name");
 						update.versionCode = latestVersionCode;
-						Matcher m = descPattern.matcher(latestRelease.getString("body"));
-						m.find();
-						update.desc = m.group(1);
 						update.URL = latestRelease.getString("html_url");
 
 						callback.onUpdateAvailable(update);

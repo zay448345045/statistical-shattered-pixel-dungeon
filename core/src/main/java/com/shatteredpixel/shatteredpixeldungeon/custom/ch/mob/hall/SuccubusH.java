@@ -115,6 +115,9 @@ public class SuccubusH extends MobHard {
         super.die(cause);
         RipperH rh = new RipperH();
         rh.pos = Dungeon.level.randomRespawnCell(rh);
+        if(!Dungeon.level.insideMap(rh.pos)){
+            rh.pos = this.pos;
+        }
         GameScene.add(rh);
     }
 

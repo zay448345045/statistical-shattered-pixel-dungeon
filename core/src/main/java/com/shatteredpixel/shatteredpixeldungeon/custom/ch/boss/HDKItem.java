@@ -188,7 +188,7 @@ public class HDKItem {
                 if(hero.buff(DamageCheater.class) == null) {
                     Buff.affect(hero, DamageCheater.class).setCounters(2);
                     --uses;
-                    hero.spend(Actor.TICK);
+                    hero.spendAndNext(Actor.TICK);
                 }else{
                     GLog.w(M.L(this, "already"));
                 }
@@ -234,7 +234,7 @@ public class HDKItem {
             }
 
             public int onDamage(Char toProtect, int damage){
-                int threshold = Math.min(toProtect.HP/2, toProtect.HT/8);
+                int threshold = Math.min(toProtect.HP/5, toProtect.HT/15);
                 if(damage >= threshold){
                     for(Mob m: Dungeon.level.mobs.toArray(new Mob[0])){
                         if(m.alignment == Char.Alignment.ENEMY && Dungeon.level.distance(toProtect.pos, m.pos)<9){
@@ -259,12 +259,14 @@ public class HDKItem {
                         }
                     };
                     GameScene.effect(halo);
+                    --counters;
+                    if(counters <= 0){
+                        detach();
+                    }
+                    return 0;
                 }
-                --counters;
-                if(counters <= 0){
-                    detach();
-                }
-                return 0;
+                return damage;
+
             }
 
             @Override

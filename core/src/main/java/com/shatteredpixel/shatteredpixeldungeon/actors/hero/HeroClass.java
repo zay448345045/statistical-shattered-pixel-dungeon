@@ -364,7 +364,7 @@ public enum HeroClass {
 			new Enchanter().collect();
 		}
 		if (Dungeon.isChallenged(Challenges.TEST_MODE)) {
-			new WandOfScanningBeam().identify().collect();
+			//new WandOfScanningBeam().identify().collect();
 
 			new MobPlacer().collect();
 			//new PVCTester().collect();
@@ -413,14 +413,17 @@ public enum HeroClass {
 			new MagicalHolster().collect();
 			Dungeon.LimitedDrops.MAGICAL_HOLSTER.drop();
 
-			new WandOfReflectDisintegration().identify().collect();
+		//	new WandOfReflectDisintegration().identify().collect();
 
 			new EnemyAttributeModifier().collect();
-			/*
+/*
 			HDKItem.KingAmulet ka = new HDKItem.KingAmulet();
 			ka.setUses(999);
 			ka.collect();
-			 */
+
+ */
+
+
 		}
 	}
 

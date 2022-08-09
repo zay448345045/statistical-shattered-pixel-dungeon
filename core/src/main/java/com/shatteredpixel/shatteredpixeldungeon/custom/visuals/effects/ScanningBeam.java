@@ -1,5 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.custom.visuals.effects;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.custom.utils.BallisticaReal;
@@ -10,21 +11,26 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.utils.PointF;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 public class ScanningBeam extends Image {
     //all data
-    private BeamData data;
-    private PointF nowStart;
+    protected BeamData data;
+    protected PointF nowStart;
 
     //time control
-    private float time = 0f;
-    private float[] total;
+    protected float time = 0f;
+    protected float[] total;
     //beam properties
-    private int type = 0;
-    private float baseDiameter = 1f;
+    protected int type = 0;
+    protected float baseDiameter = 1f;
     //record attacked chars, or this would be DOT damage depending on FPS.
-    private LinkedHashMap<Integer, Float> hasCollided = new LinkedHashMap<>();
+    protected LinkedHashMap<Integer, Float> charCollided = new LinkedHashMap<>();
+    protected boolean[] cellCollided = new boolean[Dungeon.level.length()];
+
+    protected int framePassed = 0;
 
     public ScanningBeam(Effects.Type asset, int beamType, BeamData dataPack){
         super( Effects.get( asset ) );
@@ -47,6 +53,8 @@ public class ScanningBeam extends Image {
         type = beamType;
 
         updateScale();
+
+        Arrays.fill(cellCollided, false);
     }
 
     public static void setCollide(OnCollide collide) {
@@ -61,6 +69,7 @@ public class ScanningBeam extends Image {
     @Override
     public void update(){
         super.update();
+        ++framePassed;
         time += Game.elapsed;
 
         if(time >= total[2]){
@@ -88,29 +97,52 @@ public class ScanningBeam extends Image {
         }
     }
     //May not safe if one cell/char is hit by multiple beams in one flash. Should avoid crossing.
-    private /*synchronized*/ void judgeHit(BallisticaReal ba){
+    //Not sure if it would cause performance issues, because hit judge is applied each flash
+    protected /*synchronized*/ void judgeHit(BallisticaReal ba){
+        HashMap<Integer, Char> curChars = new HashMap<>(Actor.chars().size());
+        for(Char ch: Actor.chars()){
+            curChars.put(ch.pos, ch);
+        }
         for(int i: ba.subPath(1, ba.dist)){
-            collide.cellProc(i);
-            Char ch = Actor.findChar(i);
-            if(ch != null){
-                if(!hasCollided.containsKey(ch.id())){
+            if(!cellCollided[i]) {
+                collide.cellProc(i);
+                cellCollided[i] = true;
+            }
+            if(curChars.containsKey(i)){
+                Char ch = curChars.get(i);
+                if(!charCollided.containsKey(ch.id())){
                     if(collide.onHitProc(ch) > 0) {
-                        hasCollided.put(ch.id(), angle);
+                        charCollided.put(ch.id(), angle);
                     }
                 }
             }
         }
+
+        removeCharProtection();
+        removeCellProtection();
+    }
+
+    protected void removeCharProtection(){
         //remove token if beam can't shoot that Char.
         //Normally Chars are sparse, so remove one each flash is just enough.
-        if(!hasCollided.isEmpty()) {
-            int removeFirst = hasCollided.keySet().iterator().next();
-            if (Math.abs(angle - hasCollided.values().iterator().next()) > 180) {
-                hasCollided.remove(removeFirst);
+        //just override this if needed
+        if(!charCollided.isEmpty()) {
+            int removeFirst = charCollided.keySet().iterator().next();
+            if (Math.abs(angle - charCollided.values().iterator().next()) > 180) {
+                charCollided.remove(removeFirst);
             }
         }
     }
 
-    private BallisticaReal updateScale(){
+    protected void removeCellProtection(){
+        //clear cell protection per 10 frames.
+        //can override this when necessary
+        if(framePassed % 10 == 0){
+            Arrays.fill(cellCollided, false);
+        }
+    }
+
+    protected BallisticaReal updateScale(){
         BallisticaReal ba = new BallisticaReal(nowStart, angle, data.range, type);
         float dx = ba.collisionF.x - nowStart.x;
         float dy = ba.collisionF.y - nowStart.y;

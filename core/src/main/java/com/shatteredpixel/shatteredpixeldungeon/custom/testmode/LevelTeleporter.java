@@ -272,7 +272,6 @@ public class LevelTeleporter extends TestItem {
     }
 
     public static void teleportToLocation(Hero hero, int pos){
-        PathFinder.buildDistanceMap(pos, BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null));
         if (Dungeon.level.avoid[pos] || !Dungeon.level.passable[pos]
                 || Actor.findChar(pos) != null){
             GLog.w( Messages.get(ScrollOfTeleportation.class, "cant_reach") );

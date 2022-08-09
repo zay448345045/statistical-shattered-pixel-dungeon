@@ -213,7 +213,9 @@ public class DM100H extends MobHard implements Callback {
             if(wave != null){
                 wave.killWave();
             }
-            target.sprite.centerEmitter().burst( SparkParticle.FACTORY, count()<=0?25:10);
+            if(target.sprite != null) {
+                target.sprite.centerEmitter().burst(SparkParticle.FACTORY, count() <= 0 ? 25 : 10);
+            }
             super.detach();
         }
 

@@ -324,6 +324,9 @@ public class  EyeH extends MobHard {
     protected void summonRipper(){
         RipperH rh = new RipperH();
         rh.pos = Dungeon.level.randomRespawnCell(rh);
+        if(!Dungeon.level.insideMap(rh.pos)){
+            rh.pos = this.pos;
+        }
         GameScene.add(rh);
     }
 

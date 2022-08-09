@@ -272,6 +272,7 @@ public class TitleScene extends PixelScene {
 
 		public ChangesButton( Chrome.Type type, String label ){
 			super(type, label);
+			if (SPDSettings.updates()) Updates.checkForUpdate();
 		}
 
 		boolean updateShown = false;
@@ -293,8 +294,34 @@ public class TitleScene extends PixelScene {
 
 		@Override
 		protected void onClick() {
-			ChangesScene.changesSelected = 0;
-			ShatteredPixelDungeon.switchNoFade( ChangesScene.class );
+			if (Updates.isInstallable()){
+				Updates.launchInstall();
+
+			} else if (Updates.updateAvailable()){
+				AvailableUpdateData update = Updates.updateData();
+
+				ShatteredPixelDungeon.scene().addToFront( new WndOptions(
+					Icons.get(Icons.CHANGES),
+					update.versionName == null ? Messages.get(this,"title") : Messages.get(this,"versioned_title", update.versionName),
+					"",
+					Messages.get(this,"update"),
+					Messages.get(this,"changes")
+				) {
+					@Override
+					protected void onSelect(int index) {
+						if (index == 0) {
+							Updates.launchUpdate(Updates.updateData());
+						} else if (index == 1){
+							ChangesScene.changesSelected = 0;
+							ShatteredPixelDungeon.switchNoFade( ChangesScene.class );
+						}
+					}
+				});
+
+			} else {
+				ChangesScene.changesSelected = 0;
+				ShatteredPixelDungeon.switchNoFade( ChangesScene.class );
+			}
 		}
 
 	}
@@ -339,7 +366,6 @@ public class TitleScene extends PixelScene {
 
 		@Override
 		protected void onClick() {
-
 		}
 	}
 }
