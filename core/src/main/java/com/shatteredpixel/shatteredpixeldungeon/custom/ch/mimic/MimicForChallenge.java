@@ -828,7 +828,7 @@ public class MimicForChallenge extends Mimic {
         super.storeInBundle( bundle );
         bundle.put( LEVEL, FloatLevel);
         bundle.put( BASIC_MOD_FACTOR, basicModFactor);
-        bundle.put( TYPE_FACTOR, type);
+        bundle.put( TYPE_FACTOR, resistMod);
         bundle.put( ATTACK_FACTOR, attackMod);
         bundle.put( DEFENSE_FACTOR, defendMod);
         bundle.put( TRICK_FACTOR, trickMod);
@@ -838,7 +838,7 @@ public class MimicForChallenge extends Mimic {
     public void restoreFromBundle( Bundle bundle ) {
         FloatLevel = bundle.getFloat( LEVEL );
         basicModFactor = bundle.getInt(BASIC_MOD_FACTOR);
-        type = bundle.getInt(TYPE_FACTOR);
+        resistMod = bundle.getInt(TYPE_FACTOR);
         attackMod = bundle.getInt(ATTACK_FACTOR);
         defendMod = bundle.getInt(DEFENSE_FACTOR);
         trickMod = bundle.getInt(TRICK_FACTOR);
@@ -1070,13 +1070,14 @@ public class MimicForChallenge extends Mimic {
                 }
                 items.add(reward);
             }
-        }else if(power < 16f){
+        }
+        else if(power < 16f){
             generateLevelTwoConsumable(power, items);
             generateLevelThreeConsumable(power, items);
             generateLevelFourConsumable(power, items);
             if(Random.Float()<0.15f+(power-8f)*0.025f){
                 do{
-                    switch(Random.Int(3)){
+                    switch(Random.Int(4)){
                         case 0:
                             reward = Generator.randomArmor();
                             break;
@@ -1102,13 +1103,14 @@ public class MimicForChallenge extends Mimic {
                 }
                 items.add(reward);
             }
-        }else{
+        }
+        else{
             generateLevelTwoConsumable(power, items);
             generateLevelThreeConsumable(power, items);
             generateLevelFourConsumable(power, items);
             if(Random.Float()<0.4f){
                 do{
-                    switch(Random.Int(3)){
+                    switch(Random.Int(4)){
                         case 0:
                             reward = Generator.randomArmor();
                             break;

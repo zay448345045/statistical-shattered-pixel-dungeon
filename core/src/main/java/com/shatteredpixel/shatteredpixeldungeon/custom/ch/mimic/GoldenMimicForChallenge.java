@@ -80,7 +80,7 @@ public class GoldenMimicForChallenge extends MimicForChallenge {
                 if (i instanceof Armor && ((Armor) i).hasCurseGlyph()){
                     ((Armor) i).inscribe(null);
                 }
-                if (!(i instanceof MissileWeapon) && i.level() < 6){
+                if (i.level() < 6){
                     i.upgrade();
                 }
             }

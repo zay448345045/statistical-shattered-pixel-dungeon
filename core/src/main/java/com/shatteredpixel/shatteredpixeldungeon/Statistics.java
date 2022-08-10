@@ -255,6 +255,7 @@ public class Statistics {
 	//so use long to record seconds, float to count sub-seconds.
 	public static long real_seconds = 0;
 	public static float second_elapsed = 0;
+	public static float turnsPassed = 0f;
 
 
 	private static void resetCustom(){
@@ -264,6 +265,7 @@ public class Statistics {
 		real_seconds = 0;
 		//Dungeon has been inited, so write directly.
 		isCustomSeed = !CustomGameSettings.getSeedString().equals("");
+		turnsPassed = 0f;
 	}
 
 	private static void storeCustom(Bundle b){
@@ -272,6 +274,7 @@ public class Statistics {
 		b.put("real_time_passed", second_elapsed);
 		b.put("is_custom_seed", isCustomSeed);
 		b.put("real_seconds_passed", real_seconds);
+		b.put("turns_passed", turnsPassed);
 	}
 
 	private static void restoreCustom(Bundle b){
@@ -280,6 +283,7 @@ public class Statistics {
 		second_elapsed = b.getFloat("real_time_passed");
 		isCustomSeed = b.getBoolean("is_custom_seed");
 		real_seconds = b.getLong("real_seconds_passed");
+		turnsPassed = b.getFloat("turns_passed");
 	}
 
 }

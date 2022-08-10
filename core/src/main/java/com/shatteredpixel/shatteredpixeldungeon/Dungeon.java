@@ -44,6 +44,7 @@ import com.shatteredpixel.shatteredpixeldungeon.custom.ch.boss.HardGooLevel;
 import com.shatteredpixel.shatteredpixeldungeon.custom.ch.boss.HardTenguLevel;
 import com.shatteredpixel.shatteredpixeldungeon.custom.ch.boss.NewHDKLevel;
 import com.shatteredpixel.shatteredpixeldungeon.custom.ch.boss.YogRealLevel;
+import com.shatteredpixel.shatteredpixeldungeon.expansion.mergeManagers.LevelSwitchListener;
 import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
@@ -457,6 +458,9 @@ public class Dungeon {
 		hero.curAction = hero.lastAction = null;
 
 		observe();
+
+		LevelSwitchListener.onLevelSwitch();
+
 		try {
 			saveAll();
 		} catch (IOException e) {
@@ -464,6 +468,8 @@ public class Dungeon {
 			/*This only catches IO errors. Yes, this means things can go wrong, and they can go wrong catastrophically.
 			But when they do the user will get a nice 'report this issue' dialogue, and I can fix the bug.*/
 		}
+
+
 	}
 
 	public static void dropToChasm( Item item ) {
