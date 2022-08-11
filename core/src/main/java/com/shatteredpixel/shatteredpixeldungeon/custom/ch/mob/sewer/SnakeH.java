@@ -17,7 +17,7 @@ import com.watabou.utils.Random;
 
 public class SnakeH extends MobHard {
     {
-        HT = HP = 5;
+        HT = HP = 4;
 
         defenseSkill = 9999;
     }

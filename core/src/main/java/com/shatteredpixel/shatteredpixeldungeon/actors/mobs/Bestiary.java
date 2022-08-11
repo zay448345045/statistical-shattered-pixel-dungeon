@@ -35,7 +35,7 @@ public class Bestiary {
 	}
 
 	public static ArrayList<Class<? extends Mob>> getMobRotation( int depth ){
-		ArrayList<Class<? extends Mob>> mobs = standardMobRotation( depth );
+		ArrayList<Class<? extends Mob>> mobs;
 		if(!hasReinforce(depth)){
 			mobs = standardMobRotation(depth);
 			addRareMobs(depth, mobs);
@@ -43,6 +43,7 @@ public class Bestiary {
 		}else{
 			mobs = MobList.HardMobList(depth);
 		}
+		Random.shuffle(mobs);
 		return mobs;
 	}
 	

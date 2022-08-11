@@ -84,7 +84,7 @@ public class SwarmH extends MobHard {
     @Override
     public int defenseProc( Char enemy, int damage ) {
 
-            if (HP >= damage + 2) {
+            if (HP >= damage + 2 && generation < 4) {
                 ArrayList<Integer> candidates = new ArrayList<>();
                 boolean[] solid = Dungeon.level.solid;
 

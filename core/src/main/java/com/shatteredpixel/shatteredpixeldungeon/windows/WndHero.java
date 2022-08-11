@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -216,15 +217,20 @@ public class WndHero extends WndTabbed {
 
 			pos += GAP;
 
-			RedButton buttonScore = new RedButton(M.L(HeroStat.class, "item_enter"), 8){
+			RedButton buttonItem = new RedButton(M.L(HeroStat.class, "item_enter"), 8){
 				@Override
 				protected void onClick() {
 					super.onClick();
 					GameScene.show(new WndTreasureGenerated());
 				}
 			};
-			add(buttonScore);
-			buttonScore.setRect(2, pos, WIDTH - 4, 16);
+			add(buttonItem);
+			buttonItem.setRect(2, pos, WIDTH - 4, 16);
+			boolean item_button_active = Dungeon.isChallenged(Challenges.TEST_MODE) || Statistics.deepestFloor > 25;
+			if(!item_button_active){
+				buttonItem.active = false;
+				buttonItem.alpha(0.4f);
+			}
 		}
 
 		private void statSlot( String label, String value ) {
@@ -268,7 +274,7 @@ public class WndHero extends WndTabbed {
 					float pos = 2;
 					for(String info: result){
 						if(info.contains("dungeon_depth")){
-							pos += 8;
+							pos += 4;
 							RenderedTextBlock depthText = PixelScene.renderTextBlock(info.replace("dungeon_depth: ", M.L(HeroStat.class, "item_wnd_depth")), 8);
 							depthText.maxWidth(WIDTH);
 							depthText.hardlight(0xFFFF00);

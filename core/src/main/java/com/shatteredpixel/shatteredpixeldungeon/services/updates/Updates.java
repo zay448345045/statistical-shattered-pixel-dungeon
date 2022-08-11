@@ -35,7 +35,7 @@ public class Updates {
 	}
 
 	private static Date lastCheck = null;
-	private static final long CHECK_DELAY = 1000*60*60*12; //12 hour
+	private static final long CHECK_DELAY = 1000*60*60*3; //3 hour
 
 	public static boolean isUpdateable(){
 		return supportsUpdates() && service.isUpdateable();

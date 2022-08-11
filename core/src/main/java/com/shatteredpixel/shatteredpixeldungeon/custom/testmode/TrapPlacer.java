@@ -183,9 +183,10 @@ public class TrapPlacer extends TestItem {
         //create a new instance for trap
         Class<? extends Trap> tc = trapLib.get(index());
         if(tc == null){
-            trap = null;
-            GLog.n(M.L(this, "error", index()));
-            return;
+            trap = new EmptyTrap();
+            trap.color = enableInvalidImage ? color() : Trap.BLACK;
+            trap.shape = shape();
+            trapToCreate = trap;
         }else{
             trap = Reflection.newInstance(tc);
         }
@@ -240,6 +241,9 @@ public class TrapPlacer extends TestItem {
     private int index(){
         return row * 8 + column;
     }
+
+    private int color(){ return column; }
+    private int shape(){ return row; }
 
     private class SettingsWindow extends Window{
         private static final int WIDTH = 120;
@@ -326,7 +330,9 @@ public class TrapPlacer extends TestItem {
         private void updateText(){
             Class<? extends Trap> cls = trapLib.get(index());
             if(cls == null){
-                trap = null;
+                trap = new EmptyTrap();
+                trap.color = enableInvalidImage ? color() : Trap.BLACK;
+                trap.shape = shape();
             }else {
                 trap = Reflection.newInstance(cls);
             }
@@ -347,6 +353,32 @@ public class TrapPlacer extends TestItem {
                     trapButtons.get(i).icon(new Image(Assets.Environment.TERRAIN_FEATURES, 16*(i%COLS), 16*(i/COLS), 16, 16));;
                 }
             }
+        }
+    }
+
+    public static class EmptyTrap extends Trap{
+        @Override
+        public void activate() {
+
+        }
+
+        {
+            active = true;
+            canBeHidden = false;
+        }
+
+        @Override
+        public void storeInBundle(Bundle bundle) {
+            super.storeInBundle(bundle);
+            bundle.put("trap_shape_val", shape);
+            bundle.put("trap_color_val", color);
+        }
+
+        @Override
+        public void restoreFromBundle(Bundle bundle) {
+            super.restoreFromBundle(bundle);
+            shape = bundle.getInt("trap_shape_val");
+            color = bundle.getInt("trap_color_val");
         }
     }
 }

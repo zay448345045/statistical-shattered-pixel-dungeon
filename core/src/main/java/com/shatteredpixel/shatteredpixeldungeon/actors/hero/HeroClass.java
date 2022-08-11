@@ -55,6 +55,7 @@ import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.CustomWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.EnemyAttributeModifier;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.ImmortalShieldAffecter;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.LevelTeleporter;
+import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.MobAttributeViewer;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.MobPlacer;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.TestBag;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.TimeReverser;
@@ -69,6 +70,7 @@ import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.generator.TestMi
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.generator.TestPotion;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.generator.TestRing;
 import com.shatteredpixel.shatteredpixeldungeon.expansion.enchants.baseclasses.Enchanter;
+import com.shatteredpixel.shatteredpixeldungeon.expansion.magic.baseclass.Mana;
 import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Waterskin;
@@ -416,6 +418,8 @@ public enum HeroClass {
 		//	new WandOfReflectDisintegration().identify().collect();
 
 			new EnemyAttributeModifier().collect();
+
+			new MobAttributeViewer().collect();
 /*
 			HDKItem.KingAmulet ka = new HDKItem.KingAmulet();
 			ka.setUses(999);

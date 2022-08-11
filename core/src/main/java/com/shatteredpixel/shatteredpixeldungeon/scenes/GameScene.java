@@ -140,7 +140,7 @@ import java.util.Locale;
 
 public class GameScene extends PixelScene {
 
-	static GameScene scene;
+	public static GameScene scene;
 
 	private SkinnedBlock water;
 	private DungeonTerrainTilemap tiles;

@@ -50,6 +50,7 @@ public class Random {
 
 	public static synchronized void pushGenerator( long seed ){
 		generators.push( new java.util.Random( scrambleSeed(seed) ) );
+		int i = 1;
 	}
 
 	//scrambles a given seed, this helps eliminate patterns between the outputs of similar seeds
