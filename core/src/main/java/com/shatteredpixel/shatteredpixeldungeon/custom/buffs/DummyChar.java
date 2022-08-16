@@ -2,11 +2,12 @@ package com.shatteredpixel.shatteredpixeldungeon.custom.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.watabou.utils.Callback;
 
 //It's called char, but it serves for buffs, not chars.
 
 //Currently DummyChar is only used to hold "level buffs".
-//Level buffs are buffs that neither affect chars, nor affected by char.
+//Level buffs are buffs that not affected by chars.
 //This kind of buff should be attached to a "static" char that is sealed in level, not existing chars.
 //Or it would be problematic if the holder dies, or leaves the level.
 
@@ -46,7 +47,7 @@ public final class DummyChar extends Char {
     }
 
     //return existing dummyChar, or create a new dummyChar
-    public static DummyChar addDummyChar(){
+    public static DummyChar getDC(){
         for(Char ch: Actor.chars()){
             if(ch instanceof DummyChar){
                 return (DummyChar) ch;
@@ -66,4 +67,5 @@ public final class DummyChar extends Char {
         Actor.remove(dc);
         return true;
     }
+
 }

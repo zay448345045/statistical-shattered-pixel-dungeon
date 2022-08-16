@@ -1,32 +1,31 @@
 package com.shatteredpixel.shatteredpixeldungeon.expansion.magic.baseclass;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.custom.messages.M;
+import com.watabou.utils.Bundlable;
+import com.watabou.utils.Bundle;
 
 import java.util.ArrayList;
 
-public abstract class SpellTemplate {
+public abstract class SpellTemplate{
     public float manaCost = 0f;
     public Category spellCate = Category.NONE;
     public int targetProperty;
+    public int level;
+    public int maxLevel;
 
-    public void castSpell(Char caster){
+    public abstract void castSpell(Char caster);
 
-    }
+    public abstract void visualEffect(Char caster, int targetCell);
 
-    public void visualEffect(Char caster, int targetCell){
+    public abstract void onHit(Char caster, int targetCell, Char victim);
 
-    }
+    public abstract void dealDamage(Char caster, Char victim);
 
-    public void onHit(Char caster, int targetCell, Char victim){
+    public abstract void onDeath(Char caster, Char victim);
 
-    }
-
-    public void dealDamage(Char caster, Char victim){
-
-    }
-
-    public void onDeath(Char caster, Char victim){
-
+    public String desc(String key, int level, Object... args){
+        return M.L(this.getClass(), key+"_"+level, args);
     }
 
     //Consider: Can one spell have more than one element?
@@ -35,10 +34,8 @@ public abstract class SpellTemplate {
         ICE,
         LIGHTNING,
         SHADOW,
-        NATURE,
-        PHYSICS,
-        BASIC,
-        NONE
+        NONE,
+        BASIC
     }
 
     public static final int T_NO = 0x01;
@@ -48,4 +45,5 @@ public abstract class SpellTemplate {
     public static final int T_NO_SELF = 0x10;
     public static final int T_NO_FRIENDLY = 0x20;
     public static final int T_NO_BOSS = 0x40;
+
 }

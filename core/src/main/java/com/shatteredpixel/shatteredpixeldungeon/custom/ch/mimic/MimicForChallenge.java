@@ -530,7 +530,7 @@ public class MimicForChallenge extends Mimic {
 
     protected void summonProc(){
         int modlevel = (trickMod>>TRK_SUMMON)&0x3;
-        if(modlevel>0){
+        if(modlevel>0 && Dungeon.level.passable != null){
             int nMobs = modlevel;
 
             ArrayList<Integer> candidates = new ArrayList<>();

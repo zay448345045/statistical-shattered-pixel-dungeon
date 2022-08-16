@@ -94,6 +94,17 @@ public class MobAttributeViewer extends TestItem{
                 }catch (NullPointerException ignored){
 
                 }
+                desc += M.L(MobAttributeViewer.class, "move_speed", ch.speed());
+                desc += "\n";
+                if (ch instanceof Mob) {
+                    desc += M.L(MobAttributeViewer.class, "attack_delay", ((Mob) ch).attackDelay());
+                    desc += "\n";
+                }else if(ch instanceof Hero){
+                    desc += M.L(MobAttributeViewer.class, "attack_delay", ((Hero) ch).attackDelay());
+                    desc += "\n";
+                }
+                desc += M.L(MobAttributeViewer.class, "view_distance", ch.viewDistance);
+                desc += "\n";
                 if (ch instanceof Mob) {
                     desc += M.L(MobAttributeViewer.class, "exp", ((Mob) ch).EXP, ((Mob) ch).maxLvl);
                     desc += "\n";

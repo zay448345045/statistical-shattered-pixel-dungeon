@@ -63,8 +63,11 @@ public class RatH extends MobHard {
         int toSummon = Random.chances(new float[]{0.85f, 0.15f}) + 1;
 
         while (toSummon-- > 0) {
-            AlbinoH white = new AlbinoH();
+            final AlbinoH white = new AlbinoH();
             white.pos = Dungeon.level.randomRespawnCell(white);
+            if(!Dungeon.level.insideMap(white.pos)){
+                continue;
+            }
             GameScene.add(white, 1f);
             white.beckon(pos);
 

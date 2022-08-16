@@ -39,8 +39,15 @@ public class Mana extends Buff {
     public boolean act() {
 
         spend(TICK);
-        costMana(-0.5f);
+        regenMana();
+        //costMana(-0.5f);
         return true;
+    }
+
+    public void regenMana(){
+        curMana = Math.min(curMana + manaRegen, maxMana);
+        curMana = Math.max(curMana + manaRegen, 0);
+        updateManaDisplay();
     }
 
     @Override
@@ -115,6 +122,7 @@ public class Mana extends Buff {
         super.storeInBundle(bundle);
         bundle.put("max_mana", maxMana);
         bundle.put("cur_mana", curMana);
+        bundle.put("mana_regen", manaRegen);
     }
 
     @Override
@@ -122,6 +130,7 @@ public class Mana extends Buff {
         super.restoreFromBundle(bundle);
         maxMana = bundle.getFloat("max_mana");
         curMana = bundle.getFloat("cur_mana");
+        manaRegen = bundle.getFloat("mana_regen");
     }
 
     public static class ManaIndicator extends Group {
