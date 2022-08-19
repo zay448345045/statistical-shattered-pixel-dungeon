@@ -45,6 +45,7 @@ import com.shatteredpixel.shatteredpixeldungeon.custom.ch.boss.HardTenguLevel;
 import com.shatteredpixel.shatteredpixeldungeon.custom.ch.boss.NewHDKLevel;
 import com.shatteredpixel.shatteredpixeldungeon.custom.ch.boss.YogRealLevel;
 import com.shatteredpixel.shatteredpixeldungeon.expansion.mergeManagers.LevelSwitchListener;
+import com.shatteredpixel.shatteredpixeldungeon.expansion.mergeManagers.StaticStorage;
 import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
@@ -604,6 +605,8 @@ public class Dungeon {
 			Bundle badges = new Bundle();
 			Badges.saveLocal( badges );
 			bundle.put( BADGES, badges );
+
+			StaticStorage.storeInBundle(bundle);
 			
 			FileUtils.bundleToFile( GamesInProgress.gameFile(save), bundle);
 			
@@ -647,6 +650,8 @@ public class Dungeon {
 		} else {
 			initialVersion = bundle.getInt( VERSION );
 		}
+
+		StaticStorage.restoreFromBundle(bundle);
 
 		version = bundle.getInt( VERSION );
 

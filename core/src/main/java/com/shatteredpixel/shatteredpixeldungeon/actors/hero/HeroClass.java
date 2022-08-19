@@ -366,13 +366,16 @@ public enum HeroClass {
 			new Enchanter().collect();
 		}
 		if (Dungeon.isChallenged(Challenges.TEST_MODE)) {
+			/*
+			Mana mana = new Mana();
+			mana.maxMana = 200;
+			mana.curMana = 0;
+			mana.manaRegen = 0.514f;
+			mana.attachTo(hero);
+			 */
 			//new WandOfScanningBeam().identify().collect();
 
 			new MobPlacer().collect();
-			//new PVCTester().collect();
-			//WandOfReflectDisintegration word = new WandOfReflectDisintegration();
-			//word.curCharges = 99999;
-			//word.identify().collect();
 
 
 			CustomWeapon customWeapon = new CustomWeapon();

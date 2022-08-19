@@ -380,7 +380,7 @@ public class YogReal extends Boss{
 
         if(phase == 4 && findFist() == null){
             yell(Messages.get(this, "hope"));
-            summonCD = -20;
+            summonCD = -40;
             phase = 5;
             regularSummons.add(YogRealRipper.class);
         }
@@ -414,7 +414,7 @@ public class YogReal extends Boss{
         super.damage(damage, src);
         int postHP = HP;
         int threshold = HT-HP_PER_PHASE*phase;
-        if(preHP > threshold && postHP<=threshold && phase < 5){
+        if(preHP > threshold && postHP<=threshold && phase < 4){
             HP = threshold;
             ++phase;
             actSummonFist();

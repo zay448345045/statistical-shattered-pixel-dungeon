@@ -1,22 +1,20 @@
 package com.shatteredpixel.shatteredpixeldungeon.expansion.magic.baseclass;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
-import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.watabou.noosa.Game;
-import com.watabou.noosa.Gizmo;
 import com.watabou.noosa.Group;
-import com.watabou.noosa.Image;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 
 import java.util.Locale;
 
 public class Mana extends Buff {
+
+    public static Mana instance;
 
     {
         announced = false;
@@ -37,22 +35,39 @@ public class Mana extends Buff {
 
     @Override
     public boolean act() {
-
         spend(TICK);
         regenMana();
-        //costMana(-0.5f);
         return true;
     }
 
     public void regenMana(){
-        curMana = Math.min(curMana + manaRegen, maxMana);
-        curMana = Math.max(curMana + manaRegen, 0);
+        regenMana(RManaRegen());
         updateManaDisplay();
     }
 
-    @Override
-    public int icon() {
-        return BuffIndicator.COMBO;
+    public void regenMana(float regen){
+        curMana = Math.min(curMana + regen, RMaxMana());
+        curMana = Math.max(curMana, 0);
+    }
+
+    public float RMaxMana(){
+        return maxMana;
+    }
+
+    public float RManaRegen(){
+        return manaRegen;
+    }
+
+    public float RSpellPower(SpellBase.Category cate){
+        return spellPower;
+    }
+
+    public float RSpellDamage(SpellBase.Category cate){
+        return spellDamage;
+    }
+
+    public float RCostReduce(SpellBase.Category cate){
+        return costReduction;
     }
 
     public int color(){
@@ -94,11 +109,6 @@ public class Mana extends Buff {
         return (r<<16)+(g<<8)+b;
     }
 
-    @Override
-    public void tintIcon(Image icon) {
-        icon.hardlight(color());
-    }
-
     public float manaPercent(){
         return curMana / maxMana;
     }
@@ -109,11 +119,14 @@ public class Mana extends Buff {
     }
 
     public void updateManaDisplay(){
-        if(manaText != null){
+        if(manaText != null && manaText.camera != GameScene.uiCamera){
             manaText.killAndErase();
+            manaText = (ManaIndicator) GameScene.scene.recycle(ManaIndicator.class);
+            manaText.camera = GameScene.uiCamera;
+        }else if(manaText == null){
+            manaText = (ManaIndicator) GameScene.scene.recycle(ManaIndicator.class);
+            manaText.camera = GameScene.uiCamera;
         }
-        manaText = (ManaIndicator) GameScene.scene.recycle(ManaIndicator.class);
-        manaText.camera = GameScene.uiCamera;
         manaText.refresh(target);
     }
 
@@ -123,6 +136,9 @@ public class Mana extends Buff {
         bundle.put("max_mana", maxMana);
         bundle.put("cur_mana", curMana);
         bundle.put("mana_regen", manaRegen);
+        bundle.put("spell_damage", spellDamage);
+        bundle.put("spell_power", spellPower);
+        bundle.put("cost_reduction", costReduction);
     }
 
     @Override
@@ -131,6 +147,9 @@ public class Mana extends Buff {
         maxMana = bundle.getFloat("max_mana");
         curMana = bundle.getFloat("cur_mana");
         manaRegen = bundle.getFloat("mana_regen");
+        spellDamage = bundle.getFloat("spell_damage");
+        spellPower = bundle.getFloat("spellPower");
+        costReduction = bundle.getFloat("cost_reduction");
     }
 
     public static class ManaIndicator extends Group {
@@ -139,11 +158,6 @@ public class Mana extends Buff {
 
         public ManaIndicator() {
             super();
-        }
-
-        @Override
-        public synchronized void update() {
-            super.update();
         }
 
         public void refresh(Char ch){

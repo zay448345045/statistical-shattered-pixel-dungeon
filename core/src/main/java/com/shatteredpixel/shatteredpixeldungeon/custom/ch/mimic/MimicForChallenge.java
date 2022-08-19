@@ -646,7 +646,9 @@ public class MimicForChallenge extends Mimic {
     @Override
     public void stopHiding(){
         super.stopHiding();
-        summonProc();
+        if(buff(MimicStatusShower.class)!=null) {
+            summonProc();
+        }
     }
 
     @Override

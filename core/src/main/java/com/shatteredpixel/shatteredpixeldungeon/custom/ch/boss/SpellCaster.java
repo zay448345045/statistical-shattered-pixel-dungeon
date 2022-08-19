@@ -16,6 +16,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.custom.utils.BallisticaFloat;
 import com.shatteredpixel.shatteredpixeldungeon.custom.utils.GME;
+import com.shatteredpixel.shatteredpixeldungeon.custom.utils.timing.VirtualActor;
 import com.shatteredpixel.shatteredpixeldungeon.custom.utils.timing.VirtualTimer;
 import com.shatteredpixel.shatteredpixeldungeon.custom.visuals.effects.BeamCustom;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -306,7 +307,7 @@ public abstract class SpellCaster extends Mob {
                             }
                         } );
                         m.setSpeed(400f);
-                        VirtualTimer.countTime(10f, m::destroy);
+                        VirtualActor.delay(0.25f, true, FrostPostShoot.class);
                     }
                 }
                 detach();
@@ -382,7 +383,6 @@ public abstract class SpellCaster extends Mob {
 
             for (Char ch : affected){
 
-                //if they have already been killed by another bomb
                 if(!ch.isAlive()){
                     continue;
                 }

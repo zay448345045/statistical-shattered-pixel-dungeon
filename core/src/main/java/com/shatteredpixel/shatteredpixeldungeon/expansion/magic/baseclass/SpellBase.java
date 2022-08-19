@@ -7,8 +7,8 @@ import com.watabou.utils.Bundle;
 
 import java.util.ArrayList;
 
-public abstract class SpellTemplate{
-    public float manaCost = 0f;
+public abstract class SpellBase implements Bundlable{
+    public float baseManaCost = 0f;
     public Category spellCate = Category.NONE;
     public int targetProperty;
     public int level;
@@ -24,8 +24,28 @@ public abstract class SpellTemplate{
 
     public abstract void onDeath(Char caster, Char victim);
 
-    public String desc(String key, int level, Object... args){
-        return M.L(this.getClass(), key+"_"+level, args);
+    public String name(){
+        return M.L(this.getClass(), "name");
+    }
+
+    public String desc(){
+        return M.L(this.getClass(), descKey());
+    }
+
+    public String descKey(){
+        return "desc_" + level;
+    }
+
+    public float manaCost(){
+        return baseManaCost;
+    }
+
+    public void upgrade(int lvl){
+        level = Math.min(level + lvl, maxLevel);
+    }
+
+    public void degrade(int lvl){
+        level -= lvl;
     }
 
     //Consider: Can one spell have more than one element?
@@ -35,7 +55,7 @@ public abstract class SpellTemplate{
         LIGHTNING,
         SHADOW,
         NONE,
-        BASIC
+        PASSIVE
     }
 
     public static final int T_NO = 0x01;
@@ -46,4 +66,8 @@ public abstract class SpellTemplate{
     public static final int T_NO_FRIENDLY = 0x20;
     public static final int T_NO_BOSS = 0x40;
 
+    @Override
+    public void storeInBundle(Bundle bundle) {
+        bundle.put("spell_level", level);
+    }
 }
