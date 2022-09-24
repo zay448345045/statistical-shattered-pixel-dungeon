@@ -15,15 +15,15 @@ import java.util.List;
 //but the tile of wall is not built in trace. (Because there is only one tile for each tile in main direction)
 //However, REAL ballistica can't go through corners.
 //It considers all the points the beam cross with each x and y integer
-//So complex actions like reflection can work correctly.
-//Walls, target cells, chars are considered as a whole tile. Even 0.001 tile collision would stop.
+//So complex mechanics like reflection can work correctly.
+//Even a tiny touch with a cell is considered a collision.
 //Yeah it would be quite odd when this happens, but it works for now.
 //Integer pos is considered at the center of tile.
 public class BallisticaReal {
     //Why here we do NOT record FULL path?
     //first, introduction of range makes real collision quite messy if we add end point to path.
     //second, real beam collides with boundary, which means it has already considered the next cell.
-    //if we want to control the full path, just build a never-stop one and go by tiles.
+    //if we want to control the full path, just build a never-stop one and go through tiles.
     //third, it would cost much more if go through full path. There are cases when it updates each flash.
     public ArrayList<Integer> pathI = new ArrayList<>();
     public Integer sourceI = null;
@@ -48,7 +48,7 @@ public class BallisticaReal {
 
 
     public BallisticaReal(PointF from, PointF to, int params) {
-        //sourcepos need to offset a bit to judge cases the from is on the line
+        //sourcepos need to offset a bit to judge cases the from is right on the border of a tile
         //for example, from = "30, 20.5", to = "20, 0.5", x>=30 is wall
         //if we do not offset, the source will be 30, 20, and when it collides with y=20,
         //the wall judgement is centered at (30, 20), not (29, 20). First judgement will look at (30, 19) instead of (29,19)
@@ -123,31 +123,12 @@ public class BallisticaReal {
         //record current point
         PointF curPosF = new PointF(from.x, from.y);
         Point curPos = cellToPoint(sourceI);//pointFloatToInt(from, false);
-        //we shot into one tile, and meet one border. passable caches whether beam can pass this border.
+        //we shot into one tile, and meet one border. passable caches if beam can pass this border.
         boolean[] canPass = new boolean[4];
         final int[] neigh = new int[]{-1, 1, Dungeon.level.width(), -Dungeon.level.width()};
 
         pathI.add(sourceI);
         pathF.add(sourceF);
-        /*
-        if (stopTerrain  && Dungeon.level.solid[sourceI]) {
-            if (ignoreSoftSolid && (Dungeon.level.passable[sourceI] || Dungeon.level.avoid[sourceI])) {
-                //do nothing
-            } else {
-                cld(sourceI);
-                cldF(sourceF);
-                return;
-            }
-        } else if (stopChars && Actor.findChar( sourceI ) != null) {
-            cld(sourceI);
-            cldF(sourceF);
-            return;
-        } else if  (sourceF.equals(pointFloatToInt(to, false)) && stopTarget){
-            cld(sourceI);
-            cldF(sourceF);
-            return;
-        }
-         */
 
         while(isInsideMap(curPosF)){
             int cell= pointToCell(curPos);

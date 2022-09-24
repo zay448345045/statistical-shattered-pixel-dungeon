@@ -47,11 +47,14 @@ public class Mana extends Buff {
 
     public void regenMana(float regen){
         curMana = Math.min(curMana + regen, RMaxMana());
-        curMana = Math.max(curMana, 0);
     }
 
     public float RMaxMana(){
         return maxMana;
+    }
+
+    public float RCurMana(){
+        return curMana;
     }
 
     public float RManaRegen(){
@@ -118,6 +121,10 @@ public class Mana extends Buff {
         updateManaDisplay();
     }
 
+    public void dealManaCostDamage(Char caster, SpellBase spell){
+
+    }
+
     public void updateManaDisplay(){
         if(manaText != null && manaText.camera != GameScene.uiCamera){
             manaText.killAndErase();
@@ -170,7 +177,7 @@ public class Mana extends Buff {
                             rtb = PixelScene.renderTextBlock(8);
                             add(rtb);
                         }
-                        rtb.text(String.format(Locale.ENGLISH, "%.1f/%.1f", mana.curMana, mana.maxMana));
+                        rtb.text(String.format(Locale.ENGLISH, "%.1f/%.1f", mana.RCurMana(), mana.RMaxMana()));
                         rtb.hardlight(mana.color());
                         rtb.setPos(0, 48);
                     }

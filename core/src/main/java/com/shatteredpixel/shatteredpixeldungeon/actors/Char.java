@@ -721,6 +721,17 @@ public abstract class Char extends Actor {
 		
 		super.spend( time / timeScale );
 	}
+
+	//MODIFIED CONTENT
+	public void spendTime(float time){
+		spend(time);
+	}
+
+	//MODIFIED CONTENT
+	public void spendAndNext(float time){
+		spend(time);
+		next();
+	}
 	
 	public synchronized HashSet<Buff> buffs() {
 		return new HashSet<>(buffs);

@@ -1,6 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.expansion.magic.holder;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.custom.ch.ChallengeItem;
 import com.shatteredpixel.shatteredpixeldungeon.custom.messages.M;
@@ -16,6 +17,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ScrollPane;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
+import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.ui.Component;
 
@@ -26,6 +28,8 @@ import java.util.Map;
 public class SpellHolder extends ChallengeItem {
     {
         image = ItemSpriteSheet.MASTERY;
+        defaultAction = AC_OPEN;
+        stackable = false;
     }
 
     private static final String AC_OPEN = "open";
@@ -58,11 +62,11 @@ public class SpellHolder extends ChallengeItem {
         private ArrayList<IconButton> imageButtons = new ArrayList<>(NUM_BUTTON);
         private HashMap<SpellBase, RenderedTextBlock> spellAndText = new HashMap<>();
         private static final int[] buttonImage = new int[]{ItemSpriteSheet.WAND_FIREBOLT, ItemSpriteSheet.WAND_FROST, ItemSpriteSheet.WAND_LIGHTNING,
-                ItemSpriteSheet.WAND_CORRUPTION, ItemSpriteSheet.WAND_MAGIC_MISSILE, ItemSpriteSheet.RING_RUBY, ItemSpriteSheet.TOKEN};
-        private int selected = 0;
+                ItemSpriteSheet.WAND_CORRUPTION, ItemSpriteSheet.WAND_MAGIC_MISSILE, ItemSpriteSheet.RING_RUBY};
+        private static int selected = 0;
 
         public WndSpellList(){
-            super();
+            super(0, 0, Chrome.get(Chrome.Type.WINDOW_SILVER));
 
             resize(WIDTH, HEIGHT);
 
@@ -73,8 +77,7 @@ public class SpellHolder extends ChallengeItem {
                     protected void onClick() {
                         super.onClick();
                         selected = j;
-                        updateStat();
-                        buildSpellTextBlock();
+                        updateSelection();
                     }
                 };
 
@@ -94,13 +97,32 @@ public class SpellHolder extends ChallengeItem {
 
             pos += BTN_SIZE + 2;
 
+            ColorBlock divA = new ColorBlock(WIDTH, 1, 0xFF222222);
+            add(divA);
+            divA.x = 0;
+            divA.y = pos;
+/*
+            ColorBlock colorBlock = new ColorBlock(WIDTH - 10, 39, 0xC0808080);
+            add(colorBlock);
+            colorBlock.x = 5;
+            colorBlock.y = pos - 3;
+ */
+            pos += 4;
+
             for(int i = 0; i < 4; ++i){
                 statTextBlock.add(PixelScene.renderTextBlock(6));
                 add(statTextBlock.get(i));
-                statTextBlock.get(i).maxWidth(WIDTH - 4);
-                statTextBlock.get(i).setPos(2, pos);
-                pos += 8;
+                statTextBlock.get(i).maxWidth(WIDTH - 16);
+                statTextBlock.get(i).setPos(8, pos);
+                pos += 9;
             }
+
+            ColorBlock divB = new ColorBlock(WIDTH, 1, 0xFF222222);
+            add(divB);
+            divB.x = 0;
+            divB.y = pos;
+
+            pos += 5;
 
             pane = new ScrollPane(new Component()){
                 @Override
@@ -108,7 +130,7 @@ public class SpellHolder extends ChallengeItem {
                     super.onClick(x, y);
                     for(Map.Entry<SpellBase, RenderedTextBlock> sat: spellAndText.entrySet()){
                         RenderedTextBlock text = sat.getValue();
-                        if(x > text.left() && x < text.right() && y > text.top() && y < text.bottom()){
+                        if(y > text.top() && y < text.bottom()){
                             GameScene.show(new WndCastSpell(sat.getKey(), null));
                             break;
                         }
@@ -116,10 +138,21 @@ public class SpellHolder extends ChallengeItem {
                 }
             };
             add(pane);
-            pane.setRect(1, pos + 2, WIDTH - 2, HEIGHT - pos - 2);
+            pane.setRect(1, pos, WIDTH - 2, HEIGHT - pos - 1);
 
+            updateSelection();
+        }
+
+        public void updateSelection(){
+            int max = imageButtons.size();
+            for(int i=0;i<max;++i){
+                if(i==selected){
+                    imageButtons.get(i).icon().alpha(1f);
+                }else{
+                    imageButtons.get(i).icon().alpha(0.4f);
+                }
+            }
             updateStat();
-
             buildSpellTextBlock();
         }
 
@@ -127,26 +160,34 @@ public class SpellHolder extends ChallengeItem {
             Mana mana = curUser.buff(Mana.class);
             if(mana != null) {
                 SpellBase.Category cate = getSpellCate(selected);
-                statTextBlock.get(0).text(M.L(SpellHolder.class, "cur_mana", mana.curMana, mana.RMaxMana(), mana.RManaRegen()));
-                statTextBlock.get(1).text(M.L(SpellHolder.class, "cur_spell_power", mana.RSpellPower(cate), mana.RSpellPower(cate) - mana.spellPower));
-                statTextBlock.get(2).text(M.L(SpellHolder.class, "cur_spell_damage", mana.RSpellDamage(cate), mana.RSpellDamage(cate) - mana.spellDamage));
-                statTextBlock.get(3).text(M.L(SpellHolder.class, "cur_spell_reduction", mana.RCostReduce(cate), mana.RCostReduce(cate) - mana.costReduction));
+                statTextBlock.get(0).text(M.L(SpellHolder.class, "cur_mana", mana.RCurMana(), mana.RMaxMana(), mana.RManaRegen()));
+                statTextBlock.get(1).text(M.L(SpellHolder.class, "cur_spell_power", mana.RSpellPower(cate)*100f, mana.spellPower*100f));
+                statTextBlock.get(2).text(M.L(SpellHolder.class, "cur_spell_damage", mana.RSpellDamage(cate)*100f, mana.spellDamage*100f));
+                statTextBlock.get(3).text(M.L(SpellHolder.class, "cur_spell_reduction", mana.RCostReduce(cate)*100f, mana.costReduction*100f));
             }
         }
 
         public void buildSpellTextBlock(){
             float pane_pos = 1;
+            for(RenderedTextBlock rtb: spellAndText.values()){
+                rtb.destroy();
+            }
             spellAndText.clear();
             ArrayList<SpellBase> curSpell = SpellRecord.getSpell(getSpellCate(selected));
             for(SpellBase sp: curSpell){
                 RenderedTextBlock spellText = PixelScene.renderTextBlock(6);
                 pane.content().add(spellText);
-                spellText.maxWidth(WIDTH - 2);
-                spellText.text(sp.name() + "\n" + sp.desc());
-                spellText.setPos(0, pane_pos);
-                pane_pos = spellText.bottom() + 6;
+                spellText.maxWidth(WIDTH - 12);
+                spellText.text( "_" + sp.name() + "_\n" + sp.descAppendix().replace('_', ' '));
+                spellText.setPos(6, pane_pos);
+                pane_pos = spellText.bottom() + 9;
                 spellAndText.put(sp, spellText);
+                ColorBlock colorBlock = new ColorBlock(WIDTH - 10, 1, 0xFF222222);
+                pane.content().add(colorBlock);
+                colorBlock.x = 5;
+                colorBlock.y = pane_pos - 5;
             }
+            pane.content().setSize(pane.width(), pane_pos);
         }
 
         public SpellBase.Category getSpellCate(int selection){
@@ -161,33 +202,34 @@ public class SpellHolder extends ChallengeItem {
         }
 
         public class WndCastSpell extends Window{
-            private static final int WIDTH = 120;
+            private static final int WIDTH = 110;
             private static final int MAX_HEIGHT = 160;
             public WndCastSpell(SpellBase spell){
                 new WndCastSpell(spell, null);
             }
 
             public WndCastSpell(SpellBase spell, QuickSpellCaster qsc){
+                super(0, 0, Chrome.get(Chrome.Type.WINDOW_SILVER));
                 resize(WIDTH, MAX_HEIGHT);
 
                 RenderedTextBlock title = PixelScene.renderTextBlock(10);
                 title.maxWidth(WIDTH - 4);
                 title.text(spell.name());
                 add(title);
-                title.setPos(2, 2);
+                title.setPos(1, 2);
                 title.hardlight(TITLE_COLOR);
 
                 RenderedTextBlock info = PixelScene.renderTextBlock(6);
                 info.maxWidth(WIDTH - 2);
                 info.text(spell.desc());
                 add(info);
-                info.setPos(1, title.bottom() + 6);
+                info.setPos(1, title.bottom() + 9);
 
                 RenderedTextBlock manaChange = PixelScene.renderTextBlock(6);
                 manaChange.maxWidth(WIDTH - 2);
                 Mana mana = curUser.buff(Mana.class);
                 if(mana != null) {
-                    manaChange.text(M.L(SpellHolder.class, "cast_spell_mana_change", mana.curMana, mana.curMana - spell.manaCost()));
+                    manaChange.text(M.L(SpellHolder.class, "cast_spell_mana_change", mana.RCurMana() - spell.manaCost()));
                 }
                 add(manaChange);
                 manaChange.setPos(1, info.bottom() + 6);
@@ -196,7 +238,7 @@ public class SpellHolder extends ChallengeItem {
                     @Override
                     protected void onClick() {
                         super.onClick();
-                        spell.castSpell(curUser);
+                        spell.tryToCastSpell(curUser);
                         WndCastSpell.this.hide();
                         WndSpellList.this.hide();
                     }

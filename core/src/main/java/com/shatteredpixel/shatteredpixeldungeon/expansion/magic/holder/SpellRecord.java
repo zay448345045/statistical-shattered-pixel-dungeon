@@ -54,6 +54,7 @@ public class SpellRecord {
     }
 
     public static void load(Bundle bundle){
+        spells.clear();
         Collection<Bundlable> loaded = bundle.getCollection("all_spells");
         for(Bundlable b: loaded){
             spells.add((SpellBase) b);

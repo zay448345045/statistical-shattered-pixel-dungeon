@@ -41,6 +41,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DemonSpawner;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Snake;
+import com.shatteredpixel.shatteredpixeldungeon.custom.utils.cell.CellSelectorPro;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BannerSprites;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.EmoIcon;
@@ -124,7 +125,6 @@ import com.watabou.noosa.NoosaScript;
 import com.watabou.noosa.NoosaScriptNoLighting;
 import com.watabou.noosa.SkinnedBlock;
 import com.watabou.noosa.Visual;
-import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.DeviceCompat;
@@ -190,6 +190,8 @@ public class GameScene extends PixelScene {
 	private LootIndicator loot;
 	private ActionIndicator action;
 	private ResumeIndicator resume;
+
+	private static CellSelectorPro cellSelectorPro;
 
 	{
 		inGameScene = true;
@@ -595,6 +597,8 @@ public class GameScene extends PixelScene {
 				gameOver();
 			}
 		}
+
+		add(cellSelectorPro = new CellSelectorPro(tiles));
 
 	}
 	
@@ -1284,6 +1288,19 @@ public class GameScene extends PixelScene {
 		} else {
 			return false;
 		}
+	}
+
+	public static void proCellSelectOn(CellSelectorPro.ListenerPro proSelector){
+		cellSelectorPro.pro = proSelector;
+		cellSelectorPro.active = Dungeon.hero.ready;
+	}
+
+	public static boolean proCellSelectOff(){
+		if(cellSelectorPro.pro != null){
+			cellSelectorPro.cancel();
+			return true;
+		}
+		return false;
 	}
 	
 	public static WndBag selectItem( WndBag.ItemSelector listener ) {
