@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -99,10 +99,9 @@ public class Cursor {
 		} else {
 			if (ControllerHandler.controllerPointerActive()) {
 				ControllerHandler.setControllerPointer(true);
-				ControllerHandler.updateControllerPointer(new PointF(Game.width/2, Game.height/2), false);
+				ControllerHandler.updateControllerPointer(new PointF(Game.width/2f, Game.height/2f), false);
 			} else {
 				Gdx.input.setCursorCatched(false);
-				Gdx.input.setCursorPosition(Game.width/2, Game.height/2);
 			}
 		}
 	}

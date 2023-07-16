@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,16 +59,6 @@ public abstract class ChampionEnemy extends Buff {
 	public void fx(boolean on) {
 		if (on) target.sprite.aura( color );
 		else target.sprite.clearAura();
-	}
-
-	@Override
-	public String toString() {
-		return Messages.get(this, "name");
-	}
-
-	@Override
-	public String desc() {
-		return Messages.get(this, "desc");
 	}
 
 	public void onAttackProc(Char enemy ){
@@ -205,7 +195,8 @@ public abstract class ChampionEnemy extends Buff {
 			} else {
 				boolean[] passable = BArray.not(Dungeon.level.solid, null);
 				for (Char ch : Actor.chars()) {
-					if (ch != target) passable[ch.pos] = false;
+					//our own tile is always passable
+					passable[ch.pos] = ch == target;
 				}
 
 				PathFinder.buildDistanceMap(enemy.pos, passable, 2);

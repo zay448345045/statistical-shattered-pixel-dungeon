@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,10 +29,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
-import com.shatteredpixel.shatteredpixeldungeon.windows.WndUseItem;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.noosa.ColorBlock;
-import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Sample;
 
 public class InventorySlot extends ItemSlot {
@@ -65,6 +63,12 @@ public class InventorySlot extends ItemSlot {
 	}
 
 	@Override
+	public void alpha(float value) {
+		super.alpha(value);
+		bg.alpha(value);
+	}
+
+	@Override
 	public void item( Item item ) {
 
 		super.item( item );
@@ -78,7 +82,8 @@ public class InventorySlot extends ItemSlot {
 					item == Dungeon.hero.belongings.armor ||
 					item == Dungeon.hero.belongings.artifact ||
 					item == Dungeon.hero.belongings.misc ||
-					item == Dungeon.hero.belongings.ring;
+					item == Dungeon.hero.belongings.ring ||
+					item == Dungeon.hero.belongings.secondWep;
 
 			bg.texture( TextureCache.createSolid( equipped ? EQUIPPED : NORMAL ) );
 			bg.resetColor();

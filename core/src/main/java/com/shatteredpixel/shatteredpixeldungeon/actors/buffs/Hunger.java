@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,12 +23,12 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
-import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HornOfPlenty;
 import com.shatteredpixel.shatteredpixeldungeon.items.journal.Guidebook;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
+import com.shatteredpixel.shatteredpixeldungeon.levels.MiningLevel;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
@@ -67,7 +67,10 @@ public class Hunger extends Buff implements Hero.Doom {
 
 		if (Dungeon.level.locked
 				|| target.buff(WellFed.class) != null
-				|| target.buff(ScrollOfChallenge.ChallengeArena.class) != null){
+				|| SPDSettings.intro()
+				|| target.buff(ScrollOfChallenge.ChallengeArena.class) != null
+				//this is mainly for the current test sub-level
+				|| Dungeon.level instanceof MiningLevel){
 			spend(STEP);
 			return true;
 		}
@@ -102,7 +105,7 @@ public class Hunger extends Buff implements Hero.Doom {
 
 					if (!Document.ADVENTURERS_GUIDE.isPageRead(Document.GUIDE_FOOD)){
 						GLog.p(Messages.get(Guidebook.class, "hint"));
-						GameScene.flashForDocument(Document.GUIDE_FOOD);
+						GameScene.flashForDocument(Document.ADVENTURERS_GUIDE, Document.GUIDE_FOOD);
 					}
 
 				}
@@ -122,13 +125,6 @@ public class Hunger extends Buff implements Hero.Doom {
 	}
 
 	public void satisfy( float energy ) {
-
-		Artifact.ArtifactBuff buff = target.buff( HornOfPlenty.hornRecharge.class );
-		if (buff != null && buff.isCursed()){
-			energy *= 0.67f;
-			GLog.n( Messages.get(this, "cursedhorn") );
-		}
-
 		affectHunger( energy, false );
 	}
 
@@ -176,7 +172,7 @@ public class Hunger extends Buff implements Hero.Doom {
 	}
 
 	@Override
-	public String toString() {
+	public String name() {
 		if (level < STARVING) {
 			return Messages.get(this, "hungry");
 		} else {
@@ -203,7 +199,7 @@ public class Hunger extends Buff implements Hero.Doom {
 
 		Badges.validateDeathFromHunger();
 
-		Dungeon.fail( getClass() );
+		Dungeon.fail( this );
 		GLog.n( Messages.get(this, "ondeath") );
 	}
 }

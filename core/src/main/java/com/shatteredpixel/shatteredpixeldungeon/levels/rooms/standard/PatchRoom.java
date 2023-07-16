@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ public abstract class PatchRoom extends StandardRoom {
 			boolean valid;
 			do {
 				patch = Patch.generate(width()-2, height()-2, fill, clustering, true);
-				int startPoint = 0;
+				int startPoint = level.pointToCell(center());
 				for (Door door : connected.values()) {
 					if (door.x == left) {
 						startPoint = xyToPatchCoords(door.x + 1, door.y);

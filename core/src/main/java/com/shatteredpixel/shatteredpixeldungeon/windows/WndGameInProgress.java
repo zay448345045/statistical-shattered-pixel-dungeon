@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,11 +38,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.DungeonSeed;
 import com.watabou.noosa.Game;
-import com.shatteredpixel.shatteredpixeldungeon.ui.Button;
-import com.watabou.utils.Bundle;
-import com.watabou.utils.FileUtils;
 
-import java.io.IOException;
 import java.util.Locale;
 
 public class WndGameInProgress extends Window {
@@ -104,7 +100,11 @@ public class WndGameInProgress extends Window {
 		statSlot( Messages.get(this, "gold"), info.goldCollected );
 		statSlot( Messages.get(this, "depth"), info.maxDepth );
 		if (info.daily) {
-			statSlot( Messages.get(this, "daily_for"), "_" + info.customSeed + "_" );
+			if (info.dailyReplay) {
+				statSlot(Messages.get(this, "replay_for"), "_" + info.customSeed + "_");
+			} else {
+				statSlot(Messages.get(this, "daily_for"), "_" + info.customSeed + "_");
+			}
 		} else if (!info.customSeed.isEmpty()){
 			statSlot( Messages.get(this, "custom_seed"), "_" + info.customSeed + "_" );
 		} else {
@@ -121,8 +121,8 @@ public class WndGameInProgress extends Window {
 				GamesInProgress.curSlot = slot;
 				
 				Dungeon.hero = null;
-				Dungeon.daily = false;
-				ActionIndicator.action = null;
+				Dungeon.daily = Dungeon.dailyReplay = false;
+				ActionIndicator.clearAction();
 				InterlevelScene.mode = InterlevelScene.Mode.CONTINUE;
 				ShatteredPixelDungeon.switchScene(InterlevelScene.class);
 			}

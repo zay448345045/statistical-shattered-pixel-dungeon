@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,6 +46,7 @@ import com.watabou.noosa.Group;
 import com.watabou.noosa.audio.Music;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
+import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
@@ -153,14 +154,22 @@ public class SewerBossLevel extends SewerLevel {
 
 	@Override
 	public int randomRespawnCell( Char ch ) {
-		int pos;
-		do {
-			pos = pointToCell(roomEntrance.random());
-		} while (pos == entrance()
-				|| !passable[pos]
-				|| (Char.hasProp(ch, Char.Property.LARGE) && !openSpace[pos])
-				|| Actor.findChar(pos) != null);
-		return pos;
+		ArrayList<Integer> candidates = new ArrayList<>();
+		for (Point p : roomEntrance.getPoints()){
+			int cell = pointToCell(p);
+			if (passable[cell]
+					&& roomEntrance.inside(p)
+					&& Actor.findChar(cell) == null
+					&& (!Char.hasProp(ch, Char.Property.LARGE) || openSpace[cell])){
+				candidates.add(cell);
+			}
+		}
+
+		if (candidates.isEmpty()){
+			return -1;
+		} else {
+			return Random.element(candidates);
+		}
 	}
 
 	

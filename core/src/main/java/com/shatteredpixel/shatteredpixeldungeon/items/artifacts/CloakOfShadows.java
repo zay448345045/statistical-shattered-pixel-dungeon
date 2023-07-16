@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,10 +25,10 @@ package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Preparation;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -70,7 +70,9 @@ public class CloakOfShadows extends Artifact {
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
 		if ((isEquipped( hero ) || hero.hasTalent(Talent.LIGHT_CLOAK))
-				&& !cursed && (charge > 0 || activeBuff != null)) {
+				&& !cursed
+				&& hero.buff(MagicImmune.class) == null
+				&& (charge > 0 || activeBuff != null)) {
 			actions.add(AC_STEALTH);
 		}
 		return actions;
@@ -80,6 +82,8 @@ public class CloakOfShadows extends Artifact {
 	public void execute( Hero hero, String action ) {
 
 		super.execute(hero, action);
+
+		if (hero.buff(MagicImmune.class) != null) return;
 
 		if (action.equals( AC_STEALTH )) {
 
@@ -171,6 +175,8 @@ public class CloakOfShadows extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
+		if (cursed || target.buff(MagicImmune.class) != null) return;
+
 		if (charge < chargeCap) {
 			if (!isEquipped(target)) amount *= 0.75f*target.pointsInTalent(Talent.LIGHT_CLOAK)/3f;
 			partialCharge += 0.25f*amount;
@@ -219,9 +225,8 @@ public class CloakOfShadows extends Artifact {
 	public class cloakRecharge extends ArtifactBuff{
 		@Override
 		public boolean act() {
-			if (charge < chargeCap) {
-				LockedFloor lock = target.buff(LockedFloor.class);
-				if (activeBuff == null && (lock == null || lock.regenOn())) {
+			if (charge < chargeCap && !cursed && target.buff(MagicImmune.class) == null) {
+				if (activeBuff == null && Regeneration.regenOn()) {
 					float missing = (chargeCap - charge);
 					if (level() > 7) missing += 5*(level() - 7)/3f;
 					float turnsToCharge = (45 - missing);
@@ -241,8 +246,9 @@ public class CloakOfShadows extends Artifact {
 					}
 
 				}
-			} else
+			} else {
 				partialCharge = 0;
+			}
 
 			if (cooldown > 0)
 				cooldown --;
@@ -282,6 +288,11 @@ public class CloakOfShadows extends Artifact {
 		@Override
 		public String iconTextDisplay() {
 			return Integer.toString(turnsToCost);
+		}
+
+		@Override
+		public String desc() {
+			return Messages.get(this, "desc", turnsToCost);
 		}
 
 		@Override
@@ -349,16 +360,6 @@ public class CloakOfShadows extends Artifact {
 		public void fx(boolean on) {
 			if (on) target.sprite.add( CharSprite.State.INVISIBLE );
 			else if (target.invisible == 0) target.sprite.remove( CharSprite.State.INVISIBLE );
-		}
-
-		@Override
-		public String toString() {
-			return Messages.get(this, "name");
-		}
-
-		@Override
-		public String desc() {
-			return Messages.get(this, "desc");
 		}
 
 		@Override

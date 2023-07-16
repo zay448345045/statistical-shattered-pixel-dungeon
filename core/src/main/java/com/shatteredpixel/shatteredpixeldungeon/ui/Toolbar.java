@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,8 +26,11 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.QuickSlot;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.HoldFast;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -145,7 +148,7 @@ public class Toolbar extends Component {
 						info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.BACK, false)) + ": " + Messages.get(Toolbar.class, "quickslot_cancel");
 					}
 
-					GameScene.show(new RadialMenu(Messages.get(Toolbar.class, "quickslot_prompt"), info, slotNames, slotIcons) {
+					Game.scene().addToFront(new RadialMenu(Messages.get(Toolbar.class, "quickslot_prompt"), info, slotNames, slotIcons) {
 						@Override
 						public void onSelect(int idx, boolean alt) {
 							Item item = Dungeon.quickslot.getItem(idx);
@@ -163,14 +166,13 @@ public class Toolbar extends Component {
 
 									@Override
 									public boolean itemSelectable(Item item) {
-										return item.defaultAction != null;
+										return item.defaultAction() != null;
 									}
 
 									@Override
 									public void onSelect(Item item) {
 										if (item != null) {
-											Dungeon.quickslot.setSlot( idx , item );
-											QuickSlotButton.refresh();
+											QuickSlotButton.set(idx, item);
 										}
 									}
 								});
@@ -226,6 +228,7 @@ public class Toolbar extends Component {
 				return true;
 			}
 		});
+		btnWait.icon( 176, 0, 16, 16 );
 
 		//hidden button for rest keybind
 		add(new Button(){
@@ -249,8 +252,16 @@ public class Toolbar extends Component {
 			@Override
 			protected void onClick() {
 				if (Dungeon.hero.ready && !GameScene.cancel()) {
-					if (Dungeon.level.heaps.get(Dungeon.hero.pos) != null
+					Dungeon.hero.waitOrPickup = true;
+					if ((Dungeon.level.heaps.get(Dungeon.hero.pos) != null || Dungeon.hero.canSelfTrample())
 						&& Dungeon.hero.handle(Dungeon.hero.pos)){
+						//trigger hold fast and patient strike here, even if the hero didn't specifically wait
+						if (Dungeon.hero.hasTalent(Talent.HOLD_FAST)){
+							Buff.affect(Dungeon.hero, HoldFast.class).pos = Dungeon.hero.pos;
+						}
+						if (Dungeon.hero.hasTalent(Talent.PATIENT_STRIKE)){
+							Buff.affect(Dungeon.hero, Talent.PatientStrikeTracker.class).pos = Dungeon.hero.pos;
+						}
 						Dungeon.hero.next();
 					} else {
 						examining = false;
@@ -304,6 +315,7 @@ public class Toolbar extends Component {
 				return true;
 			}
 		});
+		btnSearch.icon( 192, 0, 16, 16 );
 		
 		add(btnInventory = new Tool(0, 0, 24, 26) {
 			private CurrencyIndicator ind;
@@ -361,12 +373,22 @@ public class Toolbar extends Component {
 			protected void layout() {
 				super.layout();
 				ind.fill(this);
+				bringToFront(ind);
 
 				arrow.x = left() + (width - arrow.width())/2;
 				arrow.y = bottom()-arrow.height-1;
 				arrow.angle = bottom() == camera().height ? 0 : 180;
 			}
+
+			@Override
+			public void enable(boolean value) {
+				if (value != active){
+					arrow.alpha( value ? 1f : 0.4f );
+				}
+				super.enable(value);
+			}
 		});
+		btnInventory.icon( 160, 0, 16, 16 );
 
 		//hidden button for inventory selector keybind
 		add(new Button(){
@@ -389,7 +411,7 @@ public class Toolbar extends Component {
 						info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.BACK, false)) + ": " + Messages.get(Toolbar.class, "container_cancel");
 					}
 
-					GameScene.show(new RadialMenu(Messages.get(Toolbar.class, "container_prompt"), info, names, images){
+					Game.scene().addToFront(new RadialMenu(Messages.get(Toolbar.class, "container_prompt"), info, names, images){
 						@Override
 						public void onSelect(int idx, boolean alt) {
 							super.onSelect(idx, alt);
@@ -426,24 +448,22 @@ public class Toolbar extends Component {
 							if (ControllerHandler.controllerActive){
 								info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.LEFT_CLICK, true)) + ": " + Messages.get(Toolbar.class, "item_select") + "\n";
 								info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.RIGHT_CLICK, true)) + ": " + Messages.get(Toolbar.class, "item_use") + "\n";
-								info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.BACK, false)) + ": " + Messages.get(Toolbar.class, "item_cancel");
+								info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.BACK, true)) + ": " + Messages.get(Toolbar.class, "item_cancel");
 							} else {
 								info += Messages.get(WndKeyBindings.class, SPDAction.LEFT_CLICK.name()) + ": " + Messages.get(Toolbar.class, "item_select") + "\n";
 								info += Messages.get(WndKeyBindings.class, SPDAction.RIGHT_CLICK.name()) + ": " + Messages.get(Toolbar.class, "item_use") + "\n";
 								info += KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(GameAction.BACK, false)) + ": " + Messages.get(Toolbar.class, "item_cancel");
 							}
 
-							GameScene.show(new RadialMenu(Messages.get(Toolbar.class, "item_prompt"), info, itemNames, itemIcons){
+							Game.scene().addToFront(new RadialMenu(Messages.get(Toolbar.class, "item_prompt"), info, itemNames, itemIcons){
 								@Override
 								public void onSelect(int idx, boolean alt) {
 									super.onSelect(idx, alt);
 									Item item = items.get(idx);
-									if (alt && item.defaultAction != null) {
+									if (alt && item.defaultAction() != null) {
 										item.execute(Dungeon.hero);
-										if (item.usesTargeting) {
-											QuickSlotButton.useTargeting(idx);
-										}
 									} else {
+										InventoryPane.clearTargetingSlot();
 										Game.scene().addToFront(new WndUseItem(null, item));
 									}
 								}
@@ -637,7 +657,17 @@ public class Toolbar extends Component {
 			btnInventory.enable(true);
 		}
 	}
-	
+
+	public void alpha( float value ){
+		btnWait.alpha( value );
+		btnSearch.alpha( value );
+		btnInventory.alpha( value );
+		for (QuickslotTool tool : btnQuick){
+			tool.alpha(value);
+		}
+		btnSwap.alpha( value );
+	}
+
 	public void pickup( Item item, int cell ) {
 		pickedUp.reset( item,
 			cell,
@@ -664,6 +694,7 @@ public class Toolbar extends Component {
 		private static final int BGCOLOR = 0x7B8073;
 		
 		private Image base;
+		private Image icon;
 		
 		public Tool( int x, int y, int width, int height ) {
 			super();
@@ -677,6 +708,13 @@ public class Toolbar extends Component {
 
 			this.width = width;
 			this.height = height;
+		}
+
+		public void icon( int x, int y, int width, int height){
+			if (icon == null) icon = new Image( Assets.Interfaces.TOOLBAR );
+			add(icon);
+
+			icon.frame( x, y, width, height);
 		}
 		
 		@Override
@@ -693,8 +731,18 @@ public class Toolbar extends Component {
 			
 			base.x = x;
 			base.y = y;
+
+			if (icon != null){
+				icon.x = x + (width()- icon.width())/2f;
+				icon.y = y + (height()- icon.height())/2f;
+			}
 		}
-		
+
+		public void alpha( float value ){
+			base.alpha(value);
+			if (icon != null) icon.alpha(value);
+		}
+
 		@Override
 		protected void onPointerDown() {
 			base.brightness( 1.4f );
@@ -711,11 +759,7 @@ public class Toolbar extends Component {
 		
 		public void enable( boolean value ) {
 			if (value != active) {
-				if (value) {
-					base.resetColor();
-				} else {
-					base.tint( BGCOLOR, 0.7f );
-				}
+				if (icon != null) icon.alpha( value ? 1f : 0.4f);
 				active = value;
 			}
 		}
@@ -746,7 +790,13 @@ public class Toolbar extends Component {
 			slot.setRect( x, y, width, height );
 			slot.slotMargins(borderLeft, 2, borderRight, 2);
 		}
-		
+
+		@Override
+		public void alpha(float value) {
+			super.alpha(value);
+			slot.alpha(value);
+		}
+
 		@Override
 		public void enable( boolean value ) {
 			super.enable( value && visible );
@@ -846,6 +896,14 @@ public class Toolbar extends Component {
 		protected void layout() {
 			super.layout();
 			updateVisuals();
+		}
+
+		@Override
+		public void alpha(float value) {
+			super.alpha(value);
+			for (Image im : icons){
+				if (im != null) im.alpha(value);
+			}
 		}
 
 		@Override

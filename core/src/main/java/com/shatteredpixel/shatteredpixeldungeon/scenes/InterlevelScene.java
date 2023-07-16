@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,7 +46,6 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.StyledButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndError;
-import com.shatteredpixel.shatteredpixeldungeon.windows.WndStory;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.glwrap.Blending;
 import com.watabou.noosa.Camera;
@@ -81,8 +80,6 @@ public class InterlevelScene extends PixelScene {
 	public static int returnDepth;
 	public static int returnBranch;
 	public static int returnPos;
-	
-	public static boolean noStory = false;
 
 	public static boolean fallIntoPit;
 	
@@ -258,9 +255,6 @@ public class InterlevelScene extends PixelScene {
 					
 					try {
 
-						if (Dungeon.hero != null){
-							Dungeon.hero.spendToWhole();
-						}
 						Actor.fixTime();
 
 						switch (mode) {
@@ -292,10 +286,12 @@ public class InterlevelScene extends PixelScene {
 						error = e;
 						
 					}
-					
-					if (phase == Phase.STATIC && error == null) {
-						phase = Phase.FADE_OUT;
-						timeLeft = fadeTime;
+
+					synchronized (thread) {
+						if (phase == Phase.STATIC && error == null) {
+							phase = Phase.FADE_OUT;
+							timeLeft = fadeTime;
+						}
 					}
 				}
 			};
@@ -317,11 +313,13 @@ public class InterlevelScene extends PixelScene {
 		case FADE_IN:
 			message.alpha( 1 - p );
 			if ((timeLeft -= Game.elapsed) <= 0) {
-				if (!thread.isAlive() && error == null) {
-					phase = Phase.FADE_OUT;
-					timeLeft = fadeTime;
-				} else {
-					phase = Phase.STATIC;
+				synchronized (thread) {
+					if (!thread.isAlive() && error == null) {
+						phase = Phase.FADE_OUT;
+						timeLeft = fadeTime;
+					} else {
+						phase = Phase.STATIC;
+					}
 				}
 			}
 			break;
@@ -377,10 +375,6 @@ public class InterlevelScene extends PixelScene {
 		if (Dungeon.hero == null) {
 			Mob.clearHeldAllies();
 			Dungeon.init();
-			if (noStory) {
-				Dungeon.chapters.add( WndStory.ID_SEWERS );
-				noStory = false;
-			}
 			GameLog.wipe();
 
 			Level level = Dungeon.newLevel();
@@ -392,11 +386,11 @@ public class InterlevelScene extends PixelScene {
 			Level level;
 			Dungeon.depth = curTransition.destDepth;
 			Dungeon.branch = curTransition.destBranch;
-			//TODO this is brittle atm, assumes we're always going down in depth 1 at a time
-			if (curTransition.destDepth > Statistics.deepestFloor) {
-				level = Dungeon.newLevel();
-			} else {
+
+			if (Dungeon.levelHasBeenGenerated(Dungeon.depth, Dungeon.branch)) {
 				level = Dungeon.loadLevel( GamesInProgress.curSlot );
+			} else {
+				level = Dungeon.newLevel();
 			}
 
 			LevelTransition destTransition = level.getTransition(curTransition.destType);
@@ -416,22 +410,27 @@ public class InterlevelScene extends PixelScene {
 
 		Level level;
 		Dungeon.depth++;
-		if (Dungeon.depth > Statistics.deepestFloor) {
-			level = Dungeon.newLevel();
-		} else {
+		if (Dungeon.levelHasBeenGenerated(Dungeon.depth, Dungeon.branch)) {
 			level = Dungeon.loadLevel( GamesInProgress.curSlot );
+		} else {
+			level = Dungeon.newLevel();
 		}
 		Dungeon.switchLevel( level, level.fallCell( fallIntoPit ));
 	}
-	
-	private void ascend() throws IOException {
-		
-		Mob.holdAllies( Dungeon.level );
 
+	private void ascend() throws IOException {
+		Mob.holdAllies( Dungeon.level );
 		Dungeon.saveAll();
+
+		Level level;
 		Dungeon.depth = curTransition.destDepth;
 		Dungeon.branch = curTransition.destBranch;
-		Level level = Dungeon.loadLevel( GamesInProgress.curSlot );
+
+		if (Dungeon.levelHasBeenGenerated(Dungeon.depth, Dungeon.branch)) {
+			level = Dungeon.loadLevel( GamesInProgress.curSlot );
+		} else {
+			level = Dungeon.newLevel();
+		}
 
 		LevelTransition destTransition = level.getTransition(curTransition.destType);
 		curTransition = null;
@@ -439,13 +438,18 @@ public class InterlevelScene extends PixelScene {
 	}
 	
 	private void returnTo() throws IOException {
-		
 		Mob.holdAllies( Dungeon.level );
-
 		Dungeon.saveAll();
+
+		Level level;
 		Dungeon.depth = returnDepth;
 		Dungeon.branch = returnBranch;
-		Level level = Dungeon.loadLevel( GamesInProgress.curSlot );
+		if (Dungeon.levelHasBeenGenerated(Dungeon.depth, Dungeon.branch)) {
+			level = Dungeon.loadLevel( GamesInProgress.curSlot );
+		} else {
+			level = Dungeon.newLevel();
+		}
+
 		Dungeon.switchLevel( level, returnPos );
 	}
 	
@@ -476,11 +480,16 @@ public class InterlevelScene extends PixelScene {
 			Dungeon.hero.resurrect();
 			level = Dungeon.newLevel();
 			Dungeon.hero.pos = level.randomRespawnCell(Dungeon.hero);
+			if (Dungeon.hero.pos == -1) Dungeon.hero.pos = level.entrance();
 
 			for (Item i : preservedItems){
-				level.drop(i, level.randomRespawnCell(null));
+				int pos = level.randomRespawnCell(null);
+				if (pos == -1) pos = level.entrance();
+				level.drop(i, pos);
 			}
-			level.drop(new LostBackpack(), level.randomRespawnCell(null));
+			int pos = level.randomRespawnCell(null);
+			if (pos == -1) pos = level.entrance();
+			level.drop(new LostBackpack(), pos);
 
 		} else {
 			level = Dungeon.level;

@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,10 +42,11 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.Dart;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.TippedDart;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
@@ -81,7 +82,7 @@ public class Heap implements Bundlable {
 	public void open( Hero hero ) {
 		switch (type) {
 		case TOMB:
-			Wraith.spawnAround( hero.pos );
+			Wraith.spawnAround( hero.pos, true );
 			break;
 		case REMAINS:
 		case SKELETON:
@@ -91,7 +92,7 @@ public class Heap implements Bundlable {
 		}
 		
 		if (haunted){
-			if (Wraith.spawnAt( pos ) == null) {
+			if (Wraith.spawnAt( pos, true ) == null) {
 				hero.sprite.emitter().burst( ShadowParticle.CURSE, 6 );
 				hero.damage( hero.HP / 2, this );
 			}
@@ -166,6 +167,13 @@ public class Heap implements Bundlable {
 		
 		if (sprite != null) {
 			sprite.view(this).place( pos );
+		}
+
+		if (TippedDart.lostDarts > 0){
+			Dart d = new Dart();
+			d.quantity(TippedDart.lostDarts);
+			TippedDart.lostDarts = 0;
+			drop(d);
 		}
 	}
 	
@@ -348,15 +356,14 @@ public class Heap implements Bundlable {
 		items.clear();
 	}
 
-	@Override
-	public String toString(){
+	public String title(){
 		switch(type){
 			case FOR_SALE:
 				Item i = peek();
 				if (size() == 1) {
-					return Messages.get(this, "for_sale", Shopkeeper.sellPrice(i), i.toString());
+					return Messages.get(this, "for_sale", Shopkeeper.sellPrice(i), i.title());
 				} else {
-					return i.toString();
+					return i.title();
 				}
 			case CHEST:
 				return Messages.get(this, "chest");
@@ -371,7 +378,7 @@ public class Heap implements Bundlable {
 			case REMAINS:
 				return Messages.get(this, "remains");
 			default:
-				return peek().toString();
+				return peek().title();
 		}
 	}
 
@@ -436,7 +443,7 @@ public class Heap implements Bundlable {
 	public void storeInBundle( Bundle bundle ) {
 		bundle.put( POS, pos );
 		bundle.put( SEEN, seen );
-		bundle.put( TYPE, type.toString() );
+		bundle.put( TYPE, type );
 		bundle.put( ITEMS, items );
 		bundle.put( HAUNTED, haunted );
 		bundle.put( AUTO_EXPLORED, autoExplored );

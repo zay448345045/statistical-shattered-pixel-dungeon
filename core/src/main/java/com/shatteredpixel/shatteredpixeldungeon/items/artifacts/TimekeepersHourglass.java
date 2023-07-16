@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
@@ -35,6 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEnergy;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -72,7 +74,10 @@ public class TimekeepersHourglass extends Artifact {
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		if (isEquipped( hero ) && !cursed && (charge > 0 || activeBuff != null)) {
+		if (isEquipped( hero )
+				&& !cursed
+				&& hero.buff(MagicImmune.class) == null
+				&& (charge > 0 || activeBuff != null)) {
 			actions.add(AC_ACTIVATE);
 		}
 		return actions;
@@ -82,6 +87,8 @@ public class TimekeepersHourglass extends Artifact {
 	public void execute( Hero hero, String action ) {
 
 		super.execute(hero, action);
+
+		if (hero.buff(MagicImmune.class) != null) return;
 
 		if (action.equals(AC_ACTIVATE)){
 
@@ -115,9 +122,11 @@ public class TimekeepersHourglass extends Artifact {
 									GameScene.flash(0x80FFFFFF);
 									Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 
+									Invisibility.dispel(Dungeon.hero);
 									activeBuff = new timeFreeze();
 									Talent.onArtifactUsed(Dungeon.hero);
 									activeBuff.attachTo(Dungeon.hero);
+									charge--;
 									((timeFreeze)activeBuff).processTime(0f);
 								}
 							}
@@ -152,7 +161,7 @@ public class TimekeepersHourglass extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (charge < chargeCap){
+		if (charge < chargeCap && !cursed && target.buff(MagicImmune.class) == null){
 			partialCharge += 0.25f*amount;
 			if (partialCharge >= 1){
 				partialCharge--;
@@ -223,8 +232,10 @@ public class TimekeepersHourglass extends Artifact {
 		@Override
 		public boolean act() {
 
-			LockedFloor lock = target.buff(LockedFloor.class);
-			if (charge < chargeCap && !cursed && (lock == null || lock.regenOn())) {
+			if (charge < chargeCap
+					&& !cursed
+					&& target.buff(MagicImmune.class) == null
+					&& Regeneration.regenOn()) {
 				//90 turns to charge at full, 60 turns to charge at 0/10
 				float chargeGain = 1 / (90f - (chargeCap - charge)*3f);
 				chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
@@ -319,7 +330,7 @@ public class TimekeepersHourglass extends Artifact {
 			type = buffType.POSITIVE;
 		}
 
-		float turnsToCost = 0f;
+		float turnsToCost = 2f;
 
 		ArrayList<Integer> presses = new ArrayList<>();
 
@@ -334,7 +345,7 @@ public class TimekeepersHourglass extends Artifact {
 
 			updateQuickslot();
 
-			if (charge < 0){
+			if (charge < 0 || charge == 0 && turnsToCost <= 0){
 				charge = 0;
 				detach();
 			}
@@ -347,16 +358,28 @@ public class TimekeepersHourglass extends Artifact {
 		}
 
 		public void triggerPresses(){
-			for (int cell : presses)
-				Dungeon.level.pressCell(cell);
+			for (int cell : presses){
+				Trap t = Dungeon.level.traps.get(cell);
+				if (t != null){
+					t.trigger();
+				}
+				Plant p = Dungeon.level.plants.get(cell);
+				if (p != null){
+					p.trigger();
+				}
+			}
 
 			presses = new ArrayList<>();
 		}
 
-		public void disarmPressedTraps(){
+		public void disarmPresses(){
 			for (int cell : presses){
 				Trap t = Dungeon.level.traps.get(cell);
-				if (t != null && t.disarmedByActivation) t.disarm();
+				if (t != null && t.disarmedByActivation) {
+					t.disarm();
+				}
+
+				Dungeon.level.uproot(cell);
 			}
 
 			presses = new ArrayList<>();
@@ -373,6 +396,7 @@ public class TimekeepersHourglass extends Artifact {
 
 		@Override
 		public void fx(boolean on) {
+			if (!(target instanceof Hero)) return;
 			Emitter.freezeEmitters = on;
 			if (on){
 				for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])) {
@@ -397,22 +421,17 @@ public class TimekeepersHourglass extends Artifact {
 
 		@Override
 		public float iconFadePercent() {
-			return Math.max(0, (2f - (turnsToCost+1)) / 2f);
+			return Math.max(0, (2f - turnsToCost) / 2f);
 		}
 
 		@Override
 		public String iconTextDisplay() {
-			return Integer.toString((int)turnsToCost+1);
-		}
-
-		@Override
-		public String toString() {
-			return Messages.get(this, "name");
+			return Integer.toString((int)turnsToCost);
 		}
 
 		@Override
 		public String desc() {
-			return Messages.get(this, "desc");
+			return Messages.get(this, "desc", Messages.decimalFormat("#.##", turnsToCost));
 		}
 
 		private static final String PRESSES = "presses";
@@ -469,7 +488,7 @@ public class TimekeepersHourglass extends Artifact {
 
 		@Override
 		public int value() {
-			return 20;
+			return 30;
 		}
 
 		@Override

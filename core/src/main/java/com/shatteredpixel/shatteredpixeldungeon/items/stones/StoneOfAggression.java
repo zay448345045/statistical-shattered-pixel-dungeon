@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,11 +31,9 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
-import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.Bundle;
 
 public class StoneOfAggression extends Runestone {
 	
@@ -98,23 +96,16 @@ public class StoneOfAggression extends Runestone {
 						if (m.alignment == Char.Alignment.ENEMY && m.isTargeting(target)) {
 							m.aggro(null);
 						}
+						if (target instanceof Mob && ((Mob) target).isTargeting(m)){
+							((Mob) target).aggro(null);
+						}
 					}
 				}
 			}
 			super.detach();
 			
 		}
-		
-		@Override
-		public String toString() {
-			return Messages.get(this, "name");
-		}
 
-		@Override
-		public String desc() {
-			return Messages.get(this, "desc", dispTurns());
-		}
-		
 	}
 	
 }

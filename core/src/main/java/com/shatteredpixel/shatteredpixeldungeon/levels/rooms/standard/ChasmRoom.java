@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2020 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,12 +25,24 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room;
+import com.watabou.utils.Rect;
 
 public class ChasmRoom extends PatchRoom {
 
 	@Override
 	public float[] sizeCatProbs() {
 		return new float[]{4, 2, 1};
+	}
+
+	@Override
+	public void merge(Level l, Room other, Rect merge, int mergeTerrain) {
+		if (mergeTerrain == Terrain.EMPTY
+				&& (other instanceof ChasmRoom || other instanceof PlatformRoom)){
+			super.merge(l, other, merge, Terrain.CHASM);
+			Painter.set(l, connected.get(other), Terrain.EMPTY);
+		} else {
+			super.merge(l, other, merge, mergeTerrain);
+		}
 	}
 
 	@Override
@@ -45,9 +57,10 @@ public class ChasmRoom extends PatchRoom {
 		// normal   ~30% to ~40%
 		// large    ~40% to ~50%
 		// giant    ~50% to ~60%
-		float fill = 0.30f + (width()*height())/1024f;
+		int scale = Math.min(width()*height(), 18*18);
+		float fill = 0.30f + scale/1024f;
 
-		setupPatch(level, fill, 1, true);
+		setupPatch(level, fill, 1, connected.size() > 0);
 		cleanDiagonalEdges();
 
 		for (int i = top + 1; i < bottom; i++) {

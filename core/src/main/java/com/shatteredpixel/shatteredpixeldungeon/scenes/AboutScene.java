@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,6 @@ import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.PointerArea;
 import com.watabou.noosa.ui.Component;
-import com.watabou.utils.DeviceCompat;
 
 public class AboutScene extends PixelScene {
 
@@ -156,8 +155,8 @@ public class AboutScene extends PixelScene {
 				"libGDX",
 				Icons.LIBGDX.get(),
 				"ShatteredPD is powered by _libGDX_!",
-				"libGDX.com",
-				"https://libGDX.com/");
+				"libgdx.com",
+				"https://libgdx.com/");
 		if (landscape()){
 			gdx.setRect(wata.left(), wata.bottom() + 8, colWidth, 0);
 		} else {
@@ -197,8 +196,8 @@ public class AboutScene extends PixelScene {
 				null,
 				null,
 				"ShatteredPD is community-translated via _Transifex_! Thank you so much to all of Shattered's volunteer translators!",
-				"www.transifex.com/shattered-pixel/",
-				"https://www.transifex.com/shattered-pixel/shattered-pixel-dungeon/");
+				"transifex.com/shattered-pixel/...",
+				"https://explore.transifex.com/shattered-pixel/shattered-pixel-dungeon/");
 		transifex.setRect((Camera.main.width - colWidth)/2f, purigro.bottom() + 12, colWidth, 0);
 		content.add(transifex);
 
@@ -357,12 +356,14 @@ public class AboutScene extends PixelScene {
 					avatar.x = x;
 					body.maxWidth((int)(width() - avatar.width - 1));
 
-					if (avatar.height() > body.height()){
-						avatar.y = topY;
-						body.setPos( avatar.x + avatar.width() + 1, topY + (avatar.height() - body.height())/2f);
-						topY += avatar.height() + 1;
+					float fullAvHeight = Math.max(avatar.height(), 16);
+					if (fullAvHeight > body.height()){
+						avatar.y = topY + (fullAvHeight - avatar.height())/2f;
+						PixelScene.align(avatar);
+						body.setPos( avatar.x + avatar.width() + 1, topY + (fullAvHeight - body.height())/2f);
+						topY += fullAvHeight + 1;
 					} else {
-						avatar.y = topY + (body.height() - avatar.height())/2f;
+						avatar.y = topY + (body.height() - fullAvHeight)/2f;
 						PixelScene.align(avatar);
 						body.setPos( avatar.x + avatar.width() + 1, topY);
 						topY += body.height() + 2;

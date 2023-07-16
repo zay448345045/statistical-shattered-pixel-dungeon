@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@ package com.shatteredpixel.shatteredpixeldungeon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
-import com.shatteredpixel.shatteredpixeldungeon.utils.DungeonSeed;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
@@ -56,6 +55,8 @@ public class SPDSettings extends GameSettings {
 	public static final String KEY_ZOOM			= "zoom";
 	public static final String KEY_BRIGHTNESS	= "brightness";
 	public static final String KEY_GRID 	    = "visual_grid";
+	public static final String KEY_CAMERA_FOLLOW= "camera_follow";
+	public static final String KEY_SCREEN_SHAKE = "screen_shake";
 	
 	public static void fullscreen( boolean value ) {
 		put( KEY_FULLSCREEN, value );
@@ -116,6 +117,22 @@ public class SPDSettings extends GameSettings {
 	public static int visualGrid() {
 		return getInt( KEY_GRID, 0, -1, 2 );
 	}
+
+	public static void cameraFollow( int value ){
+		put( KEY_CAMERA_FOLLOW, value );
+	}
+
+	public static int cameraFollow() {
+		return getInt( KEY_CAMERA_FOLLOW, 4, 1, 4 );
+	}
+
+	public static void screenShake( int value ){
+		put( KEY_SCREEN_SHAKE, value );
+	}
+
+	public static int screenShake() {
+		return getInt( KEY_SCREEN_SHAKE, 2, 0, 4 );
+	}
 	
 	//Interface
 
@@ -125,6 +142,7 @@ public class SPDSettings extends GameSettings {
 	public static final String KEY_FLIPTOOLBAR	= "flipped_ui";
 	public static final String KEY_FLIPTAGS 	= "flip_tags";
 	public static final String KEY_BARMODE		= "toolbar_mode";
+	public static final String KEY_SLOTWATERSKIN= "quickslot_waterskin";
 
 	//0 = mobile, 1 = mixed (large without inventory in main UI), 2 = large
 	public static void interfaceSize( int value ){
@@ -174,6 +192,14 @@ public class SPDSettings extends GameSettings {
 	
 	public static String toolbarMode() {
 		return getString(KEY_BARMODE, PixelScene.landscape() ? "GROUP" : "SPLIT");
+	}
+
+	public static void quickslotWaterskin( boolean value ){
+		put( KEY_SLOTWATERSKIN, value);
+	}
+
+	public static boolean quickslotWaterskin(){
+		return getBoolean( KEY_SLOTWATERSKIN, true );
 	}
 	
 	//Game State
@@ -262,6 +288,7 @@ public class SPDSettings extends GameSettings {
 	public static final String KEY_SOUND_FX		= "soundfx";
 	public static final String KEY_SFX_VOL      = "sfx_vol";
 	public static final String KEY_IGNORE_SILENT= "ignore_silent";
+	public static final String KEY_MUSIC_BG     = "music_bg";
 	
 	public static void music( boolean value ) {
 		Music.INSTANCE.enable( value );
@@ -306,6 +333,14 @@ public class SPDSettings extends GameSettings {
 
 	public static boolean ignoreSilentMode(){
 		return getBoolean( KEY_IGNORE_SILENT, false);
+	}
+
+	public static void playMusicInBackground( boolean value ){
+		put( KEY_MUSIC_BG, value);
+	}
+
+	public static boolean playMusicInBackground(){
+		return getBoolean( KEY_MUSIC_BG, true);
 	}
 	
 	//Languages and Font

@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -476,6 +476,7 @@ public class PrisonBossLevel extends Level {
 				tengu.state = tengu.HUNTING;
 				tengu.pos = (arena.left + arena.width()/2) + width()*(arena.top+2);
 				GameScene.add(tengu);
+				tengu.timeToNow();
 				tengu.notice();
 				
 				GameScene.flash(0x80FFFFFF);
@@ -546,8 +547,6 @@ public class PrisonBossLevel extends Level {
 	
 	@Override
 	public void occupyCell(Char ch) {
-		super.occupyCell(ch);
-		
 		if (ch == Dungeon.hero){
 			switch (state){
 				case START:
@@ -563,6 +562,8 @@ public class PrisonBossLevel extends Level {
 					break;
 			}
 		}
+
+		super.occupyCell(ch);
 	}
 	
 	@Override
@@ -688,14 +689,21 @@ public class PrisonBossLevel extends Level {
 	
 	@Override
 	public int randomRespawnCell( Char ch ) {
-		int pos = ENTRANCE_POS; //random cell adjacent to the entrance.
-		int cell;
-		do {
-			cell = pos + PathFinder.NEIGHBOURS8[Random.Int(8)];
-		} while (!passable[cell]
-				|| (Char.hasProp(ch, Char.Property.LARGE) && !openSpace[cell])
-				|| Actor.findChar(cell) != null);
-		return cell;
+		ArrayList<Integer> candidates = new ArrayList<>();
+		for (int i : PathFinder.NEIGHBOURS8){
+			int cell = ENTRANCE_POS + i;
+			if (passable[cell]
+					&& Actor.findChar(cell) == null
+					&& (!Char.hasProp(ch, Char.Property.LARGE) || openSpace[cell])){
+				candidates.add(cell);
+			}
+		}
+
+		if (candidates.isEmpty()){
+			return -1;
+		} else {
+			return Random.element(candidates);
+		}
 	}
 	
 	@Override

@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,9 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Adrenaline;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -35,7 +37,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Rat;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -50,6 +51,7 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Ratmogrify extends ArmorAbility {
 
@@ -66,6 +68,11 @@ public class Ratmogrify extends ArmorAbility {
 	}
 
 	@Override
+	public int targetedPos(Char user, int dst) {
+		return dst;
+	}
+
+	@Override
 	protected void activate(ClassArmor armor, Hero hero, Integer target) {
 
 		if (target == null){
@@ -74,7 +81,7 @@ public class Ratmogrify extends ArmorAbility {
 
 		Char ch = Actor.findChar(target);
 
-		if (ch == null) {
+		if (ch == null || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(this, "no_target"));
 			return;
 		} else if (ch == hero){
@@ -99,6 +106,7 @@ public class Ratmogrify extends ArmorAbility {
 					Rat rat = new Rat();
 					rat.alignment = Char.Alignment.ALLY;
 					rat.state = rat.HUNTING;
+					Buff.affect(rat, AscensionChallenge.AscensionBuffBlocker.class);
 					GameScene.add( rat );
 					ScrollOfTeleportation.appear( rat, spawnPoints.get( index ) );
 
@@ -130,9 +138,21 @@ public class Ratmogrify extends ArmorAbility {
 			rat.setup((Mob)ch);
 			rat.pos = ch.pos;
 
+			//preserve champion enemy buffs
+			HashSet<ChampionEnemy> champBuffs = ch.buffs(ChampionEnemy.class);
+			for (ChampionEnemy champ : champBuffs){
+				if (ch.remove(champ)) {
+					ch.sprite.clearAura();
+				}
+			}
+
 			Actor.remove( ch );
 			ch.sprite.killAndErase();
 			Dungeon.level.mobs.remove(ch);
+
+			for (ChampionEnemy champ : champBuffs){
+				ch.add(champ);
+			}
 
 			GameScene.add(rat);
 
@@ -164,6 +184,9 @@ public class Ratmogrify extends ArmorAbility {
 
 		{
 			spriteClass = RatSprite.class;
+
+			//always false, as we derive stats from what we are transmogging from (which was already added)
+			firstAdded = false;
 		}
 
 		private Mob original;
@@ -191,6 +214,10 @@ public class Ratmogrify extends ArmorAbility {
 		}
 
 		public Mob getOriginal(){
+			if (original != null) {
+				original.HP = HP;
+				original.pos = pos;
+			}
 			return original;
 		}
 
@@ -199,8 +226,8 @@ public class Ratmogrify extends ArmorAbility {
 		@Override
 		protected boolean act() {
 			if (timeLeft <= 0){
-				original.HP = HP;
-				original.pos = pos;
+				Mob original = getOriginal();
+				this.original = null;
 				original.clearTime();
 				GameScene.add(original);
 

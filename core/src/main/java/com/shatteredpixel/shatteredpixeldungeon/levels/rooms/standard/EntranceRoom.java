@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.items.journal.GuidePage;
 import com.shatteredpixel.shatteredpixeldungeon.items.journal.Guidebook;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
@@ -50,7 +51,16 @@ public class EntranceRoom extends StandardRoom {
 		return false;
 	}
 
-	public void paint( Level level ) {
+	@Override
+	public boolean canPlaceTrap(Point p) {
+		if (Dungeon.depth == 1) {
+			return false;
+		} else {
+			return super.canPlaceTrap(p);
+		}
+	}
+
+	public void paint(Level level ) {
 		
 		Painter.fill( level, this, Terrain.WALL );
 		Painter.fill( level, this, 1, Terrain.EMPTY );
@@ -75,7 +85,8 @@ public class EntranceRoom extends StandardRoom {
 		Random.pushGenerator();
 
 		//places the first guidebook page on floor 1
-		if (Dungeon.depth == 1 && !Document.ADVENTURERS_GUIDE.isPageRead(Document.GUIDE_INTRO)){
+		if (Dungeon.depth == 1 &&
+				(!Document.ADVENTURERS_GUIDE.isPageRead(Document.GUIDE_INTRO) || SPDSettings.intro() )){
 			int pos;
 			do {
 				//can't be on bottom row of tiles

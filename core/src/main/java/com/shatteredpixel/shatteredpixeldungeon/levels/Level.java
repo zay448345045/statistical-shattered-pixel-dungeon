@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,6 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSight;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.PinCushion;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Shadows;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -48,6 +49,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.SpiritHawk;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Piranha;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.YogFist;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Sheep;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlowParticle;
@@ -185,8 +187,9 @@ public abstract class Level implements Bundlable {
 	public void create() {
 
 		Random.pushGenerator( Dungeon.seedCurDepth() );
-		
-		if (!(Dungeon.bossLevel())) {
+
+		//TODO maybe just make this part of RegularLevel?
+		if (!Dungeon.bossLevel() && Dungeon.branch == 0) {
 
 			addItemToSpawn(Generator.random(Generator.Category.FOOD));
 
@@ -324,8 +327,8 @@ public abstract class Level implements Bundlable {
 
 		version = bundle.getInt( VERSION );
 		
-		//saves from before v0.9.3c are not supported
-		if (version < ShatteredPixelDungeon.v0_9_3c){
+		//saves from before v1.2.3 are not supported
+		if (version < ShatteredPixelDungeon.v1_2_3){
 			throw new RuntimeException("old save");
 		}
 
@@ -509,6 +512,9 @@ public abstract class Level implements Bundlable {
 	}
 
 	public LevelTransition getTransition(LevelTransition.Type type){
+		if (transitions.isEmpty()){
+			return null;
+		}
 		for (LevelTransition transition : transitions){
 			//if we don't specify a type, prefer to return any entrance
 			if (type == null &&
@@ -518,7 +524,7 @@ public abstract class Level implements Bundlable {
 				return transition;
 			}
 		}
-		return (type == null && !transitions.isEmpty() ? transitions.get(0) : null);
+		return type != null ? getTransition(null) : transitions.get(0);
 	}
 
 	public LevelTransition getTransition(int cell){
@@ -528,6 +534,29 @@ public abstract class Level implements Bundlable {
 			}
 		}
 		return null;
+	}
+
+	//some buff effects have special logic or are cancelled from the hero before transitioning levels
+	public static void beforeTransition(){
+
+		//time freeze effects need to resolve their pressed cells before transitioning
+		TimekeepersHourglass.timeFreeze timeFreeze = Dungeon.hero.buff(TimekeepersHourglass.timeFreeze.class);
+		if (timeFreeze != null) timeFreeze.disarmPresses();
+		Swiftthistle.TimeBubble timeBubble = Dungeon.hero.buff(Swiftthistle.TimeBubble.class);
+		if (timeBubble != null) timeBubble.disarmPresses();
+
+		//iron stomach does not persist through chasm falling
+		Talent.WarriorFoodImmunity foodImmune = Dungeon.hero.buff(Talent.WarriorFoodImmunity.class);
+		if (foodImmune != null) foodImmune.detach();
+
+		//spend the hero's partial turns,  so the hero cannot take partial turns between floors
+		Dungeon.hero.spendToWhole();
+		for (Char ch : Actor.chars()){
+			//also adjust any mobs that are now ahead of the hero due to this
+			if (ch.cooldown() < Dungeon.hero.cooldown()){
+				ch.spendToWhole();
+			}
+		}
 	}
 
 	public void seal(){
@@ -688,8 +717,15 @@ public abstract class Level implements Bundlable {
 	
 	public int randomRespawnCell( Char ch ) {
 		int cell;
+		int count = 0;
 		do {
+
+			if (++count > 30) {
+				return -1;
+			}
+
 			cell = Random.Int( length() );
+
 		} while ((Dungeon.level == this && heroFOV[cell])
 				|| !passable[cell]
 				|| (Char.hasProp(ch, Char.Property.LARGE) && !openSpace[cell])
@@ -1011,6 +1047,7 @@ public abstract class Level implements Bundlable {
 		int result;
 		do {
 			result = randomRespawnCell( null );
+			if (result == -1) return -1;
 		} while (traps.get(result) != null
 				|| findMob(result) != null);
 		return result;
@@ -1028,7 +1065,7 @@ public abstract class Level implements Bundlable {
 					&& ch == Dungeon.hero && Dungeon.hero.hasTalent(Talent.REJUVENATING_STEPS)
 					&& ch.buff(Talent.RejuvenatingStepsCooldown.class) == null){
 
-				if (Dungeon.hero.buff(LockedFloor.class) != null && !Dungeon.hero.buff(LockedFloor.class).regenOn()){
+				if (!Regeneration.regenOn()){
 					set(ch.pos, Terrain.FURROWED_GRASS);
 				} else if (ch.buff(Talent.RejuvenatingStepsFurrow.class) != null && ch.buff(Talent.RejuvenatingStepsFurrow.class).count() >= 200) {
 					set(ch.pos, Terrain.FURROWED_GRASS);
@@ -1055,6 +1092,10 @@ public abstract class Level implements Bundlable {
 			if (map[ch.pos] == Terrain.DOOR){
 				Door.enter( ch.pos );
 			}
+		}
+
+		if (ch.isAlive() && ch instanceof Piranha && !water[ch.pos]){
+			((Piranha) ch).dieOnLand();
 		}
 	}
 	
@@ -1096,36 +1137,27 @@ public abstract class Level implements Bundlable {
 			break;
 		}
 
+		TimekeepersHourglass.timeFreeze timeFreeze =
+				Dungeon.hero.buff(TimekeepersHourglass.timeFreeze.class);
+
+		Swiftthistle.TimeBubble bubble =
+				Dungeon.hero.buff(Swiftthistle.TimeBubble.class);
+
 		if (trap != null) {
-			
-			TimekeepersHourglass.timeFreeze timeFreeze =
-					Dungeon.hero.buff(TimekeepersHourglass.timeFreeze.class);
-			
-			Swiftthistle.TimeBubble bubble =
-					Dungeon.hero.buff(Swiftthistle.TimeBubble.class);
-			
 			if (bubble != null){
-				
 				Sample.INSTANCE.play(Assets.Sounds.TRAP);
-				
 				discover(cell);
-				
 				bubble.setDelayedPress(cell);
 				
 			} else if (timeFreeze != null){
-				
 				Sample.INSTANCE.play(Assets.Sounds.TRAP);
-				
 				discover(cell);
-				
 				timeFreeze.setDelayedPress(cell);
 				
 			} else {
-
 				if (Dungeon.hero.pos == cell) {
 					Dungeon.hero.interrupt();
 				}
-
 				trap.trigger();
 
 			}
@@ -1133,7 +1165,18 @@ public abstract class Level implements Bundlable {
 		
 		Plant plant = plants.get( cell );
 		if (plant != null) {
-			plant.trigger();
+			if (bubble != null){
+				Sample.INSTANCE.play(Assets.Sounds.TRAMPLE, 1, Random.Float( 0.96f, 1.05f ) );
+				bubble.setDelayedPress(cell);
+
+			} else if (timeFreeze != null){
+				Sample.INSTANCE.play(Assets.Sounds.TRAMPLE, 1, Random.Float( 0.96f, 1.05f ) );
+				timeFreeze.setDelayedPress(cell);
+
+			} else {
+				plant.trigger();
+
+			}
 		}
 
 		if (hard && Blob.volumeAt(cell, Web.class) > 0){
@@ -1153,7 +1196,7 @@ public abstract class Level implements Bundlable {
 		boolean sighted = c.buff( Blindness.class ) == null && c.buff( Shadows.class ) == null
 						&& c.buff( TimekeepersHourglass.timeStasis.class ) == null && c.isAlive();
 		if (sighted) {
-			boolean[] blocking;
+			boolean[] blocking = null;
 
 			if (modifiableBlocking == null || modifiableBlocking.length != Dungeon.level.losBlocking.length){
 				modifiableBlocking = new boolean[Dungeon.level.losBlocking.length];
@@ -1161,25 +1204,33 @@ public abstract class Level implements Bundlable {
 			
 			if ((c instanceof Hero && ((Hero) c).subClass == HeroSubClass.WARDEN)
 				|| c instanceof YogFist.SoiledFist) {
-				System.arraycopy(Dungeon.level.losBlocking, 0, modifiableBlocking, 0, modifiableBlocking.length);
-				blocking = modifiableBlocking;
+				if (blocking == null) {
+					System.arraycopy(Dungeon.level.losBlocking, 0, modifiableBlocking, 0, modifiableBlocking.length);
+					blocking = modifiableBlocking;
+				}
 				for (int i = 0; i < blocking.length; i++){
 					if (blocking[i] && (Dungeon.level.map[i] == Terrain.HIGH_GRASS || Dungeon.level.map[i] == Terrain.FURROWED_GRASS)){
 						blocking[i] = false;
 					}
 				}
-			} else if (c.alignment != Char.Alignment.ALLY
+			}
+
+			if (c.alignment != Char.Alignment.ALLY
 					&& Dungeon.level.blobs.containsKey(SmokeScreen.class)
 					&& Dungeon.level.blobs.get(SmokeScreen.class).volume > 0) {
-				System.arraycopy(Dungeon.level.losBlocking, 0, modifiableBlocking, 0, modifiableBlocking.length);
-				blocking = modifiableBlocking;
+				if (blocking == null) {
+					System.arraycopy(Dungeon.level.losBlocking, 0, modifiableBlocking, 0, modifiableBlocking.length);
+					blocking = modifiableBlocking;
+				}
 				Blob s = Dungeon.level.blobs.get(SmokeScreen.class);
 				for (int i = 0; i < blocking.length; i++){
 					if (!blocking[i] && s.cur[i] > 0){
 						blocking[i] = true;
 					}
 				}
-			} else {
+			}
+
+			if (blocking == null){
 				blocking = Dungeon.level.losBlocking;
 			}
 			
@@ -1286,7 +1337,7 @@ public abstract class Level implements Bundlable {
 			}
 
 			for (TalismanOfForesight.HeapAwareness h : c.buffs(TalismanOfForesight.HeapAwareness.class)){
-				if (Dungeon.depth != h.depth) continue;
+				if (Dungeon.depth != h.depth || Dungeon.branch != h.branch) continue;
 				for (int i : PathFinder.NEIGHBOURS9) heroMindFov[h.pos+i] = true;
 			}
 
@@ -1303,7 +1354,7 @@ public abstract class Level implements Bundlable {
 			}
 
 			for (RevealedArea a : c.buffs(RevealedArea.class)){
-				if (Dungeon.depth != a.depth) continue;
+				if (Dungeon.depth != a.depth || Dungeon.branch != a.branch) continue;
 				for (int i : PathFinder.NEIGHBOURS9) heroMindFov[a.pos+i] = true;
 			}
 

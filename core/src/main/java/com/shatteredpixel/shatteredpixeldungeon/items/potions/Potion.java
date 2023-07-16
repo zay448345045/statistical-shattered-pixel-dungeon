@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemStatusHandler;
 import com.shatteredpixel.shatteredpixeldungeon.items.Recipe;
-import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfHoneyedHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfCleansing;
@@ -47,11 +46,11 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Blindweed;
-import com.shatteredpixel.shatteredpixeldungeon.plants.Mageroyal;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Earthroot;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Fadeleaf;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Firebloom;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Icecap;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Mageroyal;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Rotberry;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Sorrowmoss;
@@ -192,26 +191,16 @@ public class Potion extends Item {
 			image = handler.image(this);
 			color = handler.label(this);
 		}
-		setAction();
 	}
-	
+
 	@Override
-	public boolean collect( Bag container ) {
-		if (super.collect( container )){
-			setAction();
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	public void setAction(){
+	public String defaultAction() {
 		if (isKnown() && mustThrowPots.contains(this.getClass())) {
-			defaultAction = AC_THROW;
+			return AC_THROW;
 		} else if (isKnown() &&canThrowPots.contains(this.getClass())){
-			defaultAction = AC_CHOOSE;
+			return AC_CHOOSE;
 		} else {
-			defaultAction = AC_DRINK;
+			return AC_DRINK;
 		}
 	}
 	
@@ -335,12 +324,6 @@ public class Potion extends Item {
 			if (!isKnown()) {
 				handler.know(this);
 				updateQuickslot();
-				Potion p = Dungeon.hero.belongings.getItem(getClass());
-				if (p != null)  p.setAction();
-				if (ExoticPotion.regToExo.get(getClass()) != null) {
-					p = Dungeon.hero.belongings.getItem(ExoticPotion.regToExo.get(getClass()));
-					if (p != null) p.setAction();
-				}
 			}
 			
 			if (Dungeon.hero.isAlive()) {

@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,9 +50,10 @@ public class RuinsRoom extends PatchRoom {
 		// normal   ~20% to ~30%
 		// large    ~30% to ~40%
 		// giant    ~40% to ~50%
-		float fill = 0.20f + (width()*height())/1024f;
+		int scale = Math.min(width()*height(), 18*18);
+		float fill = 0.20f + scale/1024f;
 		
-		setupPatch(level, fill, 0, true);
+		setupPatch(level, fill, 0, connected.size() > 0);
 		cleanDiagonalEdges();
 		
 		for (int i = top + 1; i < bottom; i++) {

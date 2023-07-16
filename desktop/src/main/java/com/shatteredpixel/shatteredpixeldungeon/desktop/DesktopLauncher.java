@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,14 +22,10 @@
 package com.shatteredpixel.shatteredpixeldungeon.desktop;
 
 import com.badlogic.gdx.Files;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3FileHandle;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3NativesLoader;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Preferences;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.GdxNativesLoader;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -45,6 +41,7 @@ import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Locale;
 
 public class DesktopLauncher {
 
@@ -85,11 +82,14 @@ public class DesktopLauncher {
 				exceptionMsg = exceptionMsg.replace("com.shatteredpixel.shatteredpixeldungeon.", "");
 				exceptionMsg = exceptionMsg.replace("com.watabou.", "");
 				exceptionMsg = exceptionMsg.replace("com.badlogic.gdx.", "");
-				exceptionMsg = exceptionMsg.replace("\t", "    ");
-				exceptionMsg = exceptionMsg.replace("'", "");
+				exceptionMsg = exceptionMsg.replace("\t", "  "); //shortens length of tabs
 
-				if (exceptionMsg.length() > 500){
-					exceptionMsg = exceptionMsg.substring(0, 500) + "...";
+				//replace ' and " with similar equivalents as tinyfd hates them for some reason
+				exceptionMsg = exceptionMsg.replace('\'', '’');
+				exceptionMsg = exceptionMsg.replace('"', '”');
+
+				if (exceptionMsg.length() > 1000){
+					exceptionMsg = exceptionMsg.substring(0, 1000) + "...";
 				}
 
 				if (exceptionMsg.contains("Couldnt create window")){
@@ -132,33 +132,34 @@ public class DesktopLauncher {
 		
 		config.setTitle( title );
 
+		//if I were implementing this from scratch I would use the full implementation title for saves
+		// (e.g. /.shatteredpixel/shatteredpixeldungeon), but we have too much existing save
+		// date to worry about transferring at this point.
+		String vendor = DesktopLauncher.class.getPackage().getImplementationTitle();
+		if (vendor == null) {
+			vendor = System.getProperty("Implementation-Title");
+		}
+		vendor = vendor.split("\\.")[1];
+
 		String basePath = "";
 		Files.FileType baseFileType = null;
 		if (SharedLibraryLoader.isWindows) {
 			if (System.getProperties().getProperty("os.name").equals("Windows XP")) {
-				basePath = "Application Data/.shatteredpixel/Shattered Pixel Dungeon/";
+				basePath = "Application Data/." + vendor + "/" + title + "/";
 			} else {
-				basePath = "AppData/Roaming/.shatteredpixel/Shattered Pixel Dungeon/";
+				basePath = "AppData/Roaming/." + vendor + "/" + title + "/";
 			}
 			baseFileType = Files.FileType.External;
 		} else if (SharedLibraryLoader.isMac) {
-			basePath = "Library/Application Support/Shattered Pixel Dungeon/";
+			basePath = "Library/Application Support/" + title + "/";
 			baseFileType = Files.FileType.External;
 		} else if (SharedLibraryLoader.isLinux) {
 			String XDGHome = System.getenv("XDG_DATA_HOME");
 			if (XDGHome == null) XDGHome = System.getProperty("user.home") + "/.local/share";
-			basePath = XDGHome + "/.shatteredpixel/shattered-pixel-dungeon/";
 
-			//copy over files from old linux save DIR, pre-1.2.0
-			FileHandle oldBase = new Lwjgl3FileHandle(".shatteredpixel/shattered-pixel-dungeon/", Files.FileType.External);
-			FileHandle newBase = new Lwjgl3FileHandle(basePath, Files.FileType.Absolute);
-			if (oldBase.exists()){
-				if (!newBase.exists()) {
-					oldBase.copyTo(newBase.parent());
-				}
-				oldBase.deleteDirectory();
-				oldBase.parent().delete(); //only regular delete, in case of saves from other PD versions
-			}
+			String titleLinux = title.toLowerCase(Locale.ROOT).replace(" ", "-");
+			basePath = XDGHome + "/." + vendor + "/" + titleLinux + "/";
+
 			baseFileType = Files.FileType.Absolute;
 		}
 

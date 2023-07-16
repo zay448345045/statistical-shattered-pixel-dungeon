@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -131,7 +131,10 @@ public class PotionOfDivineInspiration extends ExoticPotion {
 
 			@Override
 			public void onBackPressed() {
-				//do nothing, prevents accidentally closing
+				//window can be closed if potion is already IDed
+				if (isIdentified()){
+					super.onBackPressed();
+				}
 			}
 		});
 
