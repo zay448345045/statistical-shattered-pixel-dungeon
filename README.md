@@ -1,8 +1,6 @@
 *** WARNING ***
 If you want to build a new package, ignore the "last commit" on Sep 24, 2022 because this version contains unfinishend content which may affect normal gameplay.
 
-Sorry for permanent stop of update because I dont think it's a good idea neither to catch up with original shattered nor to develop custom expansions under current project considering my limited time, insufficient code and design skill and code structure from original shattered which can't support me for further and efficient work.
-
 # Statitstical-Shattered-Pixel-Dungeon #
 
 [OLD REPO](https://github.com/endlesssolitude/ShatteredPD-DetailedDesc)

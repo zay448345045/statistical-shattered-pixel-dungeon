@@ -8,7 +8,8 @@ import com.watabou.utils.Callback;
 
 import java.util.ArrayList;
 
-//used to block the actor loop for a specified period of time
+//used to lock thread temporarily, to keep current status instantly
+//so that we can stay at instant/fast visuals, or to custom freezing time.
 public class VirtualActor extends Visual {
 
     private float lasting = 0.5f;

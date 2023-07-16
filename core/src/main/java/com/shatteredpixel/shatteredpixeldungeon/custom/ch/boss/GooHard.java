@@ -33,7 +33,7 @@ import java.util.ArrayList;
 public class GooHard extends Boss{
     {
         initProperty();
-        initBaseStatus(4, 10, 14, 10, 150, 0, 2);
+        initBaseStatus(3, 8, 14, 10, 150, 0, 2);
         initStatus(20);
 
         properties.add(Property.DEMONIC);

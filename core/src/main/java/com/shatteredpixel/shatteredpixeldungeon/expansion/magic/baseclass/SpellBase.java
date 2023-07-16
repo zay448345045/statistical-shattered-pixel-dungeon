@@ -6,10 +6,13 @@ import com.shatteredpixel.shatteredpixeldungeon.custom.messages.M;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 
+import java.util.ArrayList;
+
 public abstract class SpellBase implements Bundlable{
     public float baseManaCost = 0f;
     public Category spellCate = Category.NONE;
     public int targetProperty;
+<<<<<<< HEAD
     public int level = 1;
     public int maxLevel = 1;
 
@@ -44,10 +47,12 @@ public abstract class SpellBase implements Bundlable{
 
 
 
+=======
+    public int level;
+    public int maxLevel;
+>>>>>>> parent of fc08e2cff (last commit)
 
     public abstract void castSpell(Char caster);
-
-    public abstract void onCast();
 
     public abstract void visualEffect(Char caster, int targetCell);
 
@@ -57,21 +62,16 @@ public abstract class SpellBase implements Bundlable{
 
     public abstract void onDeath(Char caster, Char victim);
 
-
-
-
-
-
     public String name(){
         return M.L(this.getClass(), "name");
     }
 
     public String desc(){
-        return M.L(this.getClass(), "desc") + "\n\n" + descAppendix();
+        return M.L(this.getClass(), descKey());
     }
 
-    public String descAppendix(){
-        return M.L(this.getClass(), "desc_more", level, manaCost());
+    public String descKey(){
+        return "desc_" + level;
     }
 
     public float manaCost(){
@@ -84,10 +84,6 @@ public abstract class SpellBase implements Bundlable{
 
     public void degrade(int lvl){
         level -= lvl;
-    }
-
-    public float castTime(){
-        return 1f;
     }
 
     //Consider: Can one spell have more than one element?
@@ -111,10 +107,5 @@ public abstract class SpellBase implements Bundlable{
     @Override
     public void storeInBundle(Bundle bundle) {
         bundle.put("spell_level", level);
-    }
-
-    @Override
-    public void restoreFromBundle(Bundle bundle) {
-        level = bundle.getInt("spell_level");
     }
 }

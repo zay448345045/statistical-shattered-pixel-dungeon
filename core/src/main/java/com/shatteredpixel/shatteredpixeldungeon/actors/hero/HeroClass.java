@@ -75,10 +75,6 @@ import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.generator.TestPo
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.generator.TestRing;
 import com.shatteredpixel.shatteredpixeldungeon.expansion.enchants.baseclasses.Enchanter;
 import com.shatteredpixel.shatteredpixeldungeon.expansion.magic.baseclass.Mana;
-import com.shatteredpixel.shatteredpixeldungeon.expansion.magic.holder.QuickSpellCaster;
-import com.shatteredpixel.shatteredpixeldungeon.expansion.magic.holder.SpellHolder;
-import com.shatteredpixel.shatteredpixeldungeon.expansion.magic.holder.SpellRecord;
-import com.shatteredpixel.shatteredpixeldungeon.expansion.magic.spell.TestSpell;
 import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Waterskin;
@@ -380,22 +376,13 @@ public enum HeroClass {
 			new Enchanter().collect();
 		}
 		if (Dungeon.isChallenged(Challenges.TEST_MODE)) {
-
+			/*
 			Mana mana = new Mana();
 			mana.maxMana = 200;
 			mana.curMana = 0;
 			mana.manaRegen = 0.514f;
-			mana.spellPower=1f;
-			mana.spellDamage=1f;
-			mana.costReduction=0f;
 			mana.attachTo(hero);
-
-			new SpellHolder().collect();
-			new QuickSpellCaster().collect();
-
-			SpellRecord.addSpell(new TestSpell());
-			SpellRecord.addSpell(new TestSpell());
-
+			 */
 			//new WandOfScanningBeam().identify().collect();
 
 			new MobPlacer().collect();
