@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
-apply plugin: 'com.google.gms.google-services'
-
-apply plugin: 'com.google.firebase.crashlytics'
+//apply plugin: 'com.google.gms.google-services'
+//
+//apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     namespace 'com.shatteredpixel.shatteredpixeldungeon.android'
@@ -77,10 +77,10 @@ dependencies {
 
     implementation 'cat.ereza:customactivityoncrash:2.4.0'
 
-    implementation platform('com.google.firebase:firebase-bom:30.3.1')
-
-    implementation 'com.google.firebase:firebase-crashlytics'
-    implementation 'com.google.firebase:firebase-analytics'
+//    implementation platform('com.google.firebase:firebase-bom:30.3.1')
+//
+//    implementation 'com.google.firebase:firebase-crashlytics'
+//    implementation 'com.google.firebase:firebase-analytics'
 }
 
 // called every time gradle gets executed, takes the native dependencies of

@@ -82,9 +82,9 @@ public class LevelTeleporter extends TestItem {
             }
 
             TimekeepersHourglass.timeFreeze timeFreeze = Dungeon.hero.buff(TimekeepersHourglass.timeFreeze.class);
-            if (timeFreeze != null) timeFreeze.disarmPressedTraps();
+            if (timeFreeze != null) timeFreeze.disarmPresses();
             Swiftthistle.TimeBubble timeBubble = Dungeon.hero.buff(Swiftthistle.TimeBubble.class);
-            if (timeBubble != null) timeBubble.disarmPressedTraps();
+            if (timeBubble != null) timeBubble.disarmPresses();
             InterlevelScene.mode = InterlevelScene.Mode.DESCEND;
             InterlevelScene.curTransition = new LevelTransition();
             InterlevelScene.curTransition.destDepth = Dungeon.depth + 1;
@@ -99,9 +99,9 @@ public class LevelTeleporter extends TestItem {
                 return;
             }
             TimekeepersHourglass.timeFreeze timeFreeze = Dungeon.hero.buff(TimekeepersHourglass.timeFreeze.class);
-            if (timeFreeze != null) timeFreeze.disarmPressedTraps();
+            if (timeFreeze != null) timeFreeze.disarmPresses();
             Swiftthistle.TimeBubble timeBubble = Dungeon.hero.buff(Swiftthistle.TimeBubble.class);
-            if (timeBubble != null) timeBubble.disarmPressedTraps();
+            if (timeBubble != null) timeBubble.disarmPresses();
             InterlevelScene.mode = InterlevelScene.Mode.RETURN;
             InterlevelScene.returnDepth = Dungeon.depth - 1;
             InterlevelScene.returnPos = -1;
@@ -185,9 +185,9 @@ public class LevelTeleporter extends TestItem {
                 protected void onClick() {
                     super.onClick();
                     TimekeepersHourglass.timeFreeze timeFreeze = Dungeon.hero.buff(TimekeepersHourglass.timeFreeze.class);
-                    if (timeFreeze != null) timeFreeze.disarmPressedTraps();
+                    if (timeFreeze != null) timeFreeze.disarmPresses();
                     Swiftthistle.TimeBubble timeBubble = Dungeon.hero.buff(Swiftthistle.TimeBubble.class);
-                    if (timeBubble != null) timeBubble.disarmPressedTraps();
+                    if (timeBubble != null) timeBubble.disarmPresses();
                     InterlevelScene.curTransition = Dungeon.level.getTransition(Dungeon.hero.pos);
                     InterlevelScene.mode = InterlevelScene.Mode.RETURN;
                     InterlevelScene.returnDepth = selectedLevel;

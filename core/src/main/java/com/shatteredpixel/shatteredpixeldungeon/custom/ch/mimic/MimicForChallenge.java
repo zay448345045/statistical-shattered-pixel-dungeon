@@ -767,16 +767,19 @@ public class MimicForChallenge extends Mimic {
     }
 
     @Override
-    public synchronized void add( Buff buff ) {
+    public synchronized boolean add( Buff buff ) {
         super.add(buff);
         if(buff.type== Buff.buffType.NEGATIVE) {
             int modlevel = (defendMod >> DEF_NEGATIVE_IMMUNE) & 0x3;
             if (modlevel > 0) {
                 if (Random.Int(3) < modlevel) {
                     Buff.detach(this, buff.getClass());
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 
     private float basicModPower(int level){

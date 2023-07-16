@@ -125,10 +125,11 @@ public class TenguHard extends Boss{
 
     //Tengu is immune to debuffs and damage when removed from the level
     @Override
-    public void add(Buff buff) {
+    public boolean add(Buff buff) {
         if (Actor.chars().contains(this) || buff instanceof Doom || loading){
             super.add(buff);
         }
+        return false;
     }
 
     @Override

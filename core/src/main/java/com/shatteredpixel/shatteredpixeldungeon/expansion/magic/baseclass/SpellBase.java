@@ -1,6 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.expansion.magic.baseclass;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.custom.messages.M;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
@@ -27,7 +28,7 @@ public abstract class SpellBase implements Bundlable{
             //yes, you can have negative mana value, but the penalty is high.
             mana.costMana(manaCost());
             castSpell(caster);
-            caster.spendAndNext(castTime());
+            ((Hero)caster).spendAndNext(castTime());
         }
     }
 

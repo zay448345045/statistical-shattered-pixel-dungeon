@@ -10,6 +10,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.MobHard;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Chains;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Effects;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -91,7 +92,7 @@ public class GuardH extends MobHard {
                 yell( Messages.get(this, "scorpion") );
                 new Item().throwSound();
                 Sample.INSTANCE.play( Assets.Sounds.CHAINS );
-                sprite.parent.add(new Chains(sprite.center(), enemy.sprite.center(), new Callback() {
+                sprite.parent.add(new Chains(sprite.center(), enemy.sprite.center(), Effects.Type.CHAIN, new Callback() {
                     public void call() {
                         Actor.addDelayed(new Pushing(enemy, enemy.pos, newPosFinal, new Callback(){
                             public void call() {

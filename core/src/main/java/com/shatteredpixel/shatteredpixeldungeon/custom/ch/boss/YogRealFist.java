@@ -651,7 +651,7 @@ public abstract class YogRealFist extends Mob {
         public void attack( int cell ) {
             super.attack( cell );
 
-            jump(ch.pos, ch.pos, null, 9, SLAM_TIME );
+            jump(ch.pos, ch.pos, 9, SLAM_TIME,null);
         }
 
         public void zap( int cell ) {
