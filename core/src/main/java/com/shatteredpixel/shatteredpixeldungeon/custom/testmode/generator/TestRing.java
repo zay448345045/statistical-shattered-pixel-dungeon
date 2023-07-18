@@ -6,6 +6,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfAccuracy;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfArcana;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfElements;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEnergy;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEvasion;
@@ -155,8 +156,10 @@ public class TestRing extends TestGenerator {
             case 9:
                 return RingOfTenacity.class;
             case 10:
-            default:
                 return RingOfWealth.class;
+            case 11:
+            default:
+                return RingOfArcana.class;
         }
     }
 
@@ -198,7 +201,7 @@ public class TestRing extends TestGenerator {
 
     private void buildRingList() {
         if (!ringList.isEmpty()) return;
-        for (int i = 0; i < 11; ++i) {
+        for (int i = 0; i < 12; ++i) {
             ringList.add(idToRing(i));
         }
     }
@@ -211,7 +214,7 @@ public class TestRing extends TestGenerator {
     }
 
     private int total(int category){
-        if (category == RING_CAT) return 11;
+        if (category == RING_CAT) return 12;
         if (category == WAND_CAT) return 13;
         return 0;
     }

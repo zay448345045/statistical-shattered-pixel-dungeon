@@ -12,45 +12,9 @@ public abstract class SpellBase implements Bundlable{
     public float baseManaCost = 0f;
     public Category spellCate = Category.NONE;
     public int targetProperty;
-<<<<<<< HEAD
-    public int level = 1;
-    public int maxLevel = 1;
 
-    //cache data before mana is cost.
-    public float maxMana;
-    public float curMana;
-    public float manaRegen;
-    public float spellPower;
-    public float spellDamage;
-    public float costReduction;
-
-    public void tryToCastSpell(Char caster){
-        Mana mana = caster.buff(Mana.class);
-        if(mana != null){
-            buildData(mana);
-            //yes, you can have negative mana value, but the penalty is high.
-            mana.costMana(manaCost());
-            castSpell(caster);
-            ((Hero)caster).spendAndNext(castTime());
-        }
-    }
-
-    protected void buildData(Mana mana){
-        maxMana = mana.RMaxMana();
-        curMana = mana.RCurMana();
-        manaRegen = mana.RManaRegen();
-        spellPower = mana.RSpellPower(spellCate);
-        spellDamage = mana.RSpellDamage(spellCate);
-        costReduction = mana.RCostReduce(spellCate);
-    }
-
-
-
-
-=======
     public int level;
     public int maxLevel;
->>>>>>> parent of fc08e2cff (last commit)
 
     public abstract void castSpell(Char caster);
 

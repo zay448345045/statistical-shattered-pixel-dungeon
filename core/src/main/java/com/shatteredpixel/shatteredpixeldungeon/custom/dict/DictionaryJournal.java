@@ -193,6 +193,8 @@ public enum DictionaryJournal {
         MOBS.d.put("mob_mimic_crystal",     DictSpriteSheet.MIMIC_CRYSTAL);
         MOBS.d.put("mob_wraith",            DictSpriteSheet.WRAITH);
         MOBS.d.put("mob_bee",               DictSpriteSheet.BEE);
+        MOBS.d.put("mob_tormented_spirit",  DictSpriteSheet.TORMENTED_SPIRIT);
+        MOBS.d.put("mob_phantom_piranha",   DictSpriteSheet.PHANTOM_PIRANHA);
         MOBS.d.put("mob_ghost",             DictSpriteSheet.SAD_GHOST);
         MOBS.d.put("mob_wandmaker",         DictSpriteSheet.WAND_MAKER);
         MOBS.d.put("mob_blacksmith",        DictSpriteSheet.BLACKSMITH);
@@ -206,6 +208,7 @@ public enum DictionaryJournal {
         //ring
         RINGS.d.put("ring_accuracy",        ItemSpriteSheet.RING_AGATE);
         RINGS.d.put("ring_element",         ItemSpriteSheet.RING_AGATE);
+        RINGS.d.put("ring_arcana",          ItemSpriteSheet.RING_AGATE);
         RINGS.d.put("ring_energy",          ItemSpriteSheet.RING_DIAMOND);
         RINGS.d.put("ring_evasion",         ItemSpriteSheet.RING_DIAMOND);
         RINGS.d.put("ring_force",           ItemSpriteSheet.RING_DIAMOND);
@@ -234,23 +237,27 @@ public enum DictionaryJournal {
         WEAPONS.d.put("melee_gloves",       ItemSpriteSheet.GLOVES);
         WEAPONS.d.put("melee_dagger",       ItemSpriteSheet.DAGGER);
         WEAPONS.d.put("melee_staff",        ItemSpriteSheet.MAGES_STAFF);
+        WEAPONS.d.put("melee_rapier",       ItemSpriteSheet.RAPIER);
         WEAPONS.d.put("melee_shortsword",   ItemSpriteSheet.SHORTSWORD);
         WEAPONS.d.put("melee_handaxe",      ItemSpriteSheet.HAND_AXE);
         WEAPONS.d.put("melee_spear",        ItemSpriteSheet.SPEAR);
         WEAPONS.d.put("melee_quarterstaff", ItemSpriteSheet.QUARTERSTAFF);
         WEAPONS.d.put("melee_dirk",         ItemSpriteSheet.DIRK);
+        WEAPONS.d.put("melee_sickle",       ItemSpriteSheet.SICKLE);
         WEAPONS.d.put("melee_sword",        ItemSpriteSheet.SWORD);
         WEAPONS.d.put("melee_mace",         ItemSpriteSheet.MACE);
         WEAPONS.d.put("melee_scimitar",     ItemSpriteSheet.SCIMITAR);
         WEAPONS.d.put("melee_roundshield",  ItemSpriteSheet.ROUND_SHIELD);
         WEAPONS.d.put("melee_sai",          ItemSpriteSheet.SAI);
         WEAPONS.d.put("melee_whip",         ItemSpriteSheet.WHIP);
+        WEAPONS.d.put("melee_katana",       ItemSpriteSheet.KATANA);
         WEAPONS.d.put("melee_longsword",    ItemSpriteSheet.LONGSWORD);
         WEAPONS.d.put("melee_battleaxe",    ItemSpriteSheet.BATTLE_AXE);
         WEAPONS.d.put("melee_flail",        ItemSpriteSheet.FLAIL);
         WEAPONS.d.put("melee_runicblade",   ItemSpriteSheet.RUNIC_BLADE);
         WEAPONS.d.put("melee_assassin",     ItemSpriteSheet.ASSASSINS_BLADE);
         WEAPONS.d.put("melee_bow",          ItemSpriteSheet.CROSSBOW);
+        WEAPONS.d.put("melee_war_scythe",   ItemSpriteSheet.WAR_SCYTHE);
         WEAPONS.d.put("melee_greatsword",   ItemSpriteSheet.GREATSWORD);
         WEAPONS.d.put("melee_hammer",       ItemSpriteSheet.WAR_HAMMER);
         WEAPONS.d.put("melee_glaive",       ItemSpriteSheet.GLAIVE);

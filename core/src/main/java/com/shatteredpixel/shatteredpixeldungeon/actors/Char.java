@@ -80,6 +80,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Tengu;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.MirrorImage;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.PrismaticImage;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
+import com.shatteredpixel.shatteredpixeldungeon.expansion.mergeManagers.charmodifier.CombatModifier;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.AntiMagic;
@@ -98,6 +99,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLightning;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Blazing;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Blocking;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Grim;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Kinetic;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Shocking;
@@ -406,8 +408,10 @@ public abstract class Char extends Actor {
 			if ( buff(Weakness.class) != null ){
 				dmg *= 0.67f;
 			}
-			
+
+			dmg = CombatModifier.INSTANCE.attackModify(this, enemy, dmg);
 			int effectiveDamage = enemy.defenseProc( this, Math.round(dmg) );
+			dr = CombatModifier.INSTANCE.defenseModify(this, enemy, dr, effectiveDamage);
 			effectiveDamage = Math.max( effectiveDamage - dr, 0 );
 
 			if (enemy.buff(Viscosity.ViscosityTracker.class) != null){
@@ -548,7 +552,9 @@ public abstract class Char extends Actor {
 			acuRoll *= buff.evasionAndAccuracyFactor();
 		}
 		acuRoll *= AscensionChallenge.statModifier(attacker);
-		
+
+		acuRoll = CombatModifier.INSTANCE.accuracyModify(attacker, defender, acuRoll);
+
 		float defRoll = Random.Float( defStat );
 		if (defender.buff(Bless.class) != null) defRoll *= 1.25f;
 		if (defender.buff(  Hex.class) != null) defRoll *= 0.8f;
@@ -557,7 +563,9 @@ public abstract class Char extends Actor {
 			defRoll *= buff.evasionAndAccuracyFactor();
 		}
 		defRoll *= AscensionChallenge.statModifier(defender);
-		
+
+		defRoll = CombatModifier.INSTANCE.evasionModify(attacker, defender, defRoll);
+
 		return (acuRoll * accMulti) >= defRoll;
 	}
 	
@@ -651,6 +659,7 @@ public abstract class Char extends Actor {
 		for (ChampionEnemy buff : buffs(ChampionEnemy.class)){
 			dmg = (int) Math.ceil(dmg * buff.damageTakenFactor());
 		}
+		dmg = (int)Math.ceil(dmg / AscensionChallenge.statModifier(this));
 
 		if (!(src instanceof LifeLink) && buff(LifeLink.class) != null){
 			HashSet<LifeLink> links = buffs(LifeLink.class);
@@ -732,6 +741,8 @@ public abstract class Char extends Actor {
 		if (buff( Paralysis.class ) != null) {
 			buff( Paralysis.class ).processDamage(dmg);
 		}
+
+		dmg = CombatModifier.INSTANCE.damage(this, dmg, src);
 
 		int shielded = dmg;
 		//FIXME: when I add proper damage properties, should add an IGNORES_SHIELDS property to use here.
@@ -916,12 +927,17 @@ public abstract class Char extends Actor {
 			}
 		}
 
+		if(!CombatModifier.INSTANCE.preAddBuff(this, buff)){
+			return false;
+		}
 		if (sprite != null && buff(Challenge.SpectatorFreeze.class) != null){
 			return false; //can't add buffs while frozen and game is loaded
 		}
 
 		buffs.add( buff );
 		if (Actor.chars().contains(this)) Actor.add( buff );
+
+		CombatModifier.INSTANCE.postAddBuff(this,buff);
 
 		if (sprite != null && buff.announced) {
 			switch (buff.type) {

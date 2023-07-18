@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Guard;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Monk;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Necromancer;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.PhantomPiranha;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Piranha;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Rat;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RipperDemon;
@@ -48,6 +49,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Statue;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Succubus;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Swarm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Thief;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.TormentedSpirit;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Warlock;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
 import com.shatteredpixel.shatteredpixeldungeon.custom.dict.DictSpriteSheet;
@@ -161,7 +163,7 @@ public class MobPlacer extends TestItem{
             case 3: return DataPack.DM201.ordinal() - DataPack.NEW_FIRE_ELE.ordinal() - 1;
             case 4: return DataPack.ELE_CHAOS.ordinal() - DataPack.DM201.ordinal() - 1;
             case 5: return DataPack.ACIDIC.ordinal() - DataPack.ELE_CHAOS.ordinal() - 1;
-            case 6: default: return DataPack.PIRANHA.ordinal() - DataPack.ACIDIC.ordinal() - 1;
+            case 6: default: return DataPack.PHANTOM_PIRANHA.ordinal() - DataPack.ACIDIC.ordinal() - 1;
         }
     }
     private int dataThreshold(int tier){
@@ -432,7 +434,9 @@ public class MobPlacer extends TestItem{
         STATUE(Statue.class, DictSpriteSheet.STATUE),
         ARMORED_STATUE(ArmoredStatue.class, DictSpriteSheet.ARMORED_STATUE),
         WRAITH(Wraith.class, DictSpriteSheet.WRAITH),
-        PIRANHA(Piranha.class, DictSpriteSheet.FISH);
+        TORMENTED_SPIRIT(TormentedSpirit.class,DictSpriteSheet.TORMENTED_SPIRIT),
+        PIRANHA(Piranha.class, DictSpriteSheet.FISH),
+        PHANTOM_PIRANHA(PhantomPiranha.class,DictSpriteSheet.PHANTOM_PIRANHA);
 
         private Class<? extends Mob> mobClass;
         private int imageId;

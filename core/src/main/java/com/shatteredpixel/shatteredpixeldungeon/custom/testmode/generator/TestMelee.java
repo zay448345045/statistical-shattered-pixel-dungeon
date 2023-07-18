@@ -207,14 +207,14 @@ public class TestMelee extends TestGenerator {
     }
 
     private int maxSlots(int t){
-        if(t<=1) return 4;
-        if(t==2) return 5;
-        else return 6;
+        if(t <= 1) return 5;
+        if(t == 2 || t == 3) return 6;
+        else return 7;
     }
 
     private class SettingsWindow extends Window {
         private static final int WIDTH = 120;
-        private static final int BTN_SIZE = 19;
+        private static final int BTN_SIZE = 18;
         private static final int GAP = 2;
         private OptionSlider o_tier;
         private OptionSlider o_level;
