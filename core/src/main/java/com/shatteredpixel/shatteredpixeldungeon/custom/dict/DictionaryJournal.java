@@ -74,6 +74,7 @@ public enum DictionaryJournal {
         ALCHEMY.d.put("food_fruit",         ItemSpriteSheet.BLANDFRUIT);
         ALCHEMY.d.put("food_chunk",         ItemSpriteSheet.BLAND_CHUNKS);
         ALCHEMY.d.put("food_berry",         ItemSpriteSheet.BERRY);
+        ALCHEMY.d.put("phantom_meat",       ItemSpriteSheet.PHANTOM_MEAT);
 
         //potions, enhanced ones implemented
         ALCHEMY.d.put("potion_exp",         ItemSpriteSheet.POTION_INDIGO);
@@ -264,6 +265,8 @@ public enum DictionaryJournal {
         WEAPONS.d.put("melee_greataxe",     ItemSpriteSheet.GREATAXE);
         WEAPONS.d.put("melee_greatshield",  ItemSpriteSheet.GREATSHIELD);
         WEAPONS.d.put("melee_gauntlet",     ItemSpriteSheet.GAUNTLETS);
+        //duelist ability
+        WEAPONS.d.put("duelist_ability",    ItemSpriteSheet.WEAPON_HOLDER);
         //ench & curse
         WEAPONS.d.put("weapon_ench1",       ItemSpriteSheet.STONE_ENCHANT);
         WEAPONS.d.put("weapon_ench2",       ItemSpriteSheet.STONE_ENCHANT);
