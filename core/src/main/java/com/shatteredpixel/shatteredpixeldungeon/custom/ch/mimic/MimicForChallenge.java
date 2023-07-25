@@ -774,12 +774,12 @@ public class MimicForChallenge extends Mimic {
             if (modlevel > 0) {
                 if (Random.Int(3) < modlevel) {
                     Buff.detach(this, buff.getClass());
-                    return true;
+                    return false;
                 }
             }
         }
 
-        return false;
+        return true;
     }
 
     private float basicModPower(int level){

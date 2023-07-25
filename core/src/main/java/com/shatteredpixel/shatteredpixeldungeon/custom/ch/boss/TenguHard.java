@@ -127,7 +127,7 @@ public class TenguHard extends Boss{
     @Override
     public boolean add(Buff buff) {
         if (Actor.chars().contains(this) || buff instanceof Doom || loading){
-            super.add(buff);
+            return super.add(buff);
         }
         return false;
     }

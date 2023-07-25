@@ -148,7 +148,7 @@ public abstract class SpellCaster extends Mob {
     public boolean add(Buff buff) {
         //immune to all buffs/debuffs when inactive
         if (alignment != Alignment.NEUTRAL) {
-            super.add(buff);
+            return super.add(buff);
         }
         return false;
     }
