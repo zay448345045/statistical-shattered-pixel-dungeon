@@ -26,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Awareness;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSight;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
@@ -38,6 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Wandmaker;
+import com.shatteredpixel.shatteredpixeldungeon.custom.buffs.AbsoluteBlindness;
 import com.shatteredpixel.shatteredpixeldungeon.custom.ch.boss.HardDKLevel;
 import com.shatteredpixel.shatteredpixeldungeon.custom.ch.boss.HardDM300Level;
 import com.shatteredpixel.shatteredpixeldungeon.custom.ch.boss.HardGooLevel;
@@ -493,6 +495,9 @@ public class Dungeon {
 		
 		hero.curAction = hero.lastAction = null;
 
+		if (hero.buff(AbsoluteBlindness.class) != null) {
+			hero.viewDistance = 0;
+		}
 		observe();
 
 		LevelSwitchListener.onLevelSwitch();

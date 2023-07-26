@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -312,13 +313,22 @@ public class Wandmaker extends NPC {
 				spawned = true;
 
 				given = false;
-				wand1 = (Wand) Generator.randomUsingDefaults(Generator.Category.WAND);
+
+				//尝试避免生成冲击波法杖
+				int tries = 0;
+				do {
+					wand1 = (Wand) Generator.randomUsingDefaults(Generator.Category.WAND);
+					tries++;
+				} while (tries < 100 && Challenges.isItemBlocked(wand1));
+
 				wand1.cursed = false;
 				wand1.upgrade();
 
+				tries = 0;
 				do {
 					wand2 = (Wand) Generator.randomUsingDefaults(Generator.Category.WAND);
-				} while (wand2.getClass().equals(wand1.getClass()));
+					tries++;
+				} while (wand2.getClass().equals(wand1.getClass()) || (tries < 100 && Challenges.isItemBlocked(wand2)));
 				wand2.cursed = false;
 				wand2.upgrade();
 				

@@ -49,7 +49,10 @@ public class SkeletonH extends MobHard {
     public void die(Object cause){
         revive();
 
-        if (cause == Chasm.class) return;
+        if (cause == Chasm.class) {
+            super.die(cause);
+            return;
+        }
 
         boolean heroKilled = false;
         for (int i = 0; i < PathFinder.NEIGHBOURS8.length; i++) {

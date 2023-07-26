@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -234,10 +235,13 @@ public class Imp extends NPC {
 				}
 				
 				given = false;
-				
+
+				//尝试避免生成元素戒指
+				int tries = 0;
 				do {
 					reward = (Ring)Generator.randomUsingDefaults( Generator.Category.RING );
-				} while (reward.cursed);
+					tries++;
+				} while (reward.cursed || (tries < 100 && Challenges.isItemBlocked(reward)));
 				reward.upgrade( 2 );
 				reward.cursed = true;
 			}

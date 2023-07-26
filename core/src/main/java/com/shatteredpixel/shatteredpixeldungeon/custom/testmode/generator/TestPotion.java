@@ -521,27 +521,27 @@ public class TestPotion extends TestGenerator {
             }
         }
 
+        if(dartList.isEmpty()){
+            for(int i=0; i<maxIndex(3)+1; ++i){
+                dartList.add(idToTippedDart(i));
+            }
+        }
+
         if (scrollList.isEmpty()) {
-            for (int i = 0; i < maxIndex(3)+1; ++i) {
+            for (int i = 0; i < maxIndex(4)+1; ++i) {
                 scrollList.add(idToScroll(i));
             }
         }
 
         if (exoticScrollList.isEmpty()) {
-            for (int i = 0; i < maxIndex(4)+1; ++i) {
+            for (int i = 0; i < maxIndex(5)+1; ++i) {
                 exoticScrollList.add(idToExoticScroll(i));
             }
         }
 
         if (stoneList.isEmpty()) {
-            for (int i = 0; i < maxIndex(5)+1; ++i) {
+            for (int i = 0; i < maxIndex(6)+1; ++i) {
                 stoneList.add(idToStone(i));
-            }
-        }
-
-        if(dartList.isEmpty()){
-            for(int i=0; i<maxIndex(6)+1; ++i){
-                dartList.add(idToTippedDart(i));
             }
         }
 
