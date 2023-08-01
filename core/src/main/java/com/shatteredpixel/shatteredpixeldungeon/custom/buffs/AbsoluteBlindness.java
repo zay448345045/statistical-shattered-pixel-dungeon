@@ -1,6 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.custom.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.custom.messages.M;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
@@ -12,6 +13,7 @@ public class AbsoluteBlindness extends Buff {
         actPriority = VFX_PRIO;
         announced = true;
         type=buffType.NEGATIVE;
+        immunities.add(Blindness.class);
     }
 
     protected float left=0f;
@@ -82,6 +84,6 @@ public class AbsoluteBlindness extends Buff {
 
     @Override
     public String desc() {
-        return M.L(this, "desc");
+        return M.L(this, "desc",Float.toString(left));
     }
 }

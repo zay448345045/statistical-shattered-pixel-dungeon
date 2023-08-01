@@ -189,9 +189,24 @@ public class TenguHard extends Boss{
 
             //if tengu has lost a certain amount of hp, jump
         } else if (beforeHitHP / hpBracket != HP / hpBracket) {
-            jump();
+            //let full attack action complete first
+            Actor.add(new Actor() {
+
+                {
+                    actPriority = VFX_PRIO;
+                }
+
+                @Override
+                protected boolean act() {
+                    Actor.remove(this);
+                    jump();
+                    return true;
+                }
+            });
+            return;
         }
     }
+
 
     @Override
     public boolean isAlive() {

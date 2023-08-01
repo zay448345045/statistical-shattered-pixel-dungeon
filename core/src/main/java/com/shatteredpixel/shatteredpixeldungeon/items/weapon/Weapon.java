@@ -111,6 +111,15 @@ abstract public class Weapon extends KindOfWeapon {
 	public Inscription inscription;
 
 	@Override
+	public String desc() {
+		String string = super.desc();
+		if (inscription != null) {
+			string += ("\n\n" + inscription.desc());
+		}
+		return string;
+	};
+
+	@Override
 	public int proc( Char attacker, Char defender, int damage ) {
 
 		if(inscription != null && attacker == Dungeon.hero){

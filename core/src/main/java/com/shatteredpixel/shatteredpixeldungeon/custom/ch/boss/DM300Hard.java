@@ -60,6 +60,7 @@ public class DM300Hard extends Boss{
         spriteClass = DM300Sprite.class;
 
         initProperty();
+        properties.add(Property.INORGANIC);
         initBaseStatus(16, 22, 28, 16, 400, 4, 8);
         initStatus(76);
 

@@ -76,7 +76,9 @@ public class Messages {
 
 			Assets.Messages.CUSTOM,
 			Assets.Messages.EXPANSION,
-			Assets.Messages.TEXT
+			Assets.Messages.TEXT,
+
+			Assets.Messages.MINIGAMES
 	};
 
 	static{

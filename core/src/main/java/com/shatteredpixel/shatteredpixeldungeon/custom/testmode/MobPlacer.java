@@ -339,7 +339,8 @@ public class MobPlacer extends TestItem{
                         updateMobText();
                     }
                 };
-                btn.icon( DictSpriteSheet.miscImages(allData.get(dataThreshold(mobTier)+i).imageId) );
+//                btn.icon( DictSpriteSheet.miscImages(allData.get(dataThreshold(mobTier)+i).imageId) );
+                btn.icon(Reflection.newInstance(allData.get(dataThreshold(mobTier) + i).getMobClass()).sprite());
                 float max = Math.max(btn.icon().width(), btn.icon().height());
                 btn.icon().scale = new PointF(BTN_SIZE/max, BTN_SIZE/max);
                 if(i<firstLine){

@@ -79,7 +79,7 @@ public enum Rankings {
 
 	public void submit( boolean win, Object cause ) {
 
-		if(Dungeon.isChallenged(Challenges.TEST_MODE)){
+		if(Dungeon.isChallenged(Challenges.TEST_MODE) || Dungeon.isChallenged(Challenges.MINIGAMES)){
 			return;
 		}
 

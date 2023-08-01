@@ -136,9 +136,15 @@ public class MenuPane extends Component {
 		btnMenu = new MenuButton();
 		add( btnMenu );
 
-		if(!Dungeon.isChallenged(Challenges.TEST_MODE)){version = new BitmapText( "v" + Game.version , PixelScene.pixelFont);version.alpha( 0.5f );}
-		else {
-			version = new BitmapText("v" + Game.version + "-TEST", PixelScene.pixelFont) {
+		if(!Dungeon.isChallenged(Challenges.TEST_MODE) && !Dungeon.isChallenged(Challenges.MINIGAMES)) {
+			version = new BitmapText( "v" + Game.version , PixelScene.pixelFont);version.alpha( 0.5f );
+		} else {
+			String s = "-TEST";
+			if (Dungeon.isChallenged(Challenges.MINIGAMES)) {
+				s = "-MINIGAME";
+			}
+
+			version = new BitmapText("v" + Game.version + s, PixelScene.pixelFont) {
 				private float time;
 
 				@Override

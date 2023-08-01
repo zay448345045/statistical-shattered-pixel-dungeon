@@ -72,6 +72,7 @@ public class Unholy extends CountInscription {
                                     }
                                     if(!ch.isAlive()){
                                         Wraith corrupted = new Wraith();
+                                        corrupted.adjustStats(Dungeon.depth);
                                         corrupted.pos = ch.pos;
                                         GameScene.add(corrupted);
                                         Buff.affect(corrupted, Corruption.class);

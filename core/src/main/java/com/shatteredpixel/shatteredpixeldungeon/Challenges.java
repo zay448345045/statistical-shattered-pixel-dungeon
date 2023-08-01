@@ -50,6 +50,8 @@ public class Challenges {
 
 	public static final int EXPANSION_ENCH 		= 1<<18;
 
+	public static final int MINIGAMES			= 1<<10;
+
 	public static final int MAX_VALUE           = (1<<19)-1;
 
 	public static final String[] NAME_IDS = {
@@ -68,8 +70,9 @@ public class Challenges {
 			"elite_bosses",
 			"elite_enemies",
 
-			"expansion_ench"
+			"expansion_ench",
 
+			"minigames"
 	};
 
 	public static final long[] MASKS = {
@@ -79,7 +82,9 @@ public class Challenges {
 			ELITE_BOSSES,
 			ELITE_ENEMIES,
 
-			EXPANSION_ENCH
+			EXPANSION_ENCH,
+
+			MINIGAMES
 	};
 
 	public static int activeChallenges(){

@@ -36,7 +36,7 @@ public class SeniorMonkH extends MonkH {
     {
         spriteClass = SeniorSprite.class;
         lootChance=1f;
-        loot = new Pasty().quantity(1);
+        loot = new Pasty();
 
         hitsToDisarm = 99999;
     }

@@ -78,6 +78,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SecretRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.SpecialRoom;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.NewLevel;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Toolbar;
@@ -296,6 +297,7 @@ public class Dungeon {
 		Actor.clear();
 		
 		Level level;
+
 		if (branch == 0) {
 			switch (depth) {
 				case 1:
@@ -367,6 +369,10 @@ public class Dungeon {
 			}
 		} else {
 			level = new DeadEndLevel();
+		}
+
+		if (Dungeon.isChallenged(Challenges.MINIGAMES)) {
+			level = new NewLevel();
 		}
 
 		//dead end levels get cleared, don't count as generated

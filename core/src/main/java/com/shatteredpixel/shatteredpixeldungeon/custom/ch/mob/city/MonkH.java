@@ -122,7 +122,7 @@ public class MonkH extends MobHard {
         Imp.Quest.process( this );
 
         super.rollToDropLoot();
-        super.rollToDropLoot();
+//        super.rollToDropLoot();
     }
 
     protected float focusCooldown = 0;
