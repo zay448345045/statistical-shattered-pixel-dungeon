@@ -47,14 +47,12 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.warrior.Sh
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.warrior.Endure;
 import com.shatteredpixel.shatteredpixeldungeon.custom.ch.ChallengeBag;
 import com.shatteredpixel.shatteredpixeldungeon.custom.ch.boss.BossTome;
-import com.shatteredpixel.shatteredpixeldungeon.custom.ch.boss.HDKItem;
 import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mimic.MimicDocs;
 import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mimic.MimicScroll;
 import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mimic.MimicStatusAffactor;
 import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.EnemyTome;
 import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.ScrollOfUpgradeEater;
 import com.shatteredpixel.shatteredpixeldungeon.custom.dict.DictBook;
-import com.shatteredpixel.shatteredpixeldungeon.custom.dict.NewDictBook;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.BackpackCleaner;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.CustomWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.EnemyAttributeModifier;
@@ -65,9 +63,8 @@ import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.MobPlacer;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.TestBag;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.TimeReverser;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.TrapPlacer;
-import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.WandOfReflectDisintegration;
-import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.WandOfScanningBeam;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.generator.LazyTest;
+import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.TerrainPlacer;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.generator.TestArmor;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.generator.TestArtifact;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.generator.TestMelee;
@@ -75,7 +72,6 @@ import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.generator.TestMi
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.generator.TestPotion;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.generator.TestRing;
 import com.shatteredpixel.shatteredpixeldungeon.expansion.enchants.baseclasses.Enchanter;
-import com.shatteredpixel.shatteredpixeldungeon.expansion.magic.baseclass.Mana;
 import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Waterskin;
@@ -97,7 +93,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMappi
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMirrorImage;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRage;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfDivination;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
@@ -109,7 +104,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingKn
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingSpike;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingStone;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.watabou.utils.DeviceCompat;
 
 public enum HeroClass {
 
@@ -436,6 +430,8 @@ public enum HeroClass {
 			new EnemyAttributeModifier().collect();
 
 			new MobAttributeViewer().collect();
+
+			new TerrainPlacer().collect();
 /*
 			HDKItem.KingAmulet ka = new HDKItem.KingAmulet();
 			ka.setUses(999);

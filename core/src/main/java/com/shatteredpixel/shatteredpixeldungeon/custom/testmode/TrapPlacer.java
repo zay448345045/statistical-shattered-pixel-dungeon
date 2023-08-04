@@ -194,6 +194,7 @@ public class TrapPlacer extends TestItem {
         //logic for deciding if triggering trap
         //Dungeon.level.map[cell] = Terrain.TRAP;
         Level.set(cell, Terrain.TRAP, Dungeon.level);
+        GameScene.updateMap(cell);
         //avoid new traps
         //Dungeon.level.avoid[cell] = true;
         //Dungeon.level.passable[cell] = false;
