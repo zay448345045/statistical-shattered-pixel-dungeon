@@ -7,6 +7,7 @@ import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.TestItem;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.TrapPlacer;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
+import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -33,9 +34,6 @@ public class TerrainPlacer extends TestItem {
         image = ItemSpriteSheet.PICKAXE;
         defaultAction = AC_PLACE;
     }
-
-    private int row = 0;
-    private int column = 0;
 
     public int chosen;
     public RenderedTextBlock name;
@@ -77,19 +75,17 @@ public class TerrainPlacer extends TestItem {
         }
     }
 
-    @Override
-    public void storeInBundle(Bundle bundle) {
-        super.storeInBundle(bundle);
-        bundle.put("row", row);
-        bundle.put("column", column);
-    }
-
-    @Override
-    public void restoreFromBundle(Bundle bundle) {
-        super.restoreFromBundle(bundle);
-        row = bundle.getInt("row");
-        column = bundle.getInt("column");
-    }
+//    @Override
+//    public void storeInBundle(Bundle bundle) {
+//        super.storeInBundle(bundle);
+//        bundle.put("chosen", chosen);
+//    }
+//
+//    @Override
+//    public void restoreFromBundle(Bundle bundle) {
+//        super.restoreFromBundle(bundle);
+//        chosen = bundle.getInt("chosen");
+//    }
 
     private class SettingsWindow extends Window {
 
