@@ -215,6 +215,13 @@ public class GameScene extends PixelScene {
 		super.create();
 		Camera.main.zoom( GameMath.gate(minZoom, defaultZoom + SPDSettings.zoom(), maxZoom));
 
+		switch (SPDSettings.cameraFollow()) {
+			case 4: default:    Camera.main.setFollowDeadzone(0);      break;
+			case 3:             Camera.main.setFollowDeadzone(0.2f);   break;
+			case 2:             Camera.main.setFollowDeadzone(0.5f);   break;
+			case 1:             Camera.main.setFollowDeadzone(0.9f);   break;
+		}
+
 		scene = this;
 
 		terrain = new Group();

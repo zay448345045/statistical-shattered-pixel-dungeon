@@ -1,15 +1,14 @@
-package com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Level;
+package com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.level;
 
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Heros.MvHWarrior1;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Heros.MvHWarrior2;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Heros.MvHWarrior3;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Monsters.MvHExplosiveTrap;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Monsters.MvHYogBall;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Monsters.MvHYogBomb;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.MvHHeroSpawner;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.MvHMobSprite;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.WndMvH;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.MobSprite;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.heroes.MvHWarrior1;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.heroes.MvHWarrior2;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.heroes.MvHWarrior3;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.monsters.MvHExplosiveTrap;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.monsters.MvHYogBall;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.monsters.MvHYogBomb;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.MvHHeroSpawner;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.MvHMobSprite;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.WndMvH;
 import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;

@@ -1,14 +1,13 @@
-package com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Heros;
+package com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.heroes;
 
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.MvHHeroSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.MvHHeroSprite;
 
 public class MvHWarrior4 extends MvHHeroSprite {
 
     public boolean haveUpdate = false;
 
     public MvHWarrior4() {
-        super(true,4);
+        super(true,4,0);
         HT = HP = 270;
         DELAY = delay = 0.5f;
         gameSpeed = 2f;

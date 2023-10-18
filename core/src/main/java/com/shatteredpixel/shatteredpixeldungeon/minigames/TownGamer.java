@@ -4,12 +4,14 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.NPC;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Level.MvH1_1;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Level.MvH1_2;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Level.MvH1_3;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Level.MvH1_4;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Level.MvH1_5;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.level.MvH1_1;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.level.MvH1_2;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.level.MvH1_3;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.level.MvH1_4;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.level.MvH1_5;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.level.MvH1_6;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.level.MvH1_7;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ShopkeeperSprite;
@@ -160,7 +162,7 @@ public class TownGamer extends NPC {
 
         public WndAdventure() {
             super(Messages.get(TownGamer.class,"adventure"),Messages.get(TownGamer.class,"in_development"),
-                    "1-1","1-2","1-3","1-4","1-5",Messages.get(TownGamer.class,"no"));
+                    "1-1","1-2","1-3","1-4","1-5","1-6","1-7",Messages.get(TownGamer.class,"no"));
         }
         @Override
         public void onSelect(int index) {
@@ -180,6 +182,12 @@ public class TownGamer extends NPC {
                     break;
                 case 4:
                     GameScene.show(new MvH1_5());
+                    break;
+                case 5:
+                    GameScene.show(new MvH1_6());
+                    break;
+                case 6:
+                    GameScene.show(new MvH1_7());
                     break;
                 default:
                     hide();

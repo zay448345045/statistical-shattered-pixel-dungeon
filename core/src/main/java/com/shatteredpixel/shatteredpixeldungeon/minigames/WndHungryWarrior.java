@@ -1,9 +1,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.minigames;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.MvHHeroSprite;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.MvHHeroSprite;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.input.PointerEvent;

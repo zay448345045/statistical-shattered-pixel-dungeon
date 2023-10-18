@@ -1,10 +1,8 @@
-package com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Monsters;
+package com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.monsters;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.MvHMobSprite;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.WndMvH;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ElementalSprite;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.WndMvH;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
@@ -38,7 +36,7 @@ public class MvHElementalFrost extends MvHElementalSprite.Frost {
 
                 MagicMissile missile = ((MagicMissile)parent.recycle(MagicMissile.class));
                 WndMvH.wndMvH.addToFront(missile);
-                missile.reset(MagicMissile.MAGIC_MISSILE,this.center(),enemy.center(),new Callback() {
+                missile.reset(MagicMissile.FROST,this.center(),enemy.center(),new Callback() {
                     @Override
                     public void call() {
                         if (enemy != null) {

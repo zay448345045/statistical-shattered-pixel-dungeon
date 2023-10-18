@@ -1,4 +1,4 @@
-package com.shatteredpixel.shatteredpixeldungeon.minigames;
+package com.shatteredpixel.shatteredpixeldungeon.minigames.wip;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;

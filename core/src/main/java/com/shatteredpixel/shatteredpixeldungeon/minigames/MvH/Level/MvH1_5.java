@@ -1,15 +1,16 @@
-package com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Level;
+package com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.level;
 
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Heros.MvHWarrior1;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Heros.MvHWarrior2;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Heros.MvHWarrior3;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Monsters.MvHBomb;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Monsters.MvHDewcatcher;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Monsters.MvHElementalNewBornFire;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Monsters.MvHExplosiveTrap;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Monsters.MvHYog;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.MvHHeroSpawner;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.WndMvH;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.heroes.MvHWarrior1;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.heroes.MvHWarrior2;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.heroes.MvHWarrior3;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.monsters.MvHBomb;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.monsters.MvHDewcatcher;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.monsters.MvHElementalFrost;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.monsters.MvHElementalNewBornFire;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.monsters.MvHExplosiveTrap;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.monsters.MvHYog;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.MvHHeroSpawner;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.WndMvH;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,17 +47,17 @@ public class MvH1_5 extends WndMvH {
                 mvHHeroSpawner.new Wave(MvHHeroSpawner.Condition.ALL,2),
                 mvHHeroSpawner.new Wave(MvHHeroSpawner.Condition.ALL,3),
                 mvHHeroSpawner.new Wave(MvHHeroSpawner.Condition.ALL,3),
-                mvHHeroSpawner.new Wave(MvHHeroSpawner.Condition.DIE,3),
+                mvHHeroSpawner.new Wave(MvHHeroSpawner.Condition.DIE,4),
                 mvHHeroSpawner.new Wave(MvHHeroSpawner.Condition.TIME,0,2f,1),
                 mvHHeroSpawner.new Wave(MvHHeroSpawner.Condition.ALL,4),
-                mvHHeroSpawner.new Wave(MvHHeroSpawner.Condition.ALL,4),
-                mvHHeroSpawner.new Wave(MvHHeroSpawner.Condition.ALL,4),
                 mvHHeroSpawner.new Wave(MvHHeroSpawner.Condition.ALL,5),
                 mvHHeroSpawner.new Wave(MvHHeroSpawner.Condition.ALL,5),
                 mvHHeroSpawner.new Wave(MvHHeroSpawner.Condition.ALL,5),
                 mvHHeroSpawner.new Wave(MvHHeroSpawner.Condition.ALL,6),
                 mvHHeroSpawner.new Wave(MvHHeroSpawner.Condition.ALL,6),
-                mvHHeroSpawner.new Wave(MvHHeroSpawner.Condition.DIE,6),
+                mvHHeroSpawner.new Wave(MvHHeroSpawner.Condition.ALL,6),
+                mvHHeroSpawner.new Wave(MvHHeroSpawner.Condition.ALL,7),
+                mvHHeroSpawner.new Wave(MvHHeroSpawner.Condition.DIE,7),
                 mvHHeroSpawner.new Wave(MvHHeroSpawner.Condition.TIME,0,2f,1),//before last wave
                 mvHHeroSpawner.new Wave(MvHHeroSpawner.Condition.TIME,0,2f,2),
                 mvHHeroSpawner.new Wave(MvHHeroSpawner.Condition.DIE,14)
@@ -67,5 +68,12 @@ public class MvH1_5 extends WndMvH {
         mvHHeroSpawner.x = 0;
         mvHHeroSpawner.y = 0;
         addToBack(mvHHeroSpawner);
+    }
+
+    @Override
+    public void createToLoot(float x,float y) {
+        lootCard loot = WndMvH.wndMvH.new lootCard(new MvHElementalFrost());
+        loot.setRect(x,y,20,20);
+        WndMvH.wndMvH.addToFront(loot);
     }
 }

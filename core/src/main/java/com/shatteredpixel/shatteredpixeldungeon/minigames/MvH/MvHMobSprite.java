@@ -1,4 +1,4 @@
-package com.shatteredpixel.shatteredpixeldungeon.minigames.MvH;
+package com.shatteredpixel.shatteredpixeldungeon.minigames.mvh;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;

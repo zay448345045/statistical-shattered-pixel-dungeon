@@ -796,7 +796,11 @@ public class TestPotion extends TestGenerator {
 
         private void updateText() {
             Class<? extends Item> item = idToItem(selected);
-            t_select.text(Messages.get(TestPotion.class, "select", Messages.get(item, "name")));
+            String s = Messages.get(item, "name");
+            if (item == Pasty.class) {
+                s = "馅饼";
+            }
+            t_select.text(Messages.get(TestPotion.class, "select", s));
             layout();
         }
     }

@@ -1,11 +1,38 @@
 package com.shatteredpixel.shatteredpixeldungeon.custom.dict;
 
 import com.shatteredpixel.shatteredpixeldungeon.custom.messages.M;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.AssassinsBlade;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.BattleAxe;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Crossbow;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dirk;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Flail;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gauntlet;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Glaive;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Greataxe;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Greatshield;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Greatsword;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.HandAxe;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Katana;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Longsword;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Mace;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Quarterstaff;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Rapier;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.RoundShield;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.RunicBlade;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Sai;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Scimitar;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Shortsword;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Sickle;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Spear;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Sword;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WarHammer;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WarScythe;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Whip;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WornShortsword;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.Trident;
 
 import java.util.HashMap;
 
@@ -56,7 +83,7 @@ public class Wishing {
     }
 
     public static void checkSimilarity(String target) {
-        min = 0.01f;
+        min = 0.1f;
         full = false;
 
         float a;
@@ -64,32 +91,65 @@ public class Wishing {
 
         for (String str : wishToCompare.keySet()) {
             a = getSimilarityRatio(str, target);
-
             if (a >= min) {
                 if (full) {
                     hashMap.remove(min);
+                    min = a;
                 } else {
                     if (hashMap.size() == 7) {
                         full = true;
                     }
                 }
                 hashMap.put(a,wishToCompare.get(str));
-                min = a;
             }
         }
     }
 
 
 
-    private static HashMap<String,Class<?>> wishToCompare = new HashMap();
+    private static final HashMap<String,Class<?>> wishToCompare = new HashMap<>();
     static {
-//        wishToCompare.put("","");
+//        wishToCompare.put("",);
+        wishToCompare.put("破损的短剑", WornShortsword.class);
+        wishToCompare.put("法师魔杖", MagesStaff.class);
+        wishToCompare.put("匕首", Dagger.class);
+        wishToCompare.put("镶钉手套", Gloves.class);
+        wishToCompare.put("刺剑", Rapier.class);
+
         wishToCompare.put("短剑", Shortsword.class);
         wishToCompare.put("手斧", HandAxe.class);
         wishToCompare.put("长矛", Spear.class);
         wishToCompare.put("铁头棍", Quarterstaff.class);
-        wishToCompare.put("长匕首", Dict.class);
+        wishToCompare.put("长匕首", Dirk.class);
         wishToCompare.put("短柄镰", Sickle.class);
+
+        wishToCompare.put("单手剑", Sword.class);
+        wishToCompare.put("硬头锤", Mace.class);
+        wishToCompare.put("弯刀", Scimitar.class);
+        wishToCompare.put("圆盾", RoundShield.class);
+        wishToCompare.put("双钗", Sai.class);
+        wishToCompare.put("长鞭", Whip.class);
+
+        wishToCompare.put("长剑", Longsword.class);
+        wishToCompare.put("战斧", BattleAxe.class);
+        wishToCompare.put("链枷", Flail.class);
+        wishToCompare.put("符文之刃", RunicBlade.class);
+        wishToCompare.put("暗杀之刃", AssassinsBlade.class);
+        wishToCompare.put("十字弩", Crossbow.class);
+        wishToCompare.put("武士刀", Katana.class);
+
+        wishToCompare.put("巨剑", Greatsword.class);
+        wishToCompare.put("战锤", WarHammer.class);
+        wishToCompare.put("关刀", Glaive.class);
+        wishToCompare.put("巨斧", Greataxe.class);
+        wishToCompare.put("巨型方盾", Greatshield.class);
+        wishToCompare.put("魔岩拳套", Gauntlet.class);
+        wishToCompare.put("战镰", WarScythe.class);
+//        wishToCompare.put("手斧", HandAxe.class);
+//        wishToCompare.put("长矛", Spear.class);
+//        wishToCompare.put("铁头棍", Quarterstaff.class);
+//        wishToCompare.put("长匕首", Dict.class);
+//        wishToCompare.put("短柄镰", Sickle.class);
     }
 
 }

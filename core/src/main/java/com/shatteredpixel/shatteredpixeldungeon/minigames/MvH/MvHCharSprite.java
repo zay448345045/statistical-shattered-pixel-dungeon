@@ -1,4 +1,4 @@
-package com.shatteredpixel.shatteredpixeldungeon.minigames.MvH;
+package com.shatteredpixel.shatteredpixeldungeon.minigames.mvh;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -563,10 +563,10 @@ public class MvHCharSprite extends CharSprite implements Tweener.Listener, Movie
         }
 
         if (this instanceof MvHHeroSprite && ((MvHHeroSprite)this).gameBurning > 0) {
-            ra = 1f;
+            ra = 0.8f;
         }
         if (this instanceof MvHHeroSprite && ((MvHHeroSprite)this).gameFrost > 0) {
-            ba = 1f;
+            ba = 0.8f;
         }
     }
 

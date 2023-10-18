@@ -1,12 +1,11 @@
-package com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Level;
+package com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.level;
 
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Heros.MvHWarrior1;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Monsters.MvHDewcatcher;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Monsters.MvHElementalNewBornFire;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.MvHHeroSpawner;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.MvHHeroSprite;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.WndMvH;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.heroes.MvHWarrior1;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.monsters.MvHDewcatcher;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.monsters.MvHElementalNewBornFire;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.MvHHeroSpawner;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.MvHHeroSprite;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.WndMvH;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;

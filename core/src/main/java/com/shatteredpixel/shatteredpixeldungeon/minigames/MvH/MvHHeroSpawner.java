@@ -1,8 +1,7 @@
-package com.shatteredpixel.shatteredpixeldungeon.minigames.MvH;
+package com.shatteredpixel.shatteredpixeldungeon.minigames.mvh;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
 import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;

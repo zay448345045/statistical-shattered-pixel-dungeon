@@ -1,18 +1,17 @@
-package com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Heros;
+package com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.heroes;
 
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.MvHHeroSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.MvHHeroSprite;
 
-public class MvHWarrior2 extends MvHHeroSprite {
+public class MvHWarrior1 extends MvHHeroSprite {
 
     public boolean haveUpdate = false;
 
-    public MvHWarrior2() {
-        super(true,2);
-        HT = HP = 550;
+    public MvHWarrior1() {
+        super(true,1,0);
+        HT = HP = 180;
         DELAY = delay = 0.5f;
         gameSpeed = 2f;
-        level = 2;
+        level = 1;
         flipHorizontal = true;
         runSlowly();
     }

@@ -1,8 +1,7 @@
-package com.shatteredpixel.shatteredpixeldungeon.minigames.MvH;
+package com.shatteredpixel.shatteredpixeldungeon.minigames.mvh;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
-import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.minigames.TownGamer;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -103,9 +102,9 @@ public class WndMvH extends Window {
         add(waterImage);
 
         blueBlock = new BlueBlock();
-        blueBlock.x = 6;
-        blueBlock.scale.y = 6 * Math.min((water / 1000f),1f);
-        blueBlock.y = 13 - blueBlock.scale.y;
+        blueBlock.x = 4;
+        blueBlock.scale.y = 4 * Math.min((water / 1000f),1f);
+        blueBlock.y = 10 - blueBlock.scale.y;
         add(blueBlock);
 
         txt = new StyledButton(Chrome.Type.GREY_BUTTON,Integer.toString(water),7);
@@ -417,7 +416,7 @@ public class WndMvH extends Window {
 
         public WaterImage() {
             waterSkin = new Image(Assets.Sprites.ITEMS);
-            waterSkin.frame(waterSkin.texture.uvRect(96,480,112,496));
+            waterSkin.frame(waterSkin.texture.uvRect(96,480,108,492));
         }
 
         public void layout() {
@@ -429,14 +428,14 @@ public class WndMvH extends Window {
 
     public class BlueBlock extends ColorBlock {
         public BlueBlock() {
-            super(8,5,0xFF0000FF);
+            super(8,4,0xFF0000FF);
 
             alpha(0.6f);
         }
 
         public void changeHeight() {
-            scale.y = 6 * Math.min((water / 1000f),1f);
-            y = 13 - blueBlock.scale.y;
+            scale.y = 4 * Math.min((water / 1000f),1f);
+            y = 10 - blueBlock.scale.y;
         }
     }
 
@@ -515,6 +514,7 @@ public class WndMvH extends Window {
             Sample.INSTANCE.play(Assets.Sounds.DEWDROP);
             water += 25;
             txt.text(Integer.toString(water));
+            blueBlock.changeHeight();
             destroy();
         }
 
@@ -545,6 +545,7 @@ public class WndMvH extends Window {
             Sample.INSTANCE.play(Assets.Sounds.DEWDROP);
             water += 25;
             txt.text(Integer.toString(water));
+            blueBlock.changeHeight();
             destroy();
         }
 
@@ -635,7 +636,7 @@ public class WndMvH extends Window {
                 addToFront(freeDew);
 
                 haveSpawned++;
-                time = 4.25f + Random.Float(2.75f) + 0.1f * haveSpawned;
+                time = 4.25f + Random.Float(2.75f) + 0.15f * haveSpawned;
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.shatteredpixel.shatteredpixeldungeon.minigames.MvH;
+package com.shatteredpixel.shatteredpixeldungeon.minigames.mvh;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -12,6 +12,7 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;
 import com.watabou.utils.RectF;
@@ -39,6 +40,8 @@ public class MvHHeroSprite extends MvHCharSprite {
         public int gameAttack = 50;
         public int level = 1;
 
+        public Amulet amulet;
+
         public void setMapToPos(float x, float y) {
             this.x = x * 20 + 15;
             this.y = y * 20 + 33;
@@ -47,11 +50,11 @@ public class MvHHeroSprite extends MvHCharSprite {
         public MvHHeroSprite() {
             super();
 
-            texture( Dungeon.hero.heroClass.spritesheet() );
+            texture(Assets.Sprites.WARRIOR);
 
             updateArmor();
 
-            link( Dungeon.hero );
+//            link( Dungeon.hero );
 
             if (ch.isAlive())
                 idle();
@@ -59,12 +62,30 @@ public class MvHHeroSprite extends MvHCharSprite {
                 die();
         }
 
-        public MvHHeroSprite(boolean game,int tier) {
+        public MvHHeroSprite(boolean game,int tier,int heroClass) {
             super();
             this.gameMvH = game;
             this.tier = tier;
 
-            texture(Dungeon.hero.heroClass.spritesheet());
+            switch (heroClass) {
+                default:
+                case 0:
+                    texture(Assets.Sprites.WARRIOR);
+                    break;
+                case 1:
+                    texture(Assets.Sprites.MAGE);
+                    break;
+                case 2:
+                    texture(Assets.Sprites.ROGUE);
+                    break;
+                case 3:
+                    texture(Assets.Sprites.HUNTRESS);
+                    break;
+                case 4:
+                    texture(Assets.Sprites.DUELIST);
+                    break;
+            }
+
             updateArmor();
             idle();
         }
@@ -74,7 +95,7 @@ public class MvHHeroSprite extends MvHCharSprite {
             this.gameHungry = true;
             this.tier = tier;
 
-            texture(Dungeon.hero.heroClass.spritesheet());
+            texture(Assets.Sprites.WARRIOR);
             updateArmor();
             idle();
         }
@@ -207,45 +228,30 @@ public class MvHHeroSprite extends MvHCharSprite {
                     }
 
                     if (HP > 0) {
-                        ChooseEnemy();
+                        chooseEnemy();
 
-                        if (enemy == null) {
-                            runSlowly();
+                        if (x <= 0) {
+                            WndMvH.wndMvH.gameOver();
+                            flipHorizontal = false;
 
-                            if (x <= 0 || haveAmulet) {
-                                WndMvH.wndMvH.gameOver();
-                                flipHorizontal = false;
-                                haveAmulet = true;
-                                Amulet amulet = new Amulet();
+                            if (!haveAmulet) {
+                                amulet = new Amulet();
                                 amulet.scale.set(0.2f);
                                 amulet.heroSprite = this;
                                 WndMvH.wndMvH.addToFront(amulet);
-                                x += gameSpeed * 5;
-                            } else {
-                                x -= gameSpeed;
+                                haveAmulet = true;
                             }
+                        }
+
+                        if (haveAmulet) {
+                            x += gameSpeed * 5;
+
+                        } else if (enemy == null) {
+                            runSlowly();
+                            x -= gameSpeed;
 
                         } else {
-                            if (attackdelay <= attackDelay) {
-                                attackdelay++;
-                                enemy.HP -= gameAttack;
-//							GLog.n(Integer.toString(enemy.HP));
-                                if (enemy.HP <= 0) {
-                                    enemy.gameDie();
-                                    enemy = null;
-                                }
-                            } else {
-                                enemy.flash();
-                                attackdelay = 0;
-                                enemy.HP -= gameAttack;
-//							GLog.n(Integer.toString(enemy.HP));
-                                Sample.INSTANCE.play(Assets.Sounds.HIT);
-                                if (enemy.HP <= 0) {
-                                    enemy.gameDie();
-                                    enemy = null;
-                                }
-                                play(attack);
-                            }
+                            doAttack();
                         }
 
                     } else {
@@ -269,6 +275,32 @@ public class MvHHeroSprite extends MvHCharSprite {
             super.update();
         }
 
+        public void doAttack() {
+            if (attackdelay <= attackDelay) {
+                attackdelay++;
+                enemy.HP -= gameAttack;
+//							GLog.n(Integer.toString(enemy.HP));
+                if (enemy.HP <= 0) {
+                    enemy.gameDie();
+                    enemy = null;
+                }
+            } else {
+                enemy.flash();
+                attackdelay = 0;
+                enemy.HP -= gameAttack;
+//							GLog.n(Integer.toString(enemy.HP));
+                Sample.INSTANCE.play(Assets.Sounds.HIT);
+                if (enemy.HP <= 0) {
+                    enemy.gameDie();
+                    enemy = null;
+                }
+                play(attack);
+            }
+        }
+
+        public void superUpdate() {
+            super.update();
+        }
 
         public void gameDie() {
             if (isDied) {
@@ -283,7 +315,7 @@ public class MvHHeroSprite extends MvHCharSprite {
             }
         }
 
-        public void ChooseEnemy() {
+        public void chooseEnemy() {
             enemy = null;
 
             if (WndMvH.grasses.size() == 0) {
@@ -295,6 +327,14 @@ public class MvHHeroSprite extends MvHCharSprite {
                     enemy = grass.mobSprite;
                 }
             }
+        }
+
+        public void blink(float x,float y) {
+            alpha(0);
+            parent.add( new AlphaTweener(this,1,0.4f));
+//            emitter().start(Speck.factory(Speck.LIGHT),0.2f,3);
+            this.x = x;
+            this.y = y;
         }
 
         public void sprint( float speed ) {

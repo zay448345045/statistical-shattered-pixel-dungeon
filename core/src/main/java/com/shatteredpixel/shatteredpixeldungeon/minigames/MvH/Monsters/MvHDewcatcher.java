@@ -1,9 +1,8 @@
-package com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.Monsters;
+package com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.monsters;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.MvHMobSprite;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.MvH.WndMvH;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.MobSprite;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.MvHMobSprite;
+import com.shatteredpixel.shatteredpixeldungeon.minigames.mvh.WndMvH;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.utils.Random;

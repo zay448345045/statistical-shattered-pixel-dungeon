@@ -366,7 +366,7 @@ public abstract class YogRealFist extends Mob {
                 b.announced = false;
                 b.set(dmg*.5f);
                 b.attachTo(this);
-                sprite.showStatus(CharSprite.WARNING, b.toString() + " " + (int)b.level());
+                sprite.showStatus(CharSprite.WARNING, b.name() + " " + (int)b.level());
             } else{
                 super.damage(dmg, src);
             }
