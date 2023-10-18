@@ -26,11 +26,12 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Awareness;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSight;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.SpiritHawk;
@@ -39,15 +40,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Wandmaker;
-import com.shatteredpixel.shatteredpixeldungeon.custom.buffs.AbsoluteBlindness;
-import com.shatteredpixel.shatteredpixeldungeon.custom.ch.boss.HardDKLevel;
-import com.shatteredpixel.shatteredpixeldungeon.custom.ch.boss.HardDM300Level;
-import com.shatteredpixel.shatteredpixeldungeon.custom.ch.boss.HardGooLevel;
-import com.shatteredpixel.shatteredpixeldungeon.custom.ch.boss.HardTenguLevel;
-import com.shatteredpixel.shatteredpixeldungeon.custom.ch.boss.NewHDKLevel;
-import com.shatteredpixel.shatteredpixeldungeon.custom.ch.boss.YogRealLevel;
-import com.shatteredpixel.shatteredpixeldungeon.expansion.mergeManagers.LevelSwitchListener;
-import com.shatteredpixel.shatteredpixeldungeon.expansion.mergeManagers.StaticStorage;
 import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
@@ -78,14 +70,13 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SecretRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.SpecialRoom;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.minigames.NewLevel;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Toolbar;
-import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
 import com.shatteredpixel.shatteredpixeldungeon.utils.DungeonSeed;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndResurrect;
 import com.watabou.noosa.Game;
+import com.watabou.utils.BArray;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.FileUtils;
@@ -175,6 +166,14 @@ public class Dungeon {
 					lim.count = 0;
 				}
 				
+			}
+
+			//pre-v2.2.0 saves
+			if (Dungeon.version < 750
+					&& Dungeon.isChallenged(Challenges.NO_SCROLLS)
+					&& UPGRADE_SCROLLS.count > 0){
+				//we now count SOU fully, and just don't drop every 2nd one
+				UPGRADE_SCROLLS.count += UPGRADE_SCROLLS.count-1;
 			}
 		}
 
@@ -297,7 +296,6 @@ public class Dungeon {
 		Actor.clear();
 		
 		Level level;
-
 		if (branch == 0) {
 			switch (depth) {
 				case 1:
@@ -307,8 +305,7 @@ public class Dungeon {
 					level = new SewerLevel();
 					break;
 				case 5:
-					if((Statistics.boss_enhance & 0x1) != 0) level = new HardGooLevel();
-					else level = new SewerBossLevel();
+					level = new SewerBossLevel();
 					break;
 				case 6:
 				case 7:
@@ -317,8 +314,7 @@ public class Dungeon {
 					level = new PrisonLevel();
 					break;
 				case 10:
-					if((Statistics.boss_enhance & 0x2) != 0) level = new HardTenguLevel();
-					else level = new PrisonBossLevel();
+					level = new PrisonBossLevel();
 					break;
 				case 11:
 				case 12:
@@ -327,8 +323,7 @@ public class Dungeon {
 					level = new CavesLevel();
 					break;
 				case 15:
-					if((Statistics.boss_enhance & 0x4) != 0) level =  new HardDM300Level();
-					else level = new CavesBossLevel();
+					level = new CavesBossLevel();
 					break;
 				case 16:
 				case 17:
@@ -337,8 +332,7 @@ public class Dungeon {
 					level = new CityLevel();
 					break;
 				case 20:
-					if((Statistics.boss_enhance & 0x8) != 0) level = new NewHDKLevel();//HardDKLevel();
-					else level = new CityBossLevel();
+					level = new CityBossLevel();
 					break;
 				case 21:
 				case 22:
@@ -347,8 +341,7 @@ public class Dungeon {
 					level = new HallsLevel();
 					break;
 				case 25:
-					if((Statistics.boss_enhance & 0x10) != 0) level = new YogRealLevel();
-					else level = new HallsBossLevel();
+					level = new HallsBossLevel();
 					break;
 				case 26:
 					level = new LastLevel();
@@ -369,10 +362,6 @@ public class Dungeon {
 			}
 		} else {
 			level = new DeadEndLevel();
-		}
-
-		if (Dungeon.isChallenged(Challenges.MINIGAMES)) {
-			level = new NewLevel();
 		}
 
 		//dead end levels get cleared, don't count as generated
@@ -501,13 +490,7 @@ public class Dungeon {
 		
 		hero.curAction = hero.lastAction = null;
 
-		if (hero.buff(AbsoluteBlindness.class) != null) {
-			hero.viewDistance = 0;
-		}
 		observe();
-
-		LevelSwitchListener.onLevelSwitch();
-
 		try {
 			saveAll();
 		} catch (IOException e) {
@@ -515,8 +498,6 @@ public class Dungeon {
 			/*This only catches IO errors. Yes, this means things can go wrong, and they can go wrong catastrophically.
 			But when they do the user will get a nice 'report this issue' dialogue, and I can fix the bug.*/
 		}
-
-
 	}
 
 	public static void dropToChasm( Item item ) {
@@ -546,12 +527,8 @@ public class Dungeon {
 	
 	public static boolean souNeeded() {
 		int souLeftThisSet;
-		//3 SOU each floor set, 1.5 (rounded) on forbidden runes challenge
-		if (isChallenged(Challenges.NO_SCROLLS)){
-			souLeftThisSet = Math.round(1.5f - (LimitedDrops.UPGRADE_SCROLLS.count - (depth / 5) * 1.5f));
-		} else {
-			souLeftThisSet = 3 - (LimitedDrops.UPGRADE_SCROLLS.count - (depth / 5) * 3);
-		}
+		//3 SOU each floor set
+		souLeftThisSet = 3 - (LimitedDrops.UPGRADE_SCROLLS.count - (depth / 5) * 3);
 		if (souLeftThisSet <= 0) return false;
 
 		int floorThisSet = (depth % 5);
@@ -656,8 +633,6 @@ public class Dungeon {
 			Bundle badges = new Bundle();
 			Badges.saveLocal( badges );
 			bundle.put( BADGES, badges );
-
-			StaticStorage.storeInBundle(bundle);
 			
 			FileUtils.bundleToFile( GamesInProgress.gameFile(save), bundle);
 			
@@ -701,8 +676,6 @@ public class Dungeon {
 		} else {
 			initialVersion = bundle.getInt( VERSION );
 		}
-
-		StaticStorage.restoreFromBundle(bundle);
 
 		version = bundle.getInt( VERSION );
 
@@ -1018,6 +991,8 @@ public class Dungeon {
 			BArray.and( passable, Dungeon.level.openSpace, passable );
 		}
 
+		ch.modifyPassable(passable);
+
 		if (chars) {
 			for (Char c : Actor.chars()) {
 				if (vis[c.pos]) {
@@ -1038,7 +1013,7 @@ public class Dungeon {
 	public static int findStep(Char ch, int to, boolean[] pass, boolean[] visible, boolean chars ) {
 
 		if (Dungeon.level.adjacent( ch.pos, to )) {
-			return Actor.findChar( to ) == null && (pass[to] || Dungeon.level.avoid[to]) ? to : -1;
+			return Actor.findChar( to ) == null && pass[to] ? to : -1;
 		}
 
 		return PathFinder.getStep( ch.pos, to, findPassable(ch, pass, visible, chars) );
@@ -1046,16 +1021,21 @@ public class Dungeon {
 	}
 	
 	public static int flee( Char ch, int from, boolean[] pass, boolean[] visible, boolean chars ) {
-		//only consider chars impassable if our retreat path runs into them
 		boolean[] passable = findPassable(ch, pass, visible, false, true);
 		passable[ch.pos] = true;
 
-		int step = PathFinder.getStepBack( ch.pos, from, passable );
-		while (step != -1 && Actor.findChar(step) != null && chars){
-			passable[step] = false;
-			step = PathFinder.getStepBack( ch.pos, from, passable );
+		//only consider other chars impassable if our retreat step may collide with them
+		if (chars) {
+			for (Char c : Actor.chars()) {
+				if (c.pos == from || Dungeon.level.adjacent(c.pos, ch.pos)) {
+					passable[c.pos] = false;
+				}
+			}
 		}
-		return step;
+
+		//chars affected by terror have a shorter lookahead and can't approach the fear source
+		boolean canApproachFromPos = ch.buff(Terror.class) == null && ch.buff(Dread.class) == null;
+		return PathFinder.getStepBack( ch.pos, from, canApproachFromPos ? 8 : 4, passable, canApproachFromPos );
 		
 	}
 

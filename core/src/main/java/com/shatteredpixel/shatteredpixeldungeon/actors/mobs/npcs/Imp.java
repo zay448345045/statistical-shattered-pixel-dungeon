@@ -21,7 +21,6 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -63,11 +62,11 @@ public class Imp extends NPC {
 			return true;
 		}
 		if (!Quest.given && Dungeon.level.visited[pos]) {
-			if (!seenBefore) {
-				yell( Messages.get(this, "hey", Messages.titleCase(Dungeon.hero.name()) ) );
-			}
 			Notes.add( Notes.Landmark.IMP );
-			seenBefore = true;
+			if (!seenBefore && Dungeon.level.heroFOV[pos]) {
+				yell(Messages.get(this, "hey", Messages.titleCase(Dungeon.hero.name())));
+				seenBefore = true;
+			}
 		} else {
 			seenBefore = false;
 		}
@@ -235,13 +234,10 @@ public class Imp extends NPC {
 				}
 				
 				given = false;
-
-				//尝试避免生成元素戒指
-				int tries = 0;
+				
 				do {
-					reward = (Ring)Generator.randomUsingDefaults( Generator.Category.RING );
-					tries++;
-				} while (reward.cursed || (tries < 100 && Challenges.isItemBlocked(reward)));
+					reward = (Ring)Generator.random( Generator.Category.RING );
+				} while (reward.cursed);
 				reward.upgrade( 2 );
 				reward.cursed = true;
 			}

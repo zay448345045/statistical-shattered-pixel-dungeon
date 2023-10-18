@@ -80,9 +80,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Tengu;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.MirrorImage;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.PrismaticImage;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
-import com.shatteredpixel.shatteredpixeldungeon.expansion.mergeManagers.charmodifier.CombatModifier;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.AntiMagic;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Potential;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Viscosity;
@@ -99,7 +97,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLightning;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Blazing;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Blocking;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Grim;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Kinetic;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Shocking;
@@ -115,14 +112,15 @@ import com.shatteredpixel.shatteredpixeldungeon.plants.Earthroot;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
-import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.utils.BArray;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -174,14 +172,17 @@ public abstract class Char extends Actor {
 
 	protected void throwItems(){
 		Heap heap = Dungeon.level.heaps.get( pos );
-		if (heap != null && heap.type == Heap.Type.HEAP) {
-			int n;
-			do {
-				n = pos + PathFinder.NEIGHBOURS8[Random.Int( 8 )];
-			} while (!Dungeon.level.passable[n] && !Dungeon.level.avoid[n]);
-			Item item = heap.peek();
-			if (!(item instanceof Tengu.BombAbility.BombItem || item instanceof Tengu.ShockerAbility.ShockerItem)){
-				Dungeon.level.drop( heap.pickUp(), n ).sprite.drop( pos );
+		if (heap != null && heap.type == Heap.Type.HEAP
+				&& !(heap.peek() instanceof Tengu.BombAbility.BombItem)
+				&& !(heap.peek() instanceof Tengu.ShockerAbility.ShockerItem)) {
+			ArrayList<Integer> candidates = new ArrayList<>();
+			for (int n : PathFinder.NEIGHBOURS8){
+				if (Dungeon.level.passable[pos+n]){
+					candidates.add(pos+n);
+				}
+			}
+			if (!candidates.isEmpty()){
+				Dungeon.level.drop( heap.pickUp(), Random.element(candidates) ).sprite.drop( pos );
 			}
 		}
 	}
@@ -265,7 +266,7 @@ public abstract class Char extends Actor {
 	
 	protected boolean moveSprite( int from, int to ) {
 		
-		if (sprite.isVisible() && (Dungeon.level.heroFOV[from] || Dungeon.level.heroFOV[to])) {
+		if (sprite.isVisible() && sprite.parent != null && (Dungeon.level.heroFOV[from] || Dungeon.level.heroFOV[to])) {
 			sprite.move( from, to );
 			return true;
 		} else {
@@ -408,24 +409,24 @@ public abstract class Char extends Actor {
 			if ( buff(Weakness.class) != null ){
 				dmg *= 0.67f;
 			}
-
-			dmg = CombatModifier.INSTANCE.attackModify(this, enemy, dmg);
+			
 			int effectiveDamage = enemy.defenseProc( this, Math.round(dmg) );
-			dr = CombatModifier.INSTANCE.defenseModify(this, enemy, dr, effectiveDamage);
-			effectiveDamage = Math.max( effectiveDamage - dr, 0 );
+			//do not trigger on-hit logic if defenseProc returned a negative value
+			if (effectiveDamage >= 0) {
+				effectiveDamage = Math.max(effectiveDamage - dr, 0);
 
-			if (enemy.buff(Viscosity.ViscosityTracker.class) != null){
-				effectiveDamage = enemy.buff(Viscosity.ViscosityTracker.class).deferDamage(effectiveDamage);
-				enemy.buff(Viscosity.ViscosityTracker.class).detach();
-			}
+				if (enemy.buff(Viscosity.ViscosityTracker.class) != null) {
+					effectiveDamage = enemy.buff(Viscosity.ViscosityTracker.class).deferDamage(effectiveDamage);
+					enemy.buff(Viscosity.ViscosityTracker.class).detach();
+				}
 
-			//vulnerable specifically applies after armor reductions
-			if ( enemy.buff( Vulnerable.class ) != null){
-				effectiveDamage *= 1.33f;
+				//vulnerable specifically applies after armor reductions
+				if (enemy.buff(Vulnerable.class) != null) {
+					effectiveDamage *= 1.33f;
+				}
+
+				effectiveDamage = attackProc(enemy, effectiveDamage);
 			}
-			
-			effectiveDamage = attackProc( enemy, effectiveDamage );
-			
 			if (visibleFight) {
 				if (effectiveDamage > 0 || !enemy.blockSound(Random.Float(0.96f, 1.05f))) {
 					hitSound(Random.Float(0.87f, 1.15f));
@@ -452,7 +453,9 @@ public abstract class Char extends Actor {
 					enemy.damage(-1, this);
 					DeathMark.processFearTheReaper(enemy);
 				}
-				enemy.sprite.showStatus(CharSprite.NEGATIVE, Messages.get(Preparation.class, "assassinated"));
+				if (enemy.sprite != null) {
+					enemy.sprite.showStatus(CharSprite.NEGATIVE, Messages.get(Preparation.class, "assassinated"));
+				}
 			}
 
 			Talent.CombinedLethalityTriggerTracker combinedLethality = buff(Talent.CombinedLethalityTriggerTracker.class);
@@ -468,13 +471,17 @@ public abstract class Char extends Actor {
 						enemy.damage(-1, this);
 						DeathMark.processFearTheReaper(enemy);
 					}
-					enemy.sprite.showStatus(CharSprite.NEGATIVE, Messages.get(Talent.CombinedLethalityTriggerTracker.class, "executed"));
+					if (enemy.sprite != null) {
+						enemy.sprite.showStatus(CharSprite.NEGATIVE, Messages.get(Talent.CombinedLethalityTriggerTracker.class, "executed"));
+					}
 				}
 				combinedLethality.detach();
 			}
 
-			enemy.sprite.bloodBurstA( sprite.center(), effectiveDamage );
-			enemy.sprite.flash();
+			if (enemy.sprite != null) {
+				enemy.sprite.bloodBurstA(sprite.center(), effectiveDamage);
+				enemy.sprite.flash();
+			}
 
 			if (!enemy.isAlive() && visibleFight) {
 				if (enemy == Dungeon.hero) {
@@ -552,9 +559,7 @@ public abstract class Char extends Actor {
 			acuRoll *= buff.evasionAndAccuracyFactor();
 		}
 		acuRoll *= AscensionChallenge.statModifier(attacker);
-
-		acuRoll = CombatModifier.INSTANCE.accuracyModify(attacker, defender, acuRoll);
-
+		
 		float defRoll = Random.Float( defStat );
 		if (defender.buff(Bless.class) != null) defRoll *= 1.25f;
 		if (defender.buff(  Hex.class) != null) defRoll *= 0.8f;
@@ -563,9 +568,7 @@ public abstract class Char extends Actor {
 			defRoll *= buff.evasionAndAccuracyFactor();
 		}
 		defRoll *= AscensionChallenge.statModifier(defender);
-
-		defRoll = CombatModifier.INSTANCE.evasionModify(attacker, defender, defRoll);
-
+		
 		return (acuRoll * accMulti) >= defRoll;
 	}
 	
@@ -740,8 +743,6 @@ public abstract class Char extends Actor {
 		if (buff( Paralysis.class ) != null) {
 			buff( Paralysis.class ).processDamage(dmg);
 		}
-
-		dmg = CombatModifier.INSTANCE.damage(this, dmg, src);
 
 		int shielded = dmg;
 		//FIXME: when I add proper damage properties, should add an IGNORES_SHIELDS property to use here.
@@ -926,17 +927,12 @@ public abstract class Char extends Actor {
 			}
 		}
 
-		if(!CombatModifier.INSTANCE.preAddBuff(this, buff)){
-			return false;
-		}
 		if (sprite != null && buff(Challenge.SpectatorFreeze.class) != null){
 			return false; //can't add buffs while frozen and game is loaded
 		}
 
 		buffs.add( buff );
 		if (Actor.chars().contains(this)) Actor.add( buff );
-
-		CombatModifier.INSTANCE.postAddBuff(this,buff);
 
 		if (sprite != null && buff.announced) {
 			switch (buff.type) {
@@ -1023,6 +1019,11 @@ public abstract class Char extends Actor {
 	
 	public int distance( Char other ) {
 		return Dungeon.level.distance( pos, other.pos );
+	}
+
+	public boolean[] modifyPassable( boolean[] passable){
+		//do nothing by default, but some chars can pass over terrain that others can't
+		return passable;
 	}
 	
 	public void onMotionComplete() {
