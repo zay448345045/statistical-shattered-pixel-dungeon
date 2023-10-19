@@ -115,7 +115,7 @@ public class MimicForChallenge extends Mimic {
         m.pos = pos;
 
         //generate an extra reward for killing the mimic
-        m.generatePrize();
+        m.generatePrize(false);
 
         return m;
     }
@@ -1027,7 +1027,7 @@ public class MimicForChallenge extends Mimic {
     }
 
     @Override
-    protected void generatePrize(){
+    protected void generatePrize(boolean useDecks){
 
         Item reward = null;
         float power = showPower();

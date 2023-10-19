@@ -120,6 +120,7 @@ public class TerrainPlacer extends TestItem {
                 case 17:
                 case 18:
                 case 19:
+                case 23:
                     break;
                 case 29:
                     icon(new Image(Dungeon.level.waterTex(),0, 0, DungeonTilemap.SIZE, DungeonTilemap.SIZE));
@@ -148,6 +149,9 @@ public class TerrainPlacer extends TestItem {
                 case 19:
                     name.text("已触发陷阱");
                     break;
+                case 23:
+                    name.text("被移除的告示牌");
+                    break;
                 default:
                     name.text(Dungeon.level.tileName(terrain));
                     break;
@@ -160,6 +164,6 @@ public class TerrainPlacer extends TestItem {
             DungeonTileSheet.FLAT_WALL,DungeonTileSheet.FLAT_DOOR,DungeonTileSheet.FLAT_DOOR_OPEN,DungeonTileSheet.ENTRANCE,DungeonTileSheet.EXIT,
             DungeonTileSheet.EMBERS,DungeonTileSheet.FLAT_DOOR_LOCKED,DungeonTileSheet.PEDESTAL,DungeonTileSheet.FLAT_WALL_DECO,DungeonTileSheet.FLAT_BARRICADE,
             DungeonTileSheet.FLOOR_SP,DungeonTileSheet.FLAT_HIGH_GRASS,DungeonTileSheet.FLAT_DOOR,-1,-1,-1,DungeonTileSheet.FLOOR_DECO,DungeonTileSheet.LOCKED_EXIT,
-            DungeonTileSheet.UNLOCKED_EXIT,DungeonTileSheet.FLAT_SIGN,DungeonTileSheet.WELL,DungeonTileSheet.FLAT_STATUE,DungeonTileSheet.FLAT_STATUE_SP,
+            DungeonTileSheet.UNLOCKED_EXIT,-1,DungeonTileSheet.WELL,DungeonTileSheet.FLAT_STATUE,DungeonTileSheet.FLAT_STATUE_SP,
             DungeonTileSheet.FLAT_BOOKSHELF,DungeonTileSheet.FLAT_ALCHEMY_POT,DungeonTileSheet.WATER,DungeonTileSheet.FLAT_FURROWED_GRASS,DungeonTileSheet.FLAT_DOOR_CRYSTAL));
 }

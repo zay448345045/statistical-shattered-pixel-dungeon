@@ -67,8 +67,8 @@ public class GoldenMimicForChallenge extends MimicForChallenge {
     }
 
     @Override
-    protected void generatePrize() {
-        super.generatePrize();
+    protected void generatePrize(boolean useDecks) {
+        super.generatePrize(useDecks);
         //all existing prize items are guaranteed uncursed, and +1
         for (Item i : items){
             if (i instanceof EquipableItem || i instanceof Wand){

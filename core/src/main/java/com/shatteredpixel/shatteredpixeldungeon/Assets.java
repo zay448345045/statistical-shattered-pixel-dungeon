@@ -97,6 +97,15 @@ public class Assets {
 		public static final String HERO_ICONS       = "interfaces/hero_icons.png";
 
 		public static final String RADIAL_MENU      = "interfaces/radial_menu.png";
+
+
+		public static final String CARDFRONT		= "interfaces/card_front.png";
+		public static final String CARDBACK		= "interfaces/card_back.png";
+		public static final String CARDSLOT		= "interfaces/card_slot.png";
+		public static final String STATUSBLOCK		= "interfaces/status.png";
+		public static final String BLACK_CHESS = "interfaces/chess_black.png";
+		public static final String WHITE_CHESS = "interfaces/chess_white.png";
+		public static final String TARGET = "interfaces/target.png";
 	}
 
 	//these points to resource bundles, not raw asset files
@@ -110,6 +119,12 @@ public class Assets {
 		public static final String SCENES   = "messages/scenes/scenes";
 		public static final String UI       = "messages/ui/ui";
 		public static final String WINDOWS  = "messages/windows/windows";
+
+		public static final String CUSTOM   = "messages/custom/custom";
+		public static final String EXPANSION= "messages/expansion/expansion";
+		public static final String TEXT     = "messages/text/text";
+
+		public static final String MINIGAMES   = "messages/minigames/minigames";
 	}
 
 	public static class Music {
@@ -149,6 +164,8 @@ public class Assets {
 		public static final String HALLS_TENSE          = "music/halls_tense.ogg";
 		public static final String HALLS_BOSS           = "music/halls_boss.ogg";
 		public static final String HALLS_BOSS_FINALE    = "music/halls_boss_finale.ogg";
+
+		public static final String PVH		= "music/Grasswalk.ogg";
 	}
 
 	public static class Sounds {
@@ -318,5 +335,7 @@ public class Assets {
 		public static final String CRYSTAL_GUARDIAN= "sprites/crystal_guardian.png";
 		public static final String CRYSTAL_SPIRE= "sprites/crystal_spire.png";
 		public static final String GNOLL_GUARD= "sprites/gnoll_guard.png";
+
+		public static final String BOMB = "sprites/bomb.png";
 	}
 }
