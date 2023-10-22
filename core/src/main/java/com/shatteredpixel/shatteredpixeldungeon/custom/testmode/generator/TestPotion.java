@@ -64,6 +64,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfMi
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfToxicEssence;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.CorpseDust;
+import com.shatteredpixel.shatteredpixeldungeon.items.quest.DarkGold;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.Embers;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.GooBlob;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.MetalShard;
@@ -475,6 +476,7 @@ public class TestPotion extends TestGenerator {
             case 10: return ArcaneResin.class;
             case 11: return Embers.class;
             case 12: return CorpseDust.class;
+            case 13: return DarkGold.class;
         }
     }
 
@@ -482,12 +484,12 @@ public class TestPotion extends TestGenerator {
         if(cate == 7) return 10;
         if(cate == 9) return 12;
         if(cate == 10) return 9;
-        if(cate == 11) return 12;
+        if(cate == 11) return 13;
         return 11;
     }
 
     private int maxCategory(){
-        return 11;
+        return 12;
     }
 
     private static ArrayList<Class<? extends Potion>> potionList = new ArrayList<>();

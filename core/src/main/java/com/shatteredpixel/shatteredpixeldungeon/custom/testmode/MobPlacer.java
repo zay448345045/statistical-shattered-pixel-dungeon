@@ -15,6 +15,9 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Bat;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Brute;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CausticSlime;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Crab;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CrystalGuardian;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CrystalSpire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CrystalWisp;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DM100;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DM200;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DM201;
@@ -163,7 +166,7 @@ public class MobPlacer extends TestItem{
             case 3: return DataPack.DM201.ordinal() - DataPack.NEW_FIRE_ELE.ordinal() - 1;
             case 4: return DataPack.ELE_CHAOS.ordinal() - DataPack.DM201.ordinal() - 1;
             case 5: return DataPack.ACIDIC.ordinal() - DataPack.ELE_CHAOS.ordinal() - 1;
-            case 6: default: return DataPack.PHANTOM_PIRANHA.ordinal() - DataPack.ACIDIC.ordinal() - 1;
+            case 6: default: return DataPack.CRYSTAL_WISP.ordinal() - DataPack.ACIDIC.ordinal() - 1;
         }
     }
     private int dataThreshold(int tier){
@@ -437,7 +440,12 @@ public class MobPlacer extends TestItem{
         WRAITH(Wraith.class, DictSpriteSheet.WRAITH),
         TORMENTED_SPIRIT(TormentedSpirit.class,DictSpriteSheet.TORMENTED_SPIRIT),
         PIRANHA(Piranha.class, DictSpriteSheet.FISH),
-        PHANTOM_PIRANHA(PhantomPiranha.class,DictSpriteSheet.PHANTOM_PIRANHA);
+        PHANTOM_PIRANHA(PhantomPiranha.class,DictSpriteSheet.PHANTOM_PIRANHA),
+
+        CRYSTAL_SPIRE(CrystalSpire.class,DictSpriteSheet.CRYSTAL_SPIRE),
+        CRYSTAL_GUARDIAN(CrystalGuardian.class,DictSpriteSheet.CRYSTAL_GUARDIAN),
+        CRYSTAL_WISP(CrystalWisp.class,DictSpriteSheet.CRYSTAL_WISP);
+
 
         private Class<? extends Mob> mobClass;
         private int imageId;

@@ -16,15 +16,15 @@ public class DictSpriteSheet {
     public static Image miscImages(int sheet){
         switch (sheet){
             case AREA_SEWER:
-                return new Image(Assets.Environment.TILES_SEWERS, 16, 64, 16, 16);
+                return new Image(Assets.Environment.TILES_SEWERS, 16, 48, 16, 16);
             case AREA_PRISON:
-                return new Image(Assets.Environment.TILES_PRISON, 16, 64, 16, 16);
+                return new Image(Assets.Environment.TILES_PRISON, 16, 48, 16, 16);
             case AREA_CAVE:
-                return new Image(Assets.Environment.TILES_CAVES, 16, 64, 16, 16);
+                return new Image(Assets.Environment.TILES_CAVES, 16, 48, 16, 16);
             case AREA_CITY:
-                return new Image(Assets.Environment.TILES_CITY, 16, 64, 16, 16);
+                return new Image(Assets.Environment.TILES_CITY, 16, 48, 16, 16);
             case AREA_HALL:
-                return new Image(Assets.Environment.TILES_HALLS, 16, 64, 16, 16);
+                return new Image(Assets.Environment.TILES_HALLS, 16, 48, 16, 16);
 
             case BOSS_CHAPTER1:
                 return new Image(Assets.Sprites.GOO, 60, 0, 20, 14);
@@ -176,15 +176,25 @@ public class DictSpriteSheet {
             case SHEEP:
                 return new Image(Assets.Sprites.SHEEP, 0, 0, 16, 15);
             case RED_SENTRY:
-                    return new Image(Assets.Sprites.RED_SENTRY, 0, 0, 8, 15);
+                return new Image(Assets.Sprites.RED_SENTRY, 0, 0, 8, 15);
+
+            case CRYSTAL_SPIRE:
+                Image i1 = new  Image(Assets.Sprites.CRYSTAL_SPIRE, 0, 0, 24, 41);
+                i1.scale.set(0.4f);
+                return i1;
+            case CRYSTAL_GUARDIAN:
+                return new Image(Assets.Sprites.CRYSTAL_GUARDIAN, 0, 0, 12, 15);
+            case CRYSTAL_WISP:
+                return new Image(Assets.Sprites.CRYSTAL_WISP, 0, 0, 12, 14);
+
             case HERO:
                 return new Image(Assets.Sprites.ROGUE, 0, 15, 12, 15);
             case TRAP_GREEN_RECT:
                 return new Image(Assets.Environment.TERRAIN_FEATURES, 48, 64, 16, 16);
             case LOCKED_FLOOR:
-                return new Image(Assets.Environment.TILES_CAVES, 64, 80, 16, 16);
+                return new Image(Assets.Environment.TILES_CAVES, 16, 64, 16, 16);
             case CHASM:
-                return new Image(Assets.Environment.TILES_CAVES, 48, 48, 16, 16);
+                return new Image(Assets.Environment.TILES_CAVES, 176, 16, 16, 16);
             case BUFF_POSITIVE:
                 return new Image(Assets.Interfaces.BUFFS_LARGE, 48 ,16, 16, 16);
             case BUFF_NEUTRAL:
@@ -280,6 +290,12 @@ public class DictSpriteSheet {
     public static final int BEE             = 707 + 10000;
     public static final int TORMENTED_SPIRIT = 708 + 10000;
     public static final int PHANTOM_PIRANHA = 709 + 10000;
+
+    public static final int CRYSTAL_SPIRE = 710 + 10000;
+
+    public static final int CRYSTAL_GUARDIAN = 711 + 10000;
+
+    public static final int CRYSTAL_WISP = 712 + 10000;
 
 
     public static final int SAD_GHOST       = 800 + 10000;

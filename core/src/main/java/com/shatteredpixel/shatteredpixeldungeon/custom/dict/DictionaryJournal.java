@@ -206,6 +206,12 @@ public enum DictionaryJournal {
         MOBS.d.put("mob_sheep",             DictSpriteSheet.SHEEP);
         MOBS.d.put("mob_red_sentry",        DictSpriteSheet.RED_SENTRY);
 
+        //mine
+        MOBS.d.put("mob_crystal_spire",     DictSpriteSheet.CRYSTAL_SPIRE);
+        MOBS.d.put("mob_crystal_guardian",  DictSpriteSheet.CRYSTAL_GUARDIAN);
+        MOBS.d.put("mob_crystal_wisp",      DictSpriteSheet.CRYSTAL_WISP);
+
+
         //ring
         RINGS.d.put("ring_accuracy",        ItemSpriteSheet.RING_AGATE);
         RINGS.d.put("ring_element",         ItemSpriteSheet.RING_AGATE);
@@ -317,6 +323,10 @@ public enum DictionaryJournal {
         DOCUMENTS.d.put("info_ranking",     ItemSpriteSheet.AMULET);
         DOCUMENTS.d.put("info_bones",       ItemSpriteSheet.REMAINS);
         DOCUMENTS.d.put("fight_mech",       ItemSpriteSheet.DAGGER);
+        DOCUMENTS.d.put("quest_ghost",      DictSpriteSheet.SAD_GHOST);
+        DOCUMENTS.d.put("quest_windmaker",  DictSpriteSheet.WAND_MAKER);
+        DOCUMENTS.d.put("quest_blacksmith", DictSpriteSheet.BLACKSMITH);
+        DOCUMENTS.d.put("quest_imp",        DictSpriteSheet.IMP);
 
         //unclassified
         //buffs
@@ -332,6 +342,7 @@ public enum DictionaryJournal {
         UNCLASSIFIED.d.put("misc_seal",  ItemSpriteSheet.SEAL);
         UNCLASSIFIED.d.put("misc_gold",  ItemSpriteSheet.GOLD);
         UNCLASSIFIED.d.put("misc_dust",  ItemSpriteSheet.DUST);
+        UNCLASSIFIED.d.put("misc_ore",  ItemSpriteSheet.ORE);
         UNCLASSIFIED.d.put("misc_soon",  ItemSpriteSheet.SOMETHING);
     }
 
