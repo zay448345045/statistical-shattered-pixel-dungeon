@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2023 Evan Debenham
+ * Copyright (C) 2014-2024 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -96,6 +97,10 @@ public class WndBlacksmith extends Window {
 							Blacksmith.Quest.favor -= pickaxeCost;
 							Blacksmith.Quest.pickaxe = null;
 							WndBlacksmith.this.hide();
+
+							if (!Blacksmith.Quest.rewardsAvailable()){
+								Notes.remove( Notes.Landmark.TROLL );
+							}
 						}
 					}
 				});
@@ -104,7 +109,7 @@ public class WndBlacksmith extends Window {
 		pickaxe.enable(Blacksmith.Quest.pickaxe != null && Blacksmith.Quest.favor >= pickaxeCost);
 		buttons.add(pickaxe);
 
-		int reforgecost = 500 * (int)Math.pow(2, Blacksmith.Quest.reforges);
+		int reforgecost = 500 + 1000*Blacksmith.Quest.reforges;
 		RedButton reforge = new RedButton(Messages.get(this, "reforge", reforgecost), 6){
 			@Override
 			protected void onClick() {
@@ -114,7 +119,7 @@ public class WndBlacksmith extends Window {
 		reforge.enable(Blacksmith.Quest.favor >= reforgecost);
 		buttons.add(reforge);
 
-		int hardenCost = 500 * (int)Math.pow(2, Blacksmith.Quest.hardens);
+		int hardenCost = 500 + 1000*Blacksmith.Quest.hardens;
 		RedButton harden = new RedButton(Messages.get(this, "harden", hardenCost), 6){
 			@Override
 			protected void onClick() {
@@ -124,7 +129,7 @@ public class WndBlacksmith extends Window {
 		harden.enable(Blacksmith.Quest.favor >= hardenCost);
 		buttons.add(harden);
 
-		int upgradeCost = 1000 * (int)Math.pow(2, Blacksmith.Quest.upgrades);
+		int upgradeCost = 1000 + 1000*Blacksmith.Quest.upgrades;
 		RedButton upgrade = new RedButton(Messages.get(this, "upgrade", upgradeCost), 6){
 			@Override
 			protected void onClick() {
@@ -252,7 +257,7 @@ public class WndBlacksmith extends Window {
 				protected void onClick() {
 
 					Item first, second;
-					if (btnItem1.item().trueLevel() > btnItem2.item().trueLevel()) {
+					if (btnItem1.item().trueLevel() >= btnItem2.item().trueLevel()) {
 						first = btnItem1.item();
 						second = btnItem2.item();
 					} else {
@@ -287,8 +292,12 @@ public class WndBlacksmith extends Window {
 					Badges.validateItemLevelAquired( first );
 					Item.updateQuickslot();
 
-					Blacksmith.Quest.favor -= 500 * (int)Math.pow(2, Blacksmith.Quest.reforges);
+					Blacksmith.Quest.favor -= 500 + 1000*Blacksmith.Quest.reforges;
 					Blacksmith.Quest.reforges++;
+
+					if (!Blacksmith.Quest.rewardsAvailable()){
+						Notes.remove( Notes.Landmark.TROLL );
+					}
 
 					hide();
 					if (wndParent != null){
@@ -318,7 +327,7 @@ public class WndBlacksmith extends Window {
 
 			@Override
 			public boolean itemSelectable(Item item) {
-				return item.isIdentified() && item.isUpgradable();
+				return item.isIdentified() && !item.cursed && item.isUpgradable();
 			}
 
 			@Override
@@ -365,7 +374,7 @@ public class WndBlacksmith extends Window {
 		@Override
 		public boolean itemSelectable(Item item) {
 			return item.isUpgradable()
-					&& item.isIdentified()
+					&& item.isIdentified() && !item.cursed
 					&& ((item instanceof MeleeWeapon && !((Weapon) item).enchantHardened)
 					|| (item instanceof Armor && !((Armor) item).glyphHardened));
 		}
@@ -379,14 +388,17 @@ public class WndBlacksmith extends Window {
 					((Armor) item).glyphHardened = true;
 				}
 
-				int hardenCost = Blacksmith.Quest.hardens == 0 ? 500 : 1000;
-				Blacksmith.Quest.favor -= hardenCost;
+				Blacksmith.Quest.favor -= 500 + 1000*Blacksmith.Quest.hardens;
 				Blacksmith.Quest.hardens++;
 
 				WndBlacksmith.this.hide();
 
 				Sample.INSTANCE.play(Assets.Sounds.EVOKE);
 				Item.evoke( Dungeon.hero );
+
+				if (!Blacksmith.Quest.rewardsAvailable()){
+					Notes.remove( Notes.Landmark.TROLL );
+				}
 			}
 		}
 	}
@@ -407,14 +419,15 @@ public class WndBlacksmith extends Window {
 		public boolean itemSelectable(Item item) {
 			return item.isUpgradable()
 					&& item.isIdentified()
-					&& item.level() < 3;
+					&& !item.cursed
+					&& item.level() < 2;
 		}
 
 		@Override
 		public void onSelect(Item item) {
 			if (item != null) {
 				item.upgrade();
-				int upgradeCost = 1000 * (int)Math.pow(2, Blacksmith.Quest.upgrades);
+				int upgradeCost = 1000 + 1000*Blacksmith.Quest.upgrades;
 				Blacksmith.Quest.favor -= upgradeCost;
 				Blacksmith.Quest.upgrades++;
 
@@ -425,6 +438,10 @@ public class WndBlacksmith extends Window {
 				Item.evoke( Dungeon.hero );
 
 				Badges.validateItemLevelAquired( item );
+
+				if (!Blacksmith.Quest.rewardsAvailable()){
+					Notes.remove( Notes.Landmark.TROLL );
+				}
 			}
 		}
 	}
@@ -499,6 +516,10 @@ public class WndBlacksmith extends Window {
 						}
 						WndSmith.this.hide();
 						Blacksmith.Quest.smithRewards = null;
+
+						if (!Blacksmith.Quest.rewardsAvailable()){
+							Notes.remove( Notes.Landmark.TROLL );
+						}
 					}
 				};
 				btnConfirm.setRect(0, height+2, width/2-1, 16);

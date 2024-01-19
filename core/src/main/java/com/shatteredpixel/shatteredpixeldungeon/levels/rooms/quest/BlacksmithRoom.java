@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2023 Evan Debenham
+ * Copyright (C) 2014-2024 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -102,6 +102,15 @@ public class BlacksmithRoom extends StandardRoom {
 			if (level.map[cell] == Terrain.TRAP){
 				level.setTrap(new BurningTrap().reveal(), cell);
 			}
+		}
+	}
+
+	@Override
+	public boolean canPlaceCharacter(Point p, Level l) {
+		if (l.map[l.pointToCell(p)] == Terrain.EXIT){
+			return false;
+		} else {
+			return super.canPlaceCharacter(p, l);
 		}
 	}
 

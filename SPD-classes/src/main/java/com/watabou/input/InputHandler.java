@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2023 Evan Debenham
+ * Copyright (C) 2014-2024 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -103,6 +103,10 @@ public class InputHandler extends InputAdapter {
 	
 	@Override
 	public synchronized boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		if (screenX < 0 || screenX > Game.width || screenY < 0 || screenY > Game.height){
+			return true;
+		}
+
 		if (pointer != ControllerHandler.CONTROLLER_POINTER_ID) {
 			ControllerHandler.setControllerPointer(false);
 			ControllerHandler.controllerActive = false;

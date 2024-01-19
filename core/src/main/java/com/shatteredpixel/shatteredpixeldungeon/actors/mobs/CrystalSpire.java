@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2023 Evan Debenham
+ * Copyright (C) 2014-2024 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,6 +66,8 @@ public class CrystalSpire extends Mob {
 		HP = HT = 300;
 		spriteClass = CrystalSpireSprite.class;
 
+		EXP = 20;
+
 		//acts after other mobs, which makes baiting crystal guardians more consistent
 		actPriority = MOB_PRIO-1;
 
@@ -74,7 +76,7 @@ public class CrystalSpire extends Mob {
 		alignment = Alignment.NEUTRAL;
 
 		properties.add(Property.IMMOVABLE);
-		properties.add(Property.MINIBOSS);
+		properties.add(Property.BOSS);
 		properties.add(Property.INORGANIC);
 	}
 
@@ -131,7 +133,7 @@ public class CrystalSpire extends Mob {
 						dmg += 12; //18-27 damage
 						Buff.prolong(ch, Cripple.class, 30f);
 					}
-					ch.damage(dmg, CrystalSpire.this);
+					ch.damage(dmg, new SpireSpike());
 
 					int movePos = i;
 					//crystal guardians get knocked away from the hero, others get knocked away from the spire
@@ -195,6 +197,7 @@ public class CrystalSpire extends Mob {
 				abilityCooldown += ABILITY_CD;
 
 				spend(GameMath.gate(TICK, (int)Math.ceil(Dungeon.hero.cooldown()), 3*TICK));
+				Dungeon.hero.interrupt();
 			} else {
 				abilityCooldown -= 1;
 				spend(TICK);
@@ -204,6 +207,8 @@ public class CrystalSpire extends Mob {
 
 		return true;
 	}
+
+	public static class SpireSpike{}
 
 	private void diamondAOEAttack(){
 		targetedCells.clear();
@@ -292,6 +297,11 @@ public class CrystalSpire extends Mob {
 	}
 
 	@Override
+	public boolean isInvulnerable(Class effect) {
+		return super.isInvulnerable(effect) || effect != Pickaxe.class;
+	}
+
+	@Override
 	public boolean add( Buff buff ) {
 		return false; //immune to all buffs and debuffs
 	}
@@ -304,7 +314,6 @@ public class CrystalSpire extends Mob {
 			final Pickaxe p = Dungeon.hero.belongings.getItem(Pickaxe.class);
 
 			if (p == null){
-				//maybe a game log entry here?
 				return true;
 			}
 
@@ -320,6 +329,8 @@ public class CrystalSpire extends Mob {
 					sprite.bloodBurstA(Dungeon.hero.sprite.center(), dmg);
 					sprite.flash();
 
+					BossHealthBar.bleed(HP <= HT/3);
+
 					if (isAlive()) {
 						Sample.INSTANCE.play(Assets.Sounds.SHATTER, 1f, Random.Float(1.15f, 1.25f));
 						((CrystalSpireSprite) sprite).updateIdle();
@@ -328,6 +339,11 @@ public class CrystalSpire extends Mob {
 						Sample.INSTANCE.playDelayed(Assets.Sounds.ROCKS, 0.1f);
 						PixelScene.shake( 3, 0.7f );
 						Blacksmith.Quest.beatBoss();
+
+						if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
+							fieldOfView = new boolean[Dungeon.level.length()];
+							Dungeon.level.updateFieldOfView( CrystalSpire.this, fieldOfView );
+						}
 
 						for (int i = 0; i < Dungeon.level.length(); i++){
 							if (fieldOfView[i] && Dungeon.level.map[i] == Terrain.MINE_CRYSTAL){
@@ -340,7 +356,7 @@ public class CrystalSpire extends Mob {
 						for (Char ch : Actor.chars()){
 							if (fieldOfView[ch.pos]) {
 								if (ch instanceof CrystalGuardian) {
-									ch.damage(ch.HT, this);
+									ch.damage(ch.HT, new SpireSpike());
 								}
 								if (ch instanceof CrystalWisp) {
 									Buff.affect(ch, Blindness.class, 5f);

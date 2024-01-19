@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2023 Evan Debenham
+ * Copyright (C) 2014-2024 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -403,6 +403,8 @@ public class Dungeon {
 				}
 			}
 		}
+
+		Statistics.qualifiedForBossRemainsBadge = false;
 		
 		level.create();
 		
@@ -462,20 +464,26 @@ public class Dungeon {
 	}
 
 	public static boolean interfloorTeleportAllowed(){
-		if (Dungeon.level.locked || (Dungeon.hero != null && Dungeon.hero.belongings.getItem(Amulet.class) != null)){
+		if (Dungeon.level.locked
+				|| Dungeon.level instanceof MiningLevel
+				|| (Dungeon.hero != null && Dungeon.hero.belongings.getItem(Amulet.class) != null)){
 			return false;
 		}
 		return true;
 	}
 	
 	public static void switchLevel( final Level level, int pos ) {
-		
+
+		//Position of -2 specifically means trying to place the hero the exit
 		if (pos == -2){
 			LevelTransition t = level.getTransition(LevelTransition.Type.REGULAR_EXIT);
 			if (t != null) pos = t.cell();
 		}
 
-		if (pos < 0 || pos >= level.length() || (!level.passable[pos] && !level.avoid[pos])){
+		//Place hero at the entrance if they are out of the map (often used for pox = -1)
+		// or if they are in solid terrain (except in the mining level, where that happens normally)
+		if (pos < 0 || pos >= level.length()
+				|| (!(level instanceof MiningLevel) && !level.passable[pos] && !level.avoid[pos])){
 			pos = level.getTransition(null).cell();
 		}
 		

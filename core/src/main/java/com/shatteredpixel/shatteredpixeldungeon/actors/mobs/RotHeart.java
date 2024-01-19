@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2023 Evan Debenham
+ * Copyright (C) 2014-2024 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -75,14 +75,14 @@ public class RotHeart extends Mob {
 	@Override
 	public int defenseProc(Char enemy, int damage) {
 		//rot heart spreads less gas in enclosed spaces
-		int openNearby = 2;
+		int openNearby = 0;
 		for (int i : PathFinder.NEIGHBOURS8){
 			if (!Dungeon.level.solid[pos+i]){
 				openNearby++;
 			}
 		}
 
-		GameScene.add(Blob.seed(pos, 2*openNearby, ToxicGas.class));
+		GameScene.add(Blob.seed(pos, 5 + 3*openNearby, ToxicGas.class));
 
 		return super.defenseProc(enemy, damage);
 	}
