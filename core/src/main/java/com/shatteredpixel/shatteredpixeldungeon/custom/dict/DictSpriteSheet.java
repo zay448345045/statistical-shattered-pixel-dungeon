@@ -188,11 +188,11 @@ public class DictSpriteSheet {
                 return new Image(Assets.Sprites.CRYSTAL_WISP, 0, 0, 12, 14);
 
             case GNOLL_GEOMANCER:
-                return new Image(Assets.Sprites.CRYSTAL_WISP, 0, 0, 12, 16);
+                return new Image(Assets.Sprites.GNOLL_GEOMANCER, 0, 0, 12, 16);
             case GNOLL_GUARD:
-                return new Image(Assets.Sprites.CRYSTAL_WISP, 0, 0, 12, 16);
+                return new Image(Assets.Sprites.GNOLL_GUARD, 0, 0, 12, 16);
             case GNOLL_SAPPER:
-                return new Image(Assets.Sprites.CRYSTAL_WISP, 0, 0, 12, 15);
+                return new Image(Assets.Sprites.GNOLL_SAPPER, 0, 0, 12, 15);
 
             case HERO:
                 return new Image(Assets.Sprites.ROGUE, 0, 15, 12, 15);
