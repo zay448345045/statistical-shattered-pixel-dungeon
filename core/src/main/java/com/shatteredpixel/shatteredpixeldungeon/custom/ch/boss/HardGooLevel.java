@@ -24,6 +24,8 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
+
 public class HardGooLevel extends Level {
         {
             color1 = 0x48763c;
@@ -78,14 +80,18 @@ public class HardGooLevel extends Level {
 
         @Override
         protected void createItems() {
-            Item item = Bones.get();
-            if (item != null) {
+            Random.pushGenerator(Random.Long());
+            ArrayList<Item> bonesItems = Bones.get();
+            if (bonesItems != null) {
                 int pos;
                 do {
                     pos = randomRespawnCell(null);
-                } while (pos % WIDTH == 18);
-                drop(item, pos).setHauntedIfCursed().type = Heap.Type.REMAINS;
+                } while (pos == entrance());
+                for (Item i : bonesItems) {
+                    drop(i, pos).setHauntedIfCursed().type = Heap.Type.REMAINS;
+                }
             }
+            Random.popGenerator();
 
             MeleeWeapon mw = Generator.randomWeapon(11);
             mw.level(2);

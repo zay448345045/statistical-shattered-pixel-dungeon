@@ -1,5 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.custom.testmode;
 
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -27,6 +28,9 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Eye;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.FetidRat;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Ghoul;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Gnoll;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollGeomancer;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollGuard;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollSapper;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollTrickster;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Golem;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GreatCrab;
@@ -62,7 +66,9 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.StatueSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.CheckBox;
 import com.shatteredpixel.shatteredpixeldungeon.ui.IconButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.OptionSlider;
@@ -124,6 +130,9 @@ public class MobPlacer extends TestItem{
                             try {
                                 Mob m = Reflection.newInstance(allData.get(dataThreshold(mobTier) + mobIndex).mobClass);
                                 m.pos = cell;
+                                if(m instanceof Statue) {
+                                    ((Statue)m).createWeapon(false);
+                                }
                                 GameScene.add(m);
                                 if(elite_op>0){
                                     for(int i=0;i<6;++i){
@@ -166,7 +175,8 @@ public class MobPlacer extends TestItem{
             case 3: return DataPack.DM201.ordinal() - DataPack.NEW_FIRE_ELE.ordinal() - 1;
             case 4: return DataPack.ELE_CHAOS.ordinal() - DataPack.DM201.ordinal() - 1;
             case 5: return DataPack.ACIDIC.ordinal() - DataPack.ELE_CHAOS.ordinal() - 1;
-            case 6: default: return DataPack.CRYSTAL_WISP.ordinal() - DataPack.ACIDIC.ordinal() - 1;
+            case 6: return DataPack.PHANTOM_PIRANHA.ordinal() - DataPack.ACIDIC.ordinal() - 1;
+            case 7: default: return DataPack.GNOLL_SAPPER.ordinal() - DataPack.PHANTOM_PIRANHA.ordinal() - 1;
         }
     }
     private int dataThreshold(int tier){
@@ -183,6 +193,8 @@ public class MobPlacer extends TestItem{
                 return DataPack.ELE_CHAOS.ordinal()+1;
             case 6:
                 return DataPack.ACIDIC.ordinal()+1;
+            case 7:
+                return DataPack.PHANTOM_PIRANHA.ordinal() + 1;
         }
     }
 
@@ -215,7 +227,7 @@ public class MobPlacer extends TestItem{
         private RenderedTextBlock selectedPage;
         private ArrayList<IconButton> mobButtons = new ArrayList<>();
         private RenderedTextBlock selectedMob;
-        private ArrayList<CheckBox> eliteOptions = new ArrayList<>(6);
+        private ArrayList<CheckBox> eliteOptions = new ArrayList<>(7);
 
         public WndSetMob(){
             super();
@@ -226,8 +238,8 @@ public class MobPlacer extends TestItem{
                 @Override
                 public void onClick(){
                     mobTier--;
-                    if(mobTier < 1 || mobTier>6){
-                        mobTier = 6;
+                    if(mobTier < 1 || mobTier>7){
+                        mobTier = 7;
                     }
                     mobIndex = Math.min(mobIndex, maxMobIndex(mobTier));
                     refreshImage();
@@ -241,7 +253,7 @@ public class MobPlacer extends TestItem{
                 @Override
                 public void onClick(){
                     mobTier++;
-                    if(mobTier < 1 || mobTier > 6){
+                    if(mobTier < 1 || mobTier > 7){
                         mobTier = 1;
                     }
                     mobIndex = Math.min(mobIndex, maxMobIndex(mobTier));
@@ -305,7 +317,7 @@ public class MobPlacer extends TestItem{
         private void updateSelectedMob(){
             int selected = mobTier;
             StringBuilder sb = new StringBuilder();
-            for(int i=1;i<=6;++i){
+            for(int i=1;i<=7;++i){
                 sb.append((i==selected? "* ":"- "));
             }
             selectedPage.text(sb.toString());
@@ -343,7 +355,15 @@ public class MobPlacer extends TestItem{
                     }
                 };
 //                btn.icon( DictSpriteSheet.miscImages(allData.get(dataThreshold(mobTier)+i).imageId) );
-                btn.icon(Reflection.newInstance(allData.get(dataThreshold(mobTier) + i).getMobClass()).sprite());
+                CharSprite charSprite;
+                if ((allData.get(dataThreshold(mobTier) + i).getMobClass()) == ArmoredStatue.class) {
+                    charSprite = new StatueSprite();
+                    ((StatueSprite)charSprite).setArmor(1);
+                } else {
+                    charSprite = Reflection.newInstance(allData.get(dataThreshold(mobTier) + i).getMobClass()).sprite();
+                }
+
+                btn.icon(charSprite);
                 float max = Math.max(btn.icon().width(), btn.icon().height());
                 btn.icon().scale = new PointF(BTN_SIZE/max, BTN_SIZE/max);
                 if(i<firstLine){
@@ -444,8 +464,11 @@ public class MobPlacer extends TestItem{
 
         CRYSTAL_SPIRE(CrystalSpire.class,DictSpriteSheet.CRYSTAL_SPIRE),
         CRYSTAL_GUARDIAN(CrystalGuardian.class,DictSpriteSheet.CRYSTAL_GUARDIAN),
-        CRYSTAL_WISP(CrystalWisp.class,DictSpriteSheet.CRYSTAL_WISP);
+        CRYSTAL_WISP(CrystalWisp.class,DictSpriteSheet.CRYSTAL_WISP),
 
+        GNOLL_GEOMANCER(GnollGeomancer.class,DictSpriteSheet.GNOLL_GEOMANCER),
+        GNOLL_GUARD(GnollGuard.class,DictSpriteSheet.GNOLL_GUARD),
+        GNOLL_SAPPER(GnollSapper.class,DictSpriteSheet.GNOLL_SAPPER);
 
         private Class<? extends Mob> mobClass;
         private int imageId;

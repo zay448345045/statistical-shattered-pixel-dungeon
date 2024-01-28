@@ -22,7 +22,7 @@ public class RaiseDead extends CountInscription {
             defender.sprite.centerEmitter().burst(ShadowParticle.UP, Random.IntRange(7, 15));
             defender.damage(damage * 11 / 10, attacker);
             if(defender.isAlive()) {return 0;}
-            Wraith wraith = Wraith.spawnAt(defender.pos,false);
+            Wraith wraith = Wraith.spawnAt(defender.pos, Wraith.class);
             Buff.affect(wraith, Corruption.class);
             consume(weapon, attacker);
         }
@@ -33,7 +33,7 @@ public class RaiseDead extends CountInscription {
     public void useUp(Weapon w, Char attacker) {
 
         for(int i: PathFinder.NEIGHBOURS4){
-            Wraith wraith = Wraith.spawnAt(attacker.pos + i,false);
+            Wraith wraith = Wraith.spawnAt(attacker.pos + i, Wraith.class);
             if(wraith != null){
                 Buff.affect(wraith, Corruption.class);
                 wraith.HT = wraith.HP = Dungeon.depth * 5 / 2 + 5;

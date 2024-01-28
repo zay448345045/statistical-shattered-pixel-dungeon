@@ -187,6 +187,13 @@ public class DictSpriteSheet {
             case CRYSTAL_WISP:
                 return new Image(Assets.Sprites.CRYSTAL_WISP, 0, 0, 12, 14);
 
+            case GNOLL_GEOMANCER:
+                return new Image(Assets.Sprites.CRYSTAL_WISP, 0, 0, 12, 16);
+            case GNOLL_GUARD:
+                return new Image(Assets.Sprites.CRYSTAL_WISP, 0, 0, 12, 16);
+            case GNOLL_SAPPER:
+                return new Image(Assets.Sprites.CRYSTAL_WISP, 0, 0, 12, 15);
+
             case HERO:
                 return new Image(Assets.Sprites.ROGUE, 0, 15, 12, 15);
             case TRAP_GREEN_RECT:
@@ -290,13 +297,12 @@ public class DictSpriteSheet {
     public static final int BEE             = 707 + 10000;
     public static final int TORMENTED_SPIRIT = 708 + 10000;
     public static final int PHANTOM_PIRANHA = 709 + 10000;
-
     public static final int CRYSTAL_SPIRE = 710 + 10000;
-
     public static final int CRYSTAL_GUARDIAN = 711 + 10000;
-
     public static final int CRYSTAL_WISP = 712 + 10000;
-
+    public static final int GNOLL_GEOMANCER = 713 + 10000;
+    public static final int GNOLL_GUARD = 714 + 10000;
+    public static final int GNOLL_SAPPER = 715 + 10000;
 
     public static final int SAD_GHOST       = 800 + 10000;
     public static final int WAND_MAKER      = 801 + 10000;

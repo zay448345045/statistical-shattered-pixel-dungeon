@@ -68,6 +68,11 @@ import com.shatteredpixel.shatteredpixeldungeon.items.quest.DarkGold;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.Embers;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.GooBlob;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.MetalShard;
+import com.shatteredpixel.shatteredpixeldungeon.items.remains.BowFragment;
+import com.shatteredpixel.shatteredpixeldungeon.items.remains.BrokenHilt;
+import com.shatteredpixel.shatteredpixeldungeon.items.remains.BrokenStaff;
+import com.shatteredpixel.shatteredpixeldungeon.items.remains.CloakScrap;
+import com.shatteredpixel.shatteredpixeldungeon.items.remains.SealShard;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
@@ -217,7 +222,7 @@ public class TestPotion extends TestGenerator {
 
     private Class<? extends Item> idToItem(int id){
         switch (cateSelected){
-            case 0: return idToPotion(id);
+            case 0: default: return idToPotion(id);
             case 1: return idToExoticPotion(id);
             case 2: return idToSeed(id);
             case 3: return idToTippedDart(id);
@@ -228,7 +233,8 @@ public class TestPotion extends TestGenerator {
             case 8: return idToSpecialPotion(id);
             case 9: return idToSpell(id);
             case 10: return idToFood(id);
-            case 11: default: return idToMisc(id);
+            case 11: return idToMisc(id);
+            case 12: return idToRemain(id);
         }
     }
 
@@ -246,6 +252,7 @@ public class TestPotion extends TestGenerator {
             case 9: return ItemSpriteSheet.PHASE_SHIFT;
             case 10: return ItemSpriteSheet.RATION;
             case 11: default: return ItemSpriteSheet.CHEST;
+            case 12: return ItemSpriteSheet.SEAL_SHARD;
         }
     }
 
@@ -480,16 +487,27 @@ public class TestPotion extends TestGenerator {
         }
     }
 
+    private Class<? extends Item> idToRemain(int id){
+        switch (id){
+            case 0: default:return SealShard.class;
+            case 1: return BrokenStaff.class;
+            case 2: return CloakScrap.class;
+            case 3: return BowFragment.class;
+            case 4: return BrokenHilt.class;
+        }
+    }
+
     private int maxIndex(int cate){
         if(cate == 7) return 10;
         if(cate == 9) return 12;
         if(cate == 10) return 9;
         if(cate == 11) return 13;
+        if(cate == 12) return 4;
         return 11;
     }
 
     private int maxCategory(){
-        return 12;
+        return 13;
     }
 
     private static ArrayList<Class<? extends Potion>> potionList = new ArrayList<>();
@@ -504,7 +522,7 @@ public class TestPotion extends TestGenerator {
     private static ArrayList<Class<? extends Spell>> spellList = new ArrayList<>();
     private static ArrayList<Class<? extends Food>> foodList = new ArrayList<>();
     private static ArrayList<Class<? extends Item>> miscList = new ArrayList<>();
-
+    private static ArrayList<Class<? extends Item>> remainList = new ArrayList<>();
     private void buildList() {
         if (potionList.isEmpty()) {
             for (int i = 0; i < maxIndex(0)+1; ++i) {
@@ -576,6 +594,12 @@ public class TestPotion extends TestGenerator {
                 miscList.add(idToMisc(i));
             }
         }
+
+        if(remainList.isEmpty()){
+            for(int i=0; i<maxIndex(12)+1; ++i){
+                remainList.add(idToRemain(i));
+            }
+        }
     }
 
     private class SettingsWindow extends Window {
@@ -635,7 +659,7 @@ public class TestPotion extends TestGenerator {
         }
 
         private void layout() {
-            t_select.setPos(0, TITLE_BTM +6*GAP + 4*BTN_SIZE + 6);
+            t_select.setPos(0, TITLE_BTM +7*GAP + 5*BTN_SIZE + 6);
             o_quantity.setRect(0, t_select.bottom() + 2 * GAP, WIDTH, 24);
             c_multiply.setRect(0, o_quantity.bottom() + GAP, WIDTH/2f - GAP/2f, 16);
             b_create.setRect(WIDTH/2f + GAP/2f, o_quantity.bottom() + GAP, WIDTH/2f - GAP/2f, 16);
@@ -646,8 +670,9 @@ public class TestPotion extends TestGenerator {
             float left;
             float top = GAP + TITLE_BTM;
             int placed = 0;
-            int length = 12;
-            int firstRow = (length % 2 == 0 ? length / 2 : (length / 2 + 1));
+            int length = 13;
+            int firstRow = 6;
+            int secondRow = 12;
             for (int i = 0; i < length; ++i) {
                 final int j = i;
                 IconButton btn = new IconButton() {
@@ -671,9 +696,12 @@ public class TestPotion extends TestGenerator {
                 if (i < firstRow) {
                     left = (WIDTH - BTN_SIZE * firstRow) / 2f;
                     btn.setRect(left + placed * BTN_SIZE, top, BTN_SIZE, BTN_SIZE);
-                } else {
-                    left = (WIDTH - BTN_SIZE * (length - firstRow)) / 2f;
+                } else if (i < secondRow){
+                    left = (WIDTH - BTN_SIZE * firstRow) / 2f;
                     btn.setRect(left + (placed - firstRow) * BTN_SIZE, top + GAP + BTN_SIZE, BTN_SIZE, BTN_SIZE);
+                } else {
+                    left = (WIDTH - BTN_SIZE * (length - secondRow)) / 2f;
+                    btn.setRect(left + (placed - secondRow) * BTN_SIZE, top + GAP * 2 + BTN_SIZE * 2, BTN_SIZE, BTN_SIZE);
                 }
                 add(btn);
                 cateButtonList.add(btn);
@@ -683,7 +711,7 @@ public class TestPotion extends TestGenerator {
 
         private void createImage() {
             float left;
-            float top = TITLE_BTM + 4*GAP + 2*BTN_SIZE + 3;
+            float top = TITLE_BTM + 5*GAP + 3*BTN_SIZE + 3;
             int placed = 0;
             int length = maxIndex(cateSelected)+1;
             int firstRow = (length % 2 == 0 ? length / 2 : (length / 2 + 1));
@@ -767,6 +795,12 @@ public class TestPotion extends TestGenerator {
                     case 11: default:{
                         Image im = new Image(Assets.Sprites.ITEMS);
                         im.frame(ItemSpriteSheet.film.get(Objects.requireNonNull(Reflection.newInstance(miscList.get(i))).image));
+                        im.scale.set(1.0f);
+                        btn.icon(im);
+                    } break;
+                    case 12: {
+                        Image im = new Image(Assets.Sprites.ITEMS);
+                        im.frame(ItemSpriteSheet.film.get(Objects.requireNonNull(Reflection.newInstance(remainList.get(i))).image));
                         im.scale.set(1.0f);
                         btn.icon(im);
                     }

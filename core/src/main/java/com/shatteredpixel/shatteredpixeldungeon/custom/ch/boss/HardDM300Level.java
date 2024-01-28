@@ -26,6 +26,8 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
+
 public class HardDM300Level extends Level {
 
     {
@@ -210,14 +212,18 @@ public class HardDM300Level extends Level {
 
     @Override
     protected void createItems() {
-        Item item = Bones.get();
-        if (item != null) {
+        Random.pushGenerator(Random.Long());
+        ArrayList<Item> bonesItems = Bones.get();
+        if (bonesItems != null) {
             int pos;
             do {
                 pos = randomRespawnCell(null);
-            } while (pos == entrance() || pos == exit());
-            drop( item, pos ).setHauntedIfCursed().type = Heap.Type.REMAINS;
+            } while (pos == entrance());
+            for (Item i : bonesItems) {
+                drop(i, pos).setHauntedIfCursed().type = Heap.Type.REMAINS;
+            }
         }
+        Random.popGenerator();
     }
 
     private static final int W = Terrain.WALL;
