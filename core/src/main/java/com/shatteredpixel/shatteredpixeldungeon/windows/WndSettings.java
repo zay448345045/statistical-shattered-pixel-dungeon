@@ -250,7 +250,11 @@ public class WndSettings extends WndTabbed {
 			}
 			add(chkFullscreen);
 
-			if (DeviceCompat.isAndroid() && PixelScene.maxScreenZoom >= 2) {
+			//power saver is being slowly phased out, only show it on old (4.3-) android devices
+			// this is being phased out as the setting is useless on all but very old devices anyway
+			// and support is going to be dropped for 4.3- in the forseeable future
+			if (DeviceCompat.isAndroid() && PixelScene.maxScreenZoom >= 2
+				&& (SPDSettings.powerSaver() || !DeviceCompat.supportsFullScreen())) {
 				chkSaver = new CheckBox(Messages.get(this, "saver")) {
 					@Override
 					protected void onClick() {
@@ -410,6 +414,7 @@ public class WndSettings extends WndTabbed {
 		CheckBox chkFlipTags;
 		ColorBlock sep2;
 		CheckBox chkFont;
+		CheckBox chkVibrate;
 
 		@Override
 		protected void createChildren() {
@@ -627,6 +632,22 @@ public class WndSettings extends WndTabbed {
 			};
 			chkFont.checked(SPDSettings.systemFont());
 			add(chkFont);
+
+			chkVibrate = new CheckBox(Messages.get(this, "vibration")){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					SPDSettings.vibration(checked());
+					if (checked()){
+						Game.vibrate(250);
+					}
+				}
+			};
+			chkVibrate.enable(Game.platform.supportsVibration());
+			if (chkVibrate.active) {
+				chkVibrate.checked(SPDSettings.vibration());
+			}
+			add(chkVibrate);
 		}
 
 		@Override
@@ -664,8 +685,16 @@ public class WndSettings extends WndTabbed {
 			sep2.size(width, 1);
 			sep2.y = height + GAP;
 
-			chkFont.setRect(0, sep2.y + 1 + GAP, width, BTN_HEIGHT);
-			height = chkFont.bottom();
+			if (width > 200) {
+				chkFont.setRect(0, sep2.y + 1 + GAP, width/2-1, BTN_HEIGHT);
+				chkVibrate.setRect(chkFont.right()+2, chkFont.top(), width/2-1, BTN_HEIGHT);
+				height = chkVibrate.bottom();
+
+			} else {
+				chkFont.setRect(0, sep2.y + 1 + GAP, width, BTN_HEIGHT);
+				chkVibrate.setRect(0, chkFont.bottom() + GAP, width, BTN_HEIGHT);
+				height = chkVibrate.bottom();
+			}
 		}
 
 	}

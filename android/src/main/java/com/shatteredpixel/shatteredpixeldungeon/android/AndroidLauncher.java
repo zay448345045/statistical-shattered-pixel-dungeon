@@ -63,7 +63,7 @@ public class AndroidLauncher extends AndroidApplication {
 			GdxNativesLoader.load();
 			FreeType.initFreeType();
 		} catch (Exception e){
-			AndroidMissingNativesHandler.errorMsg = e.getMessage();
+			AndroidMissingNativesHandler.error = e;
 			Intent intent = new Intent(this, AndroidMissingNativesHandler.class);
 			startActivity(intent);
 			finish();
@@ -120,6 +120,9 @@ public class AndroidLauncher extends AndroidApplication {
 			config.g = 6;
 			config.b = 5;
 		}
+
+		//we manage this ourselves
+		config.useImmersiveMode = false;
 		
 		config.useCompass = false;
 		config.useAccelerometer = false;

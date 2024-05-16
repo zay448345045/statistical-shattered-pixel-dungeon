@@ -61,9 +61,12 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.MasterThievesArmband;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAggression;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ExoticCrystals;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Lucky;
@@ -263,7 +266,7 @@ public abstract class Mob extends Char {
 		}
 		
 		//if we are an alert enemy, auto-hunt a target that is affected by aggression, even another enemy
-		if (alignment == Alignment.ENEMY && state != PASSIVE && state != SLEEPING) {
+		if ((alignment == Alignment.ENEMY || buff(Amok.class) != null ) && state != PASSIVE && state != SLEEPING) {
 			if (enemy != null && enemy.buff(StoneOfAggression.Aggression.class) != null){
 				state = HUNTING;
 				return enemy;
@@ -921,6 +924,16 @@ public abstract class Mob extends Char {
 			item = Generator.randomUsingDefaults( (Generator.Category)loot );
 
 		} else if (loot instanceof Class<?>) {
+
+			if (ExoticPotion.regToExo.containsKey(loot)){
+				if (Random.Float() < ExoticCrystals.consumableExoticChance()){
+					return Generator.random(ExoticPotion.regToExo.get(loot));
+				}
+			} else if (ExoticScroll.regToExo.containsKey(loot)){
+				if (Random.Float() < ExoticCrystals.consumableExoticChance()){
+					return Generator.random(ExoticScroll.regToExo.get(loot));
+				}
+			}
 
 			item = Generator.random( (Class<? extends Item>)loot );
 

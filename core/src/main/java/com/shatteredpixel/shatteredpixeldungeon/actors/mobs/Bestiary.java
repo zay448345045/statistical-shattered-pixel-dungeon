@@ -21,28 +21,18 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.spawner.MobList;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.RatSkull;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Bestiary {
-
-	private static boolean hasReinforce(int depth){
-		return (Statistics.elite_enemies & (1<<(depth-1)/5))>0;
-	}
-
+	
 	public static ArrayList<Class<? extends Mob>> getMobRotation( int depth ){
-		ArrayList<Class<? extends Mob>> mobs;
-		if(!hasReinforce(depth)){
-			mobs = standardMobRotation(depth);
-			addRareMobs(depth, mobs);
-			swapMobAlts(mobs);
-		}else{
-			mobs = MobList.HardMobList(depth);
-		}
+		ArrayList<Class<? extends Mob>> mobs = standardMobRotation( depth );
+		addRareMobs(depth, mobs);
+		swapMobAlts(mobs);
 		Random.shuffle(mobs);
 		return mobs;
 	}
@@ -222,8 +212,9 @@ public class Bestiary {
 	
 	//switches out regular mobs for their alt versions when appropriate
 	private static void swapMobAlts(ArrayList<Class<?extends Mob>> rotation){
+		float altChance = 1/50f * RatSkull.exoticChanceMultiplier();
 		for (int i = 0; i < rotation.size(); i++){
-			if (Random.Int( 50 ) == 0) {
+			if (Random.Float() < altChance) {
 				Class<? extends Mob> cl = rotation.get(i);
 				if (cl == Rat.class) {
 					cl = Albino.class;

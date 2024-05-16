@@ -26,6 +26,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.watabou.noosa.Game;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.DeviceCompat;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,9 +35,11 @@ import javax.net.ssl.SSLProtocolException;
 
 public class GitHubUpdates extends UpdateService {
 
-	private static final Pattern descPattern = Pattern.compile("(.*?)(\r\n|\n|\r)(\r\n|\n|\r)---", Pattern.DOTALL + Pattern.MULTILINE);
-	private static final Pattern versionCodePattern = Pattern.compile("version code: ([0-9]*)", Pattern.CASE_INSENSITIVE);
-	private static final Pattern latestNamePattern = Pattern.compile("latest version: (\\d+(.\\d+)*-\\d+(.\\d+)*)", Pattern.CASE_INSENSITIVE);
+	private static Pattern descPattern = Pattern.compile("(.*?)(\r\n|\n|\r)(\r\n|\n|\r)---", Pattern.DOTALL + Pattern.MULTILINE);
+	private static Pattern versionCodePattern = Pattern.compile("internal version number: ([0-9]*)", Pattern.CASE_INSENSITIVE);
+
+	private static Pattern minAndroidPattern = Pattern.compile("Android .*\\(API ([0-9]*)\\)\\+ Devices", Pattern.CASE_INSENSITIVE);
+	private static Pattern minIOSPattern = Pattern.compile("iOS ([0-9]*)\\+ Devices", Pattern.CASE_INSENSITIVE);
 
 	@Override
 	public boolean supportsUpdatePrompts() {
@@ -57,7 +60,7 @@ public class GitHubUpdates extends UpdateService {
 		}
 
 		Net.HttpRequest httpGet = new Net.HttpRequest(Net.HttpMethods.GET);
-		httpGet.setUrl("https://api.github.com/repos/endlesssolitude/statistical-shattered-pixel-dungeon/releases");
+		httpGet.setUrl("https://api.github.com/repos/00-Evan/shattered-pixel-dungeon/releases");
 		httpGet.setHeader("Accept", "application/vnd.github.v3+json");
 
 		Gdx.net.sendHttpRequest(httpGet, new Net.HttpResponseListener() {
@@ -67,16 +70,36 @@ public class GitHubUpdates extends UpdateService {
 					Bundle latestRelease = null;
 					int latestVersionCode = Game.versionCode;
 
-					Bundle[] bundles = Bundle.read( httpResponse.getResultAsStream() ).getBundleArray();
-					for (Bundle b : bundles){
+					for (Bundle b : Bundle.read( httpResponse.getResultAsStream() ).getBundleArray()){
 						Matcher m = versionCodePattern.matcher(b.getString("body"));
 
 						if (m.find()){
 							int releaseVersion = Integer.parseInt(m.group(1));
-							if (releaseVersion > latestVersionCode){
-								latestRelease = b;
-								latestVersionCode = releaseVersion;
+
+
+							//skip release that aren't the latest update (or an update at all)
+							if (releaseVersion <= latestVersionCode) {
+								continue;
+
+							// or that are betas when we haven't opted in
+							} else if (!includeBetas && !b.getBoolean("prerelease")){
+								continue;
+
+							// or that aren't compatible
+							} else if (DeviceCompat.isDesktop()){
+								Matcher minAndroid = minAndroidPattern.matcher(b.getString("body"));
+								if (minAndroid.find() && DeviceCompat.getPlatformVersion() < Integer.parseInt(minAndroid.group(1))){
+									continue;
+								}
+							} else if (DeviceCompat.isiOS()){
+								Matcher minIOS = minIOSPattern.matcher(b.getString("body"));
+								if (minIOS.find() && DeviceCompat.getPlatformVersion() < Integer.parseInt(minIOS.group(1))){
+									continue;
+								}
 							}
+
+							latestRelease = b;
+							latestVersionCode = releaseVersion;
 						}
 
 					}
@@ -87,15 +110,11 @@ public class GitHubUpdates extends UpdateService {
 
 						AvailableUpdateData update = new AvailableUpdateData();
 
-						for (Bundle b : bundles){
-							Matcher m = latestNamePattern.matcher(b.getString("body"));
-							if (m.find()){
-								update.versionName = m.group(1);
-							}
-						}
-
-						//update.versionName = latestRelease.getString("name");
+						update.versionName = latestRelease.getString("name");
 						update.versionCode = latestVersionCode;
+						Matcher m = descPattern.matcher(latestRelease.getString("body"));
+						m.find();
+						update.desc = m.group(1);
 						update.URL = latestRelease.getString("html_url");
 
 						callback.onUpdateAvailable(update);
