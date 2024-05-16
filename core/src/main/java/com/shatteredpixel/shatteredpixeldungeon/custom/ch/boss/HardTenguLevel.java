@@ -534,6 +534,8 @@ public class HardTenguLevel extends Level {
             }
         }
         Random.popGenerator();
+
+        drop(new IronKey(10), randomPrisonCellPos());
     }
 
     private int randomPrisonCellPos(){
