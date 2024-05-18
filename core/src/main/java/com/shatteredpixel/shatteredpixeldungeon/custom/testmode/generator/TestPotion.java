@@ -37,7 +37,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.food.Pasty;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.PhantomMeat;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.SmallRation;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.StewedMeat;
-import com.shatteredpixel.shatteredpixeldungeon.items.potions.AlchemicalCatalyst;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfFrost;
@@ -51,13 +50,16 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfParalyticG
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfPurity;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.brews.AquaBrew;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.brews.BlizzardBrew;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.brews.CausticBrew;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.brews.InfernalBrew;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.brews.ShockingBrew;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.brews.UnstableBrew;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfAquaticRejuvenation;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfArcaneArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfDragonsBlood;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfFeatherFall;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfHoneyedHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfIcyTouch;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfMight;
@@ -88,11 +90,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutat
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Alchemize;
-import com.shatteredpixel.shatteredpixeldungeon.items.spells.AquaBlast;
-import com.shatteredpixel.shatteredpixeldungeon.items.spells.ArcaneCatalyst;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.BeaconOfReturning;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.CurseInfusion;
-import com.shatteredpixel.shatteredpixeldungeon.items.spells.FeatherFall;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.MagicalInfusion;
 //import com.shatteredpixel.shatteredpixeldungeon.items.spells.MagicalPorter;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.PhaseShift;
@@ -101,6 +100,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.Recycle;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Spell;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.SummonElemental;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.TelekineticGrab;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.UnstableSpell;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.WildEnergy;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.Runestone;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAggression;
@@ -115,6 +115,19 @@ import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfFear;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfFlock;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfIntuition;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfShock;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.DimensionalSundial;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ExoticCrystals;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.EyeOfNewt;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.MimicTooth;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.MossyClump;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ParchmentScrap;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.PetrifiedSeed;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.RatSkull;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ThirteenLeafClover;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.TrapMechanism;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.TrinketCatalyst;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.WondrousResin;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.AdrenalineDart;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.BlindingDart;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.ChillingDart;
@@ -235,6 +248,7 @@ public class TestPotion extends TestGenerator {
             case 10: return idToFood(id);
             case 11: return idToMisc(id);
             case 12: return idToRemain(id);
+            case 13: return idToTrinket(id);
         }
     }
 
@@ -253,6 +267,7 @@ public class TestPotion extends TestGenerator {
             case 10: return ItemSpriteSheet.RATION;
             case 11: default: return ItemSpriteSheet.CHEST;
             case 12: return ItemSpriteSheet.SEAL_SHARD;
+            case 13: return ItemSpriteSheet.TRINKET_CATA;
         }
     }
 
@@ -419,36 +434,36 @@ public class TestPotion extends TestGenerator {
 
     private Class<? extends Potion> idToSpecialPotion(int id){
         switch (id){
-            case 0: return BlizzardBrew.class;
-            case 1: return CausticBrew.class;
-            case 2: return InfernalBrew.class;
-            case 3: return ShockingBrew.class;
-            case 4: return ElixirOfAquaticRejuvenation.class;
-            case 5: return ElixirOfArcaneArmor.class;
-            case 6: return ElixirOfDragonsBlood.class;
-            case 7: return ElixirOfHoneyedHealing.class;
-            case 8: return ElixirOfIcyTouch.class;
-            case 9: return ElixirOfMight.class;
-            case 10: return ElixirOfToxicEssence.class;
-            case 11: default: return AlchemicalCatalyst.class;
+            case 0: return AquaBrew.class;
+            case 1: return BlizzardBrew.class;
+            case 2: return CausticBrew.class;
+            case 3: return InfernalBrew.class;
+            case 4: return ShockingBrew.class;
+            case 5: return UnstableBrew.class;
+            case 6: return ElixirOfAquaticRejuvenation.class;
+            case 7: return ElixirOfArcaneArmor.class;
+            case 8: return ElixirOfDragonsBlood.class;
+            case 9: return ElixirOfFeatherFall.class;
+            case 10: return ElixirOfHoneyedHealing.class;
+            case 11: return ElixirOfIcyTouch.class;
+            case 12: return ElixirOfMight.class;
+            case 13: default:return ElixirOfToxicEssence.class;
         }
     }
 
     private Class<? extends Spell> idToSpell(int id){
         switch (id){
-            case 0: return Alchemize.class;
-            case 1: return AquaBlast.class;
-            case 2: return BeaconOfReturning.class;
-            case 3: return CurseInfusion.class;
-            case 4: return FeatherFall.class;
-            case 5: return MagicalInfusion.class;
-            case 6: return TelekineticGrab.class;
-            case 7: return PhaseShift.class;
-            case 8: return ReclaimTrap.class;
-            case 9: return Recycle.class;
+            case 0: default:return Alchemize.class;
+            case 1: return BeaconOfReturning.class;
+            case 2: return CurseInfusion.class;
+            case 3: return MagicalInfusion.class;
+            case 4: return PhaseShift.class;
+            case 5: return ReclaimTrap.class;
+            case 6: return Recycle.class;
+            case 7: return SummonElemental.class;
+            case 8: return TelekineticGrab.class;
+            case 9: return UnstableSpell.class;
             case 10: return WildEnergy.class;
-            case 11: return SummonElemental.class;
-            case 12: default: return ArcaneCatalyst.class;
         }
     }
 
@@ -497,9 +512,27 @@ public class TestPotion extends TestGenerator {
         }
     }
 
+    private Class<? extends Item> idToTrinket(int id){
+        switch (id){
+            case 0: default:return TrinketCatalyst.class;
+            case 1: return DimensionalSundial.class;
+            case 2: return ExoticCrystals.class;
+            case 3: return EyeOfNewt.class;
+            case 4: return MimicTooth.class;
+            case 5: return MossyClump.class;
+            case 6: return ParchmentScrap.class;
+            case 7: return PetrifiedSeed.class;
+            case 8: return RatSkull.class;
+            case 9: return ThirteenLeafClover.class;
+            case 10: return TrapMechanism.class;
+            case 11: return WondrousResin.class;
+        }
+    }
+
     private int maxIndex(int cate){
         if(cate == 7) return 10;
-        if(cate == 9) return 12;
+        if(cate == 8) return 13;
+        if(cate == 9) return 10;
         if(cate == 10) return 9;
         if(cate == 11) return 13;
         if(cate == 12) return 4;
@@ -523,6 +556,7 @@ public class TestPotion extends TestGenerator {
     private static ArrayList<Class<? extends Food>> foodList = new ArrayList<>();
     private static ArrayList<Class<? extends Item>> miscList = new ArrayList<>();
     private static ArrayList<Class<? extends Item>> remainList = new ArrayList<>();
+    private static ArrayList<Class<? extends Item>> trinketList = new ArrayList<>();
     private void buildList() {
         if (potionList.isEmpty()) {
             for (int i = 0; i < maxIndex(0)+1; ++i) {
@@ -600,6 +634,11 @@ public class TestPotion extends TestGenerator {
                 remainList.add(idToRemain(i));
             }
         }
+        if(trinketList.isEmpty()){
+            for(int i=0; i<maxIndex(13)+1; ++i){
+                trinketList.add(idToTrinket(i));
+            }
+        }
     }
 
     private class SettingsWindow extends Window {
@@ -670,7 +709,7 @@ public class TestPotion extends TestGenerator {
             float left;
             float top = GAP + TITLE_BTM;
             int placed = 0;
-            int length = 13;
+            int length = 14;
             int firstRow = 6;
             int secondRow = 12;
             for (int i = 0; i < length; ++i) {
@@ -801,6 +840,12 @@ public class TestPotion extends TestGenerator {
                     case 12: {
                         Image im = new Image(Assets.Sprites.ITEMS);
                         im.frame(ItemSpriteSheet.film.get(Objects.requireNonNull(Reflection.newInstance(remainList.get(i))).image));
+                        im.scale.set(1.0f);
+                        btn.icon(im);
+                    } break;
+                    case 13: {
+                        Image im = new Image(Assets.Sprites.ITEMS);
+                        im.frame(ItemSpriteSheet.film.get(Objects.requireNonNull(Reflection.newInstance(trinketList.get(i))).image));
                         im.scale.set(1.0f);
                         btn.icon(im);
                     }

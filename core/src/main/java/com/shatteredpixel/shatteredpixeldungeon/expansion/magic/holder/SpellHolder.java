@@ -233,7 +233,7 @@ public class SpellHolder extends ChallengeItem {
                     }
                 };
                 Image im =  new Image(Assets.Sprites.ITEMS);
-                im.frame(ItemSpriteSheet.film.get(ItemSpriteSheet.FEATHER_FALL));
+                im.frame(ItemSpriteSheet.film.get(ItemSpriteSheet.RECYCLE));
                 im.scale.set(1.0f);
                 setQuick.icon(im);
                 add(setQuick);

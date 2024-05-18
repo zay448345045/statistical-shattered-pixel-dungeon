@@ -122,7 +122,7 @@ public class HDKItem {
         public boolean doEquip(Hero hero) {
             boolean success = super.doEquip(hero);
             if(success){
-                hero.spend(-TIME_TO_EQUIP);
+                hero.spend(-timeToEquip(hero));
             }
             return success;
         }
@@ -131,7 +131,7 @@ public class HDKItem {
         public boolean doUnequip(Hero hero, boolean collect, boolean single) {
             boolean success = super.doUnequip(hero, collect, single);
             if(success){
-                hero.spend(-TIME_TO_EQUIP);
+                hero.spend(-timeToEquip(hero));
             }
             return success;
         }
