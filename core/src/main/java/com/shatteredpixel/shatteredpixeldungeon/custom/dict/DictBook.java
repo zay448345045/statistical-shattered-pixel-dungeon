@@ -79,7 +79,7 @@ public class DictBook extends ChallengeItem {
         private static final int ITEM_HEIGHT = 18;
 
         private RedButton[] itemButtons;
-        private static final int NUM_BUTTONS = 9;
+        private static final int NUM_BUTTONS = 10;
 
         private static int currentItemIdx = 0;
 
@@ -90,11 +90,12 @@ public class DictBook extends ChallengeItem {
         private static final int RINGS_IDX = 3;
         private static final int ARTIFACTS_IDX = 4;
         private static final int ALCHEMY_IDX = 5;
-        private static final int MOB_IDX = 6;
-        private static final int UNCLASSIFIED_IDX = 7;
-        private static final int DOCUMENTS_IDX = 8;
+        private static final int TRINKETS_IDX = 6;
+        private static final int MOB_IDX = 7;
+        private static final int UNCLASSIFIED_IDX = 8;
+        private static final int DOCUMENTS_IDX = 9;
 
-        private static final int spriteIndexes[] = {2, 1, 4, 5, 6, 13, 0, 0, 0};
+        private static final int spriteIndexes[] = {2, 1, 4, 5, 6, 13,0, 0, 0, 0};
 
         private ScrollPane list;
 
@@ -177,6 +178,9 @@ public class DictBook extends ChallengeItem {
             } else if (currentItemIdx == RINGS_IDX) {
                 keys = new ArrayList<>(DictionaryJournal.RINGS.keyList());
                 imageSheets = new ArrayList<>(DictionaryJournal.RINGS.imageList());
+            }  else if (currentItemIdx == TRINKETS_IDX) {
+                keys = new ArrayList<>(DictionaryJournal.TRINKETS.keyList());
+                imageSheets = new ArrayList<>(DictionaryJournal.TRINKETS.imageList());
             } else if (currentItemIdx == ALCHEMY_IDX) {
                 keys = new ArrayList<>(DictionaryJournal.ALCHEMY.keyList());
                 imageSheets = new ArrayList<>(DictionaryJournal.ALCHEMY.imageList());

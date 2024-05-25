@@ -293,6 +293,7 @@ public class DictSpriteSheet {
     public static final int MIMIC           = 703 + 10000;
     public static final int MIMIC_GOLDEN    = 704 + 10000;
     public static final int MIMIC_CRYSTAL   = 705 + 10000;
+    public static final int MIMIC_EBONY   = 716 + 10000;
     public static final int WRAITH = 706 + 10000;
     public static final int BEE             = 707 + 10000;
     public static final int TORMENTED_SPIRIT = 708 + 10000;

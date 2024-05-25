@@ -37,6 +37,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Statue;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mimic.GoldenMimicForChallenge;
+import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mimic.MimicForChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -52,6 +54,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.keys.Key;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.MimicTooth;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.TrinketCatalyst;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Journal;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.builders.Builder;
 import com.shatteredpixel.shatteredpixeldungeon.levels.builders.FigureEightBuilder;
@@ -365,6 +368,10 @@ public abstract class RegularLevel extends Level {
 		// drops 3/4/5 items 60%/30%/10% of the time
 		int nItems = 3 + Random.chances(new float[]{6, 3, 1});
 
+		if(Dungeon.isChallenged(Challenges.MIMIC_DUNGEON)){
+			nItems += 3;
+		}
+
 		if (feeling == Feeling.LARGE){
 			nItems += 2;
 		}
@@ -381,6 +388,17 @@ public abstract class RegularLevel extends Level {
 			}
 
 			Heap.Type type = null;
+
+			if (Dungeon.isChallenged(Challenges.MIMIC_DUNGEON)) {
+				if (findMob(cell) == null) {
+					if (toDrop instanceof Artifact || (toDrop.isUpgradable() && toDrop.level() > 1) || Random.Int(8) == 0) {
+						mobs.add(GoldenMimicForChallenge.spawnAt(cell, toDrop, GoldenMimicForChallenge.class));
+					} else {
+						mobs.add(MimicForChallenge.spawnAt(cell, toDrop));
+					}
+				}
+			}
+
 			switch (Random.Int( 20 )) {
 			case 0:
 				type = Heap.Type.SKELETON;

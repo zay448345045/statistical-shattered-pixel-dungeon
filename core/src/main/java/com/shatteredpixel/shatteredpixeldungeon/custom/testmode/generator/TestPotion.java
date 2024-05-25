@@ -37,6 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.food.Pasty;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.PhantomMeat;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.SmallRation;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.StewedMeat;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.SupplyRation;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfFrost;
@@ -480,6 +481,7 @@ public class TestPotion extends TestGenerator {
             case 8: return Berry.class;
             default:
             case 9: return PhantomMeat.class;
+            case 10: return SupplyRation.class;
         }
     }
 
@@ -533,7 +535,7 @@ public class TestPotion extends TestGenerator {
         if(cate == 7) return 10;
         if(cate == 8) return 13;
         if(cate == 9) return 10;
-        if(cate == 10) return 9;
+        if(cate == 10) return 10;
         if(cate == 11) return 13;
         if(cate == 12) return 4;
         return 11;

@@ -13,6 +13,7 @@ public enum DictionaryJournal {
     WEAPONS,
     WANDS,
     RINGS,
+    TRINKETS,
     MOBS,
     DOCUMENTS,
     UNCLASSIFIED;
@@ -63,9 +64,6 @@ public enum DictionaryJournal {
         ALCHEMY.d.put("bomb_arcane",        ItemSpriteSheet.ARCANE_BOMB);
         ALCHEMY.d.put("bomb_shrapnel",      ItemSpriteSheet.SHRAPNEL_BOMB);
 
-        //cats
-        ALCHEMY.d.put("catalyst_potion",    ItemSpriteSheet.SOMETHING);
-        ALCHEMY.d.put("catalyst_scroll",    ItemSpriteSheet.SOMETHING);
         //food
         ALCHEMY.d.put("food_ration",        ItemSpriteSheet.RATION);
         ALCHEMY.d.put("food_frozen",        ItemSpriteSheet.CARPACCIO);
@@ -75,6 +73,7 @@ public enum DictionaryJournal {
         ALCHEMY.d.put("food_chunk",         ItemSpriteSheet.BLAND_CHUNKS);
         ALCHEMY.d.put("food_berry",         ItemSpriteSheet.BERRY);
         ALCHEMY.d.put("phantom_meat",       ItemSpriteSheet.PHANTOM_MEAT);
+        ALCHEMY.d.put("supply_ration",       ItemSpriteSheet.SUPPLY_RATION);
 
         //potions, enhanced ones implemented
         ALCHEMY.d.put("potion_exp",         ItemSpriteSheet.POTION_INDIGO);
@@ -228,6 +227,7 @@ public enum DictionaryJournal {
         RINGS.d.put("ring_shoot",           ItemSpriteSheet.RING_QUARTZ);
         RINGS.d.put("ring_tenacity",        ItemSpriteSheet.RING_QUARTZ);
         RINGS.d.put("ring_wealth",          ItemSpriteSheet.RING_QUARTZ);
+
         //wand
         WANDS.d.put("wand_blastwave",       ItemSpriteSheet.WAND_BLAST_WAVE);
         WANDS.d.put("wand_corrosion",       ItemSpriteSheet.WAND_CORROSION);
@@ -299,7 +299,19 @@ public enum DictionaryJournal {
         WEAPONS.d.put("missile_trident",    ItemSpriteSheet.TRIDENT);
         WEAPONS.d.put("missile_cube",       ItemSpriteSheet.FORCE_CUBE);
         WEAPONS.d.put("missile_spiritbow",  ItemSpriteSheet.SPIRIT_BOW);
-
+        //trinkets
+        TRINKETS.d.put("trinket_trinket_catalyst",ItemSpriteSheet.TRINKET_CATA);
+        TRINKETS.d.put("trinket_dimensional_sundial",ItemSpriteSheet.SUNDIAL);
+        TRINKETS.d.put("trinket_exotic_crystals",ItemSpriteSheet.EXOTIC_CRYSTALS);
+        TRINKETS.d.put("trinket_eye_of_newt",ItemSpriteSheet.EYE_OF_NEWT);
+        TRINKETS.d.put("trinket_mimic_tooth",ItemSpriteSheet.MIMIC_TOOTH);
+        TRINKETS.d.put("trinket_mossy_clump",ItemSpriteSheet.MOSSY_CLUMP);
+        TRINKETS.d.put("trinket_parchment_scrap",ItemSpriteSheet.PARCHMENT_SCRAP);
+        TRINKETS.d.put("trinket_petrified_seed",ItemSpriteSheet.PETRIFIED_SEED);
+        TRINKETS.d.put("trinket_rat_skull",ItemSpriteSheet.RAT_SKULL);
+        TRINKETS.d.put("trinket_clover",ItemSpriteSheet.CLOVER);
+        TRINKETS.d.put("trinket_trap_mechanism",ItemSpriteSheet.TRAP_MECHANISM);
+        TRINKETS.d.put("trinket_wondrous_resin",ItemSpriteSheet.WONDROUS_RESIN);
         //Documents
         DOCUMENTS.d.put("info_intro",       ItemSpriteSheet.EBONY_CHEST);
         DOCUMENTS.d.put("info_tier",        ItemSpriteSheet.GLAIVE);

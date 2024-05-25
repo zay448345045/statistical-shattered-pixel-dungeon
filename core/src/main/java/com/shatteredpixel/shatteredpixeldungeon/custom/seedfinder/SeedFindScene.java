@@ -23,7 +23,6 @@ import java.util.Arrays;
 
 public class SeedFindScene extends PixelScene {
 
-    public static String result;
 
     @Override
     public void create() {
@@ -51,7 +50,7 @@ public class SeedFindScene extends PixelScene {
         ShatteredPixelDungeon.scene().addToFront(new WndTextInput(Messages.get(this, "title"), Messages.get(this, "body"), Messages.get(this, "initial_value"), 1000, true, Messages.get(this, "find"), Messages.get(HeroSelectScene.class, "custom_seed_clear")) {
             @Override
             public void onSelect(boolean positive, String text) {
-                int floor = 31;
+                int floor = 26;
                 boolean floorOption = false;
                 String up_to_floor = "floor end";
                 String strFloor = "floor";
@@ -66,15 +65,13 @@ public class SeedFindScene extends PixelScene {
                     }
                 }
 
-                if (positive) {
-                    if (!text.equals("")) {
+				if (positive && text != "") {
                         String[] itemList = floorOption ? Arrays.copyOfRange(text.split("\n"), 1, text.split("\n").length) : text.split("\n");
 
                         Component content = list.content();
                         content.clear();
 
                         CreditsBlock txt = new CreditsBlock(true, Window.TITLE_COLOR, new SeedFinder().findSeed(itemList, floor));
-                        txt.visible = false;
                         txt.setRect((Camera.main.width - colWidth)/2f, 12, colWidth, 0);
                         content.add(txt);
 
@@ -83,8 +80,6 @@ public class SeedFindScene extends PixelScene {
                         list.setRect( 0, 0, w, h );
                         list.scrollTo(0, 0);
 
-                        result = new SeedFinder().findSeed(itemList, floor);
-                    }
                 } else {
                     SPDSettings.customSeed("");
                     ShatteredPixelDungeon.switchNoFade(TitleScene.class);
@@ -102,7 +97,6 @@ public class SeedFindScene extends PixelScene {
     @Override
     protected void onBackPressed() {
         ShatteredPixelDungeon.switchScene(TitleScene.class);
-        System.gc();
     }
 
     private void addLine(float y, Group content) {
@@ -151,13 +145,5 @@ public class SeedFindScene extends PixelScene {
             height = Math.max(height, topY - top());
         }
 
-        @Override
-        public void update() {
-            super.update();
-            if (result != null) {
-                body.text(result);
-                visible = true;
-            }
-        }
     }
 }

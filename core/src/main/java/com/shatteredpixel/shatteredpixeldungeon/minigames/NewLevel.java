@@ -37,6 +37,7 @@ public class NewLevel extends Level {
         for (int i = 0;i < (64 * 64);i++) {
             map[i]=1;
         }
+        map[67]=Terrain.ALCHEMY;
 
         buildFlagMaps();
         cleanWalls();

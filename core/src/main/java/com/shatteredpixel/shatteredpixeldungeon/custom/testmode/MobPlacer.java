@@ -17,12 +17,14 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Brute;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CausticSlime;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Crab;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CrystalGuardian;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CrystalMimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CrystalSpire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CrystalWisp;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DM100;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DM200;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DM201;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DemonSpawner;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.EbonyMimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Elemental;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Eye;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.FetidRat;
@@ -32,9 +34,11 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollGeomancer;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollGuard;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollSapper;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollTrickster;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GoldenMimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Golem;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GreatCrab;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Guard;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Monk;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Necromancer;
@@ -82,6 +86,7 @@ import com.watabou.utils.Reflection;
 
 import java.awt.Checkbox;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 
@@ -132,6 +137,10 @@ public class MobPlacer extends TestItem{
                                 m.pos = cell;
                                 if(m instanceof Statue) {
                                     ((Statue)m).createWeapon(false);
+                                }
+                                if (m instanceof Mimic) {
+                                    ((Mimic)m).items = null;
+                                    ((Mimic)m).setLevel(Dungeon.depth);
                                 }
                                 GameScene.add(m);
                                 if(elite_op>0){
@@ -457,6 +466,10 @@ public class MobPlacer extends TestItem{
 
         STATUE(Statue.class, DictSpriteSheet.STATUE),
         ARMORED_STATUE(ArmoredStatue.class, DictSpriteSheet.ARMORED_STATUE),
+        MIMIC(Mimic.class,DictSpriteSheet.MIMIC),
+        GOLDEN_MIMIC(GoldenMimic.class,DictSpriteSheet.MIMIC_GOLDEN),
+        CRYSTAL_MIMIC(CrystalMimic.class,DictSpriteSheet.MIMIC_CRYSTAL),
+        EBONY_MIMIC(EbonyMimic.class,DictSpriteSheet.MIMIC_EBONY),
         WRAITH(Wraith.class, DictSpriteSheet.WRAITH),
         TORMENTED_SPIRIT(TormentedSpirit.class,DictSpriteSheet.TORMENTED_SPIRIT),
         PIRANHA(Piranha.class, DictSpriteSheet.FISH),
