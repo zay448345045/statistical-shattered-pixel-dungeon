@@ -174,7 +174,10 @@ public class WndSettings extends WndTabbed {
 			protected void createChildren() {
 				super.createChildren();
 				switch(Messages.lang().status()){
-					case UNREVIEWED:
+					case X_UNFINISH:
+						icon.hardlight(1.5f, 0, 0);
+						break;
+					case __UNREVIEW:
 						icon.hardlight(1.5f, 0.75f, 0f);
 						break;
 				}
@@ -1113,9 +1116,13 @@ public class WndSettings extends WndTabbed {
 			txtLangInfo = PixelScene.renderTextBlock(6);
 			String info = "_" + Messages.titleCase(currLang.nativeName()) + "_ - ";
 			if (currLang == Languages.ENGLISH) info += "This is the source language, written by the developer.";
+			else if (currLang.status() == Languages.Status.O_COMPLETE) info += Messages.get(this, "completed");
+			else if (currLang.status() == Languages.Status.__UNREVIEW) info += Messages.get(this, "unreviewed");
+			else if (currLang.status() == Languages.Status.X_UNFINISH) info += Messages.get(this, "unfinished");
 			txtLangInfo.text(info);
 
-			if (currLang.status() == Languages.Status.UNREVIEWED) txtLangInfo.setHightlighting(true, CharSprite.WARNING);
+			if (currLang.status() == Languages.Status.__UNREVIEW) txtLangInfo.setHightlighting(true, CharSprite.WARNING);
+			else if (currLang.status() == Languages.Status.X_UNFINISH) txtLangInfo.setHightlighting(true, CharSprite.NEGATIVE);
 			add(txtLangInfo);
 
 			sep2 = new ColorBlock(1, 1, 0xFF000000);
@@ -1147,7 +1154,10 @@ public class WndSettings extends WndTabbed {
 					btn.textColor(TITLE_COLOR);
 				} else {
 					switch (langs.get(i).status()) {
-						case UNREVIEWED:
+						case X_UNFINISH:
+							btn.textColor(0x888888);
+							break;
+						case __UNREVIEW:
 							btn.textColor(0xBBBBBB);
 							break;
 					}
