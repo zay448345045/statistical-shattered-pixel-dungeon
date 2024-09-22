@@ -1,5 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.custom.seedfinder;
 
+import com.badlogic.gdx.Gdx;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
@@ -127,10 +129,11 @@ public class SeedFinder {
         Options.condition = Condition.ALL;
 
         String result="NONE";
-
+//        testSeedALL(seedDigits + 1, floor);
         for (int i = Random.Int(9999999); i < DungeonSeed.TOTAL_SEEDS && findingStatus == FINDING.CONTINUE ; i++) {
             if (testSeedALL(seedDigits + i, floor)) {
                 result = logSeedItems(seedDigits + Integer.toString(i), floor);
+//                result = seedDigits + i;
                 break;
             }
         }
@@ -274,6 +277,9 @@ public class SeedFinder {
 
     private boolean testSeedALL(String seed, int floors) {
         SPDSettings.customSeed(seed);
+        Dungeon.hero = null;
+        Dungeon.daily = Dungeon.dailyReplay = false;
+        Dungeon.initSeed();
         GamesInProgress.selectedClass = HeroClass.WARRIOR;
         Dungeon.init();
 

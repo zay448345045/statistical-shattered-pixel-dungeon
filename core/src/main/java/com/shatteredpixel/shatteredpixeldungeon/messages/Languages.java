@@ -28,10 +28,14 @@ public enum Languages {
 	CHINESE("中文",          "zh", Status.UNREVIEWED, new String[]{"Jinkeloid(zdx00793)", "endlesssolitude"}, new String[]{"931451545", "Chronie_Lynn_Iwa", "Fatir", "Fishbone", "Hcat", "HoofBumpBlurryface", "Lery", "Lyn_0401", "Ooooscar", "ShatteredFlameBlast", "SpaceAnchor", "hmdzl001", "leo", "tempest102"});
 
 	public enum Status{
+		X_UNFINISH, //unfinished, ~80-99% translated
+		__UNREVIEW, //unreviewed, but 100% translated
+		O_COMPLETE, //complete, 100% reviewed
 		//below 80% complete languages are not added.
 		INCOMPLETE, //80-99% complete
 		UNREVIEWED, //100% complete
 		REVIEWED    //100% reviewed
+
 	}
 
 	private String name;

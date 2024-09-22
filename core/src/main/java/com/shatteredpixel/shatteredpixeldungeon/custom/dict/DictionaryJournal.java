@@ -312,6 +312,10 @@ public enum DictionaryJournal {
         TRINKETS.d.put("trinket_clover",ItemSpriteSheet.CLOVER);
         TRINKETS.d.put("trinket_trap_mechanism",ItemSpriteSheet.TRAP_MECHANISM);
         TRINKETS.d.put("trinket_wondrous_resin",ItemSpriteSheet.WONDROUS_RESIN);
+        TRINKETS.d.put("trinket_salt_cube",ItemSpriteSheet.SALT_CUBE);
+        TRINKETS.d.put("trinket_vial_of_blood",ItemSpriteSheet.BLOOD_VIAL);
+        TRINKETS.d.put("trinket_shard_of_oblivion",ItemSpriteSheet.OBLIVION_SHARD);
+        TRINKETS.d.put("trinket_chaotic_censer",ItemSpriteSheet.CHAOTIC_CENSER);
         //Documents
         DOCUMENTS.d.put("info_intro",       ItemSpriteSheet.EBONY_CHEST);
         DOCUMENTS.d.put("info_tier",        ItemSpriteSheet.GLAIVE);

@@ -435,17 +435,30 @@ public abstract class ElementalH extends MobHard {
 
         @Override
         protected void meleeProc( Char enemy, int damage ) {
-            CursedWand.cursedEffect(null, this, enemy);
+            Ballistica aim = new Ballistica(pos, enemy.pos, Ballistica.STOP_TARGET);
+            CursedWand.randomValidEffect(null, this, aim, false).effect(null, this, aim, false);
+
             if(this.isAlive() && enemy.isAlive()){
-                CursedWand.cursedEffect(null, this, enemy);
+                aim = new Ballistica(pos, enemy.pos, Ballistica.STOP_TARGET);
+                CursedWand.randomValidEffect(null, this, aim, false).effect(null, this, aim, false);
             }
         }
 
         @Override
         protected void rangedProc( Char enemy ) {
-            CursedWand.cursedEffect(null, this, enemy);
+            CursedWand.cursedZap(null, this, new Ballistica(pos, enemy.pos, Ballistica.STOP_TARGET), new Callback() {
+                @Override
+                public void call() {
+                }
+            });
+
             if(this.isAlive() && enemy.isAlive()){
-                CursedWand.cursedEffect(null, this, enemy);
+                CursedWand.cursedZap(null, this, new Ballistica(pos, enemy.pos, Ballistica.STOP_TARGET), new Callback() {
+                    @Override
+                    public void call() {
+                        next();
+                    }
+                });
             }
         }
 

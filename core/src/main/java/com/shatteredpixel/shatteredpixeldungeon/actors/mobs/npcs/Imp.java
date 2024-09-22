@@ -249,11 +249,11 @@ public class Imp extends NPC {
 				
 				given = false;
 
-				int tries = 0;
+				int tries111 = 0;
 				do {
 					reward = (Ring)Generator.random(Generator.Category.RING);
-					tries++;
-				} while (reward.cursed || (tries < 100 && Challenges.isItemBlocked(reward)));
+					tries111++;
+				} while (reward.cursed || (tries111 < 100 && Challenges.isItemBlocked(reward)));
 				reward.upgrade( 2 );
 				reward.cursed = true;
 			}

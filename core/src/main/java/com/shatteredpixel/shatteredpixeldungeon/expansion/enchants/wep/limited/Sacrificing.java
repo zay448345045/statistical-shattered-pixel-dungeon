@@ -3,7 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.expansion.enchants.wep.limited;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AnkhInvulnerability;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invulnerability;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
@@ -46,7 +46,7 @@ public class Sacrificing extends CountInscription {
         new Flare(5, 32).color(0x80FFFF40, true).show(attacker.sprite, 1f);
 
         attacker.HP = 1;
-        Buff.affect(attacker, AnkhInvulnerability.class, Math.min(5f + power / 7.5f, 30f));
+        Buff.affect(attacker, Invulnerability.class, Math.min(5f + power / 7.5f, 30f));
         for (Buff b : attacker.buffs()){
             if (b.type == Buff.buffType.NEGATIVE
                     && !(b instanceof AllyBuff)
