@@ -735,7 +735,7 @@ public abstract class YogRealFist extends Mob {
         public static class Rotting extends YogRealFistSprite {
 
             {
-                boltType = MagicMissile.TOXIC_VENT;
+                boltType = MagicMissile.SPECK + Speck.TOXIC;
             }
 
             @Override

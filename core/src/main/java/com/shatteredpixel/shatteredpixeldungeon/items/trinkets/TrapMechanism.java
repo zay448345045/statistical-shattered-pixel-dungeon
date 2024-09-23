@@ -38,13 +38,17 @@ public class TrapMechanism extends Trinket {
 
 	@Override
 	protected int upgradeEnergyCost() {
-		//5 -> 8(13) -> 10(23) -> 12(35)
-		return 6+2*level();
+		//6 -> 5(11) -> 7(18) -> 8(26)
+		return Math.round(5+1.67f*level());
 	}
 
 	@Override
-	public String desc() {
-		return Messages.get(this, "desc", (int)(100*overrideNormalLevelChance(buffedLvl())));
+	public String statsDesc() {
+		if (isIdentified()){
+			return Messages.get(this, "stats_desc", (int)(100*overrideNormalLevelChance(buffedLvl())));
+		} else {
+			return Messages.get(this, "typical_stats_desc", (int)(100*overrideNormalLevelChance(0)));
+		}
 	}
 
 	public static float overrideNormalLevelChance(){

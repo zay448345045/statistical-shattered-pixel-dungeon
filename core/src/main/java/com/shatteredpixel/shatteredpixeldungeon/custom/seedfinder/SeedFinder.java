@@ -1,5 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.custom.seedfinder;
 
+import com.badlogic.gdx.Gdx;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
@@ -127,11 +129,24 @@ public class SeedFinder {
         Options.condition = Condition.ALL;
 
         String result="NONE";
-
+//        testSeedALL(seedDigits + 1, floor);
         for (int i = Random.Int(9999999); i < DungeonSeed.TOTAL_SEEDS && findingStatus == FINDING.CONTINUE ; i++) {
+            if (SeedFindScene.thread.isInterrupted()) {
+                return "";
+            }
+
+            final String i1 = seedDigits + i;
+            Gdx.app.postRunnable(() -> {
+                if (!SeedFindScene.thread.isInterrupted()) {
+                    SeedFindScene.r.text("正在查找种子:" + i1);
+                }
+            });
             if (testSeedALL(seedDigits + i, floor)) {
                 result = logSeedItems(seedDigits + Integer.toString(i), floor);
+//                result = seedDigits + i;
                 break;
+            } else {
+                Gdx.app.log("SeedFinder", "Seed " + seedDigits + i + " not found");
             }
         }
         return result;
@@ -274,6 +289,9 @@ public class SeedFinder {
 
     private boolean testSeedALL(String seed, int floors) {
         SPDSettings.customSeed(seed);
+        Dungeon.hero = null;
+        Dungeon.daily = Dungeon.dailyReplay = false;
+        Dungeon.initSeed();
         GamesInProgress.selectedClass = HeroClass.WARRIOR;
         Dungeon.init();
 
@@ -397,6 +415,7 @@ public class SeedFinder {
     public String logSeedItems(String seed, int floors) {
 
         SPDSettings.customSeed(seed);
+        Dungeon.initSeed();
         GamesInProgress.selectedClass = HeroClass.WARRIOR;
         Dungeon.init();
         StringBuilder result = new StringBuilder(Messages.get(this, "seed") + DungeonSeed.convertToCode(Dungeon.seed) + " (" + Dungeon.seed + ") " + Messages.get(this, "items") + ":\n\n");

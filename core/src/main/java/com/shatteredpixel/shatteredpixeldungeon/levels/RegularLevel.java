@@ -59,18 +59,19 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.builders.Builder;
 import com.shatteredpixel.shatteredpixeldungeon.levels.builders.FigureEightBuilder;
 import com.shatteredpixel.shatteredpixeldungeon.levels.builders.LoopBuilder;
-import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SecretMazeRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SecretRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.MagicalFireRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.PitRoom;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.PoolRoom;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.SentryRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.ShopRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.SpecialRoom;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.TrapsRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.StandardRoom;
-import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.entrance.CavesFissureEntranceRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.entrance.EntranceRoom;
-import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.exit.CavesFissureExitRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.exit.ExitRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.BlazingTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.BurningTrap;
@@ -845,29 +846,6 @@ public abstract class RegularLevel extends Level {
 				roomEntrance = r;
 			} else if (r.isExit()){
 				roomExit = r;
-			}
-		}
-
-		//This exists to fix an alpha bug =S, remove for release
-		if (roomEntrance instanceof CavesFissureEntranceRoom){
-			for (LevelTransition t : transitions){
-				if (t.type == LevelTransition.Type.REGULAR_EXIT && roomEntrance.inside(t.center())){
-					set(t.centerCell, Terrain.ENTRANCE, this);
-					t.type = LevelTransition.Type.REGULAR_ENTRANCE;
-					t.destDepth = Dungeon.depth-1;
-					t.destType =  LevelTransition.Type.REGULAR_EXIT;
-				}
-			}
-		}
-
-		if (roomExit instanceof CavesFissureExitRoom){
-			for (LevelTransition t : transitions){
-				if (t.type == LevelTransition.Type.REGULAR_ENTRANCE && roomExit.inside(t.center())){
-					set(t.centerCell, Terrain.EXIT, this);
-					t.type = LevelTransition.Type.REGULAR_EXIT;
-					t.destDepth = Dungeon.depth+1;
-					t.destType =  LevelTransition.Type.REGULAR_ENTRANCE;
-				}
 			}
 		}
 	}
