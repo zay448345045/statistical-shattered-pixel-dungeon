@@ -17,7 +17,7 @@ allprojects {
         appPackageName = 'com.shatteredpixel.shatteredpixeldungeon.statistical'
 
         appVersionCode = 20240923
-        appVersionName = '2.5.0-stat-1'
+        appVersionName = '2.5.0-stat-2'
 
         appJavaCompatibility = JavaVersion.VERSION_1_8
 

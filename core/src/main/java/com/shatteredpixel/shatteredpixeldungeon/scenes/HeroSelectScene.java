@@ -591,7 +591,7 @@ public class HeroSelectScene extends PixelScene {
 			StyledButton seedButton = new StyledButton(Chrome.Type.BLANK, Messages.get(HeroSelectScene.class, "custom_seed"), 6){
 				@Override
 				protected void onClick() {
-					if (!Badges.isUnlocked(Badges.Badge.VICTORY) && !DeviceCompat.isDebug()){
+					if (false){
 						ShatteredPixelDungeon.scene().addToFront( new WndTitledMessage(
 								Icons.get(Icons.SEED),
 								Messages.get(HeroSelectScene.class, "custom_seed"),
@@ -755,7 +755,7 @@ public class HeroSelectScene extends PixelScene {
 			StyledButton challengeButton = new StyledButton(Chrome.Type.BLANK, Messages.get(WndChallenges.class, "title"), 6){
 				@Override
 				protected void onClick() {
-					if (!Badges.isUnlocked(Badges.Badge.VICTORY) && !DeviceCompat.isDebug()){
+					if (false){
 						ShatteredPixelDungeon.scene().addToFront( new WndTitledMessage(
 								Icons.get(Icons.CHALLENGE_GREY),
 								Messages.get(WndChallenges.class, "title"),
