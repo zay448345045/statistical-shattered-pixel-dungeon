@@ -44,10 +44,20 @@ public class ShatteredPixelDungeon extends Game {
 	public static final int v2_2_1 = 755; //iOS was 755 (also called v2.2.2), other platforms were 754
 	public static final int v2_3_2 = 768;
 	public static final int v2_4_2 = 782;
-	public static final int v2_5_0 = 794;
+	public static final int v2_5_4 = 802;
+
+	public static final int v3_0_0 = 831;
 	
 	public ShatteredPixelDungeon( PlatformSupport platform ) {
 		super( sceneClass == null ? WelcomeScene.class : sceneClass, platform );
+
+		//pre-v2.5.2
+		com.watabou.utils.Bundle.addAlias(
+				com.shatteredpixel.shatteredpixeldungeon.items.bombs.FlashBangBomb.class,
+				"com.shatteredpixel.shatteredpixeldungeon.items.bombs.ShockBomb" );
+		com.watabou.utils.Bundle.addAlias(
+				com.shatteredpixel.shatteredpixeldungeon.items.bombs.SmokeBomb.class,
+				"com.shatteredpixel.shatteredpixeldungeon.items.bombs.Flashbang" );
 
 		//pre-v2.5.0
 		com.watabou.utils.Bundle.addAlias(

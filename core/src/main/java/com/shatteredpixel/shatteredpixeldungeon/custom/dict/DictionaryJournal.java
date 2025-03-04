@@ -58,7 +58,8 @@ public enum DictionaryJournal {
         ALCHEMY.d.put("bomb_wool",          ItemSpriteSheet.WOOLY_BOMB);
         ALCHEMY.d.put("bomb_noise",         ItemSpriteSheet.NOISEMAKER);
         ALCHEMY.d.put("bomb_flash",         ItemSpriteSheet.FLASHBANG);
-        ALCHEMY.d.put("bomb_shocking",      ItemSpriteSheet.SHOCK_BOMB);
+//        ALCHEMY.d.put("bomb_shocking",      ItemSpriteSheet.SHOCK_BOMB);
+        ALCHEMY.d.put("bomb_smoke",          ItemSpriteSheet.SMOKE_BOMB);
         ALCHEMY.d.put("bomb_regrowth",      ItemSpriteSheet.REGROWTH_BOMB);
         ALCHEMY.d.put("bomb_holy",          ItemSpriteSheet.HOLY_BOMB);
         ALCHEMY.d.put("bomb_arcane",        ItemSpriteSheet.ARCANE_BOMB);

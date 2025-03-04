@@ -409,9 +409,7 @@ public class DwarfKingHard extends Boss{
             if(src instanceof ScrollOfRetribution) dmg = 1;
 
             if (dmg >= 0) {
-                Viscosity.DeferedDamage deferred = Buff.affect( this, Viscosity.DeferedDamage.class );
-                deferred.prolong( dmg );
-
+                Buff.affect(this, Viscosity.DeferedDamage.class).extend(dmg);
 
                 sprite.showStatus( CharSprite.WARNING, Messages.get(Viscosity.class, "deferred", dmg) );
             }

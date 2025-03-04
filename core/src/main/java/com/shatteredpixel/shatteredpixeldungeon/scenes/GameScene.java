@@ -138,6 +138,7 @@ import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.tweeners.Tweener;
+import com.watabou.utils.Callback;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.Point;
@@ -593,10 +594,13 @@ public class GameScene extends PixelScene {
 			if (Document.ADVENTURERS_GUIDE.isPageFound(Document.GUIDE_INTRO)){
 				GameScene.flashForDocument(Document.ADVENTURERS_GUIDE, Document.GUIDE_INTRO);
 			} else if (ControllerHandler.isControllerConnected()) {
+				GameLog.wipe();
 				GLog.p(Messages.get(GameScene.class, "tutorial_move_controller"));
 			} else if (SPDSettings.interfaceSize() == 0) {
+				GameLog.wipe();
 				GLog.p(Messages.get(GameScene.class, "tutorial_move_mobile"));
 			} else {
+				GameLog.wipe();
 				GLog.p(Messages.get(GameScene.class, "tutorial_move_desktop"));
 			}
 			toolbar.visible = toolbar.active = false;
@@ -679,6 +683,7 @@ public class GameScene extends PixelScene {
 	@Override
 	public synchronized void onPause() {
 		try {
+			if (!Dungeon.hero.ready) waitForActorThread(500, false);
 			Dungeon.saveAll();
 			Badges.saveGlobal();
 			Journal.saveGlobal();
@@ -1329,7 +1334,7 @@ public class GameScene extends PixelScene {
 		if (scene != null) {
 			for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])) {
 				if (mob.sprite != null) {
-					if (mob instanceof Mimic && mob.state == mob.PASSIVE && ((Mimic) mob).stealthy() &&  mob.sprite.visible){
+					if (mob instanceof Mimic && mob.state == mob.PASSIVE && ((Mimic) mob).stealthy() && Dungeon.level.visited[mob.pos]){
 						//mimics stay visible in fog of war after being first seen
 						mob.sprite.visible = true;
 					} else {
@@ -1351,12 +1356,18 @@ public class GameScene extends PixelScene {
 
 	public static void flash( int color, boolean lightmode ) {
 		if (scene != null) {
-			//greater than 0 to account for negative values (which have the first bit set to 1)
-			if (color > 0 && color < 0x01000000) {
-				scene.fadeIn(0xFF000000 | color, lightmode);
-			} else {
-				scene.fadeIn(color, lightmode);
-			}
+			//don't want to do this on the actor thread
+			ShatteredPixelDungeon.runOnRenderThread(new Callback() {
+				@Override
+				public void call() {
+					//greater than 0 to account for negative values (which have the first bit set to 1)
+					if (color > 0 && color < 0x01000000) {
+						scene.fadeIn(0xFF000000 | color, lightmode);
+					} else {
+						scene.fadeIn(color, lightmode);
+					}
+				}
+			});
 		}
 	}
 
