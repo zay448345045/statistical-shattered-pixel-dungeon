@@ -76,6 +76,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.remains.BrokenHilt;
 import com.shatteredpixel.shatteredpixeldungeon.items.remains.BrokenStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.remains.CloakScrap;
 import com.shatteredpixel.shatteredpixeldungeon.items.remains.SealShard;
+import com.shatteredpixel.shatteredpixeldungeon.items.remains.TornPage;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
@@ -515,6 +516,7 @@ public class TestPotion extends TestGenerator {
             case 2: return CloakScrap.class;
             case 3: return BowFragment.class;
             case 4: return BrokenHilt.class;
+            case 5: return TornPage.class;
         }
     }
 
@@ -546,7 +548,7 @@ public class TestPotion extends TestGenerator {
         if(cate == 9) return 10;
         if(cate == 10) return 10;
         if(cate == 11) return 13;
-        if(cate == 12) return 4;
+        if(cate == 12) return 5;
         if(cate == 13) return 15;
         return 11;
     }

@@ -59,6 +59,7 @@ import com.shatteredpixel.shatteredpixeldungeon.custom.ch.mob.ScrollOfUpgradeEat
 import com.shatteredpixel.shatteredpixeldungeon.custom.dict.DictBook;
 import com.shatteredpixel.shatteredpixeldungeon.custom.dict.NewDictBook;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.BackpackCleaner;
+import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.BlobsEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.CustomWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.EnemyAttributeModifier;
 import com.shatteredpixel.shatteredpixeldungeon.custom.testmode.ImmortalShieldAffecter;
@@ -472,6 +473,7 @@ public enum HeroClass {
 			new MobAttributeViewer().collect();
 
 			new TerrainPlacer().collect();
+			new BlobsEmitter().collect();
 /*
 			HDKItem.KingAmulet ka = new HDKItem.KingAmulet();
 			ka.setUses(999);

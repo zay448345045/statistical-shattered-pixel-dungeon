@@ -58,10 +58,10 @@ public class NewLevel extends Level {
         return true;
     }
 
-    @Override
-    public Mob createMob() {
-        return null;
-    }
+//    @Override
+//    public Mob createMob() {
+//        return null;
+//    }
 
     @Override
     protected void createMobs() {

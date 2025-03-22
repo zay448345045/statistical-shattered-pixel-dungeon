@@ -49,6 +49,7 @@ public enum DictionaryJournal {
         ARTIFACTS.d.put("artifact_armband",         ItemSpriteSheet.ARTIFACT_ARMBAND);
         ARTIFACTS.d.put("artifact_hourglass",       ItemSpriteSheet.ARTIFACT_HOURGLASS);
         ARTIFACTS.d.put("artifact_book",            ItemSpriteSheet.ARTIFACT_SPELLBOOK);
+        ARTIFACTS.d.put("artifact_tome",            ItemSpriteSheet.ARTIFACT_TOME);
 
         //alchemy, so many...
         //bomb
@@ -275,6 +276,7 @@ public enum DictionaryJournal {
         WEAPONS.d.put("melee_greataxe",     ItemSpriteSheet.GREATAXE);
         WEAPONS.d.put("melee_greatshield",  ItemSpriteSheet.GREATSHIELD);
         WEAPONS.d.put("melee_gauntlet",     ItemSpriteSheet.GAUNTLETS);
+        WEAPONS.d.put("melee_cudgel",       ItemSpriteSheet.CUDGEL);
         //duelist ability
         WEAPONS.d.put("duelist_ability",    ItemSpriteSheet.WEAPON_HOLDER);
         //ench & curse

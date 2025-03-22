@@ -90,7 +90,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 
-public class MobPlacer extends TestItem{
+public class MobPlacer extends TestItem {
     {
         image = ItemSpriteSheet.CANDLE;
         defaultAction = AC_PLACE;
