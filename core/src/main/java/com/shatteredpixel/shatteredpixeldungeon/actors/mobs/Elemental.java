@@ -121,6 +121,12 @@ public abstract class Elemental extends Mob {
 		
 		return super.act();
 	}
+
+	@Override
+	public void die(Object cause) {
+		flying = false;
+		super.die(cause);
+	}
 	
 	@Override
 	protected boolean canAttack( Char enemy ) {
@@ -222,7 +228,7 @@ public abstract class Elemental extends Mob {
 		{
 			spriteClass = ElementalSprite.Fire.class;
 			
-			loot = new PotionOfLiquidFlame();
+			loot = PotionOfLiquidFlame.class;
 			lootChance = 1/8f;
 			
 			properties.add( Property.FIERY );
@@ -469,7 +475,7 @@ public abstract class Elemental extends Mob {
 		{
 			spriteClass = ElementalSprite.Frost.class;
 			
-			loot = new PotionOfFrost();
+			loot = PotionOfFrost.class;
 			lootChance = 1/8f;
 			
 			properties.add( Property.ICY );
@@ -497,7 +503,7 @@ public abstract class Elemental extends Mob {
 		{
 			spriteClass = ElementalSprite.Shock.class;
 			
-			loot = new ScrollOfRecharging();
+			loot = ScrollOfRecharging.class;
 			lootChance = 1/4f;
 			
 			properties.add( Property.ELECTRIC );
@@ -546,7 +552,7 @@ public abstract class Elemental extends Mob {
 		{
 			spriteClass = ElementalSprite.Chaos.class;
 			
-			loot = new ScrollOfTransmutation();
+			loot = ScrollOfTransmutation.class;
 			lootChance = 1f;
 		}
 		

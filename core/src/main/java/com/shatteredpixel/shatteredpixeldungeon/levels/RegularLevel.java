@@ -397,9 +397,24 @@ public abstract class RegularLevel extends Level {
 					} else {
 						mobs.add(MimicForChallenge.spawnAt(cell, toDrop));
 					}
+					continue;
+				}else{
+					type = Heap.Type.CHEST;
 				}
+
+				if (toDrop instanceof Artifact ||
+					(toDrop.isUpgradable() && Random.Int(4 - toDrop.level()) == 0)) {
+						Heap dropped = drop(toDrop, cell);
+						if (heaps.get(cell) == dropped) {
+							dropped.type = Heap.Type.LOCKED_CHEST;
+							addItemToSpawn(new GoldenKey(Dungeon.depth));
+				}
+				} else {
+					Heap dropped = drop(toDrop, cell);
+					dropped.type = type;
 			}
 
+			}else {
 			switch (Random.Int( 20 )) {
 			case 0:
 				type = Heap.Type.SKELETON;
@@ -449,7 +464,8 @@ public abstract class RegularLevel extends Level {
 					dropped.setHauntedIfCursed();
 				}
 			}
-			
+			}
+
 		}
 
 		for (Item item : itemsToSpawn) {

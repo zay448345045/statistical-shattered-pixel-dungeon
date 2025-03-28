@@ -35,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEnergy;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Blindweed;
@@ -236,20 +237,26 @@ public class SandalsOfNature extends Artifact {
 				&& (level() < 3 || curSeedEffect != item.getClass());
 	}
 
+	@Override
+	public void resetForTrinity(int visibleLevel) {
+		super.reset();
+		curSeedEffect = null;
+	}
+
 	private static final String SEEDS = "seeds";
 	private static final String CUR_SEED_EFFECT = "cur_seed_effect";
 
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle(bundle);
-		bundle.put(SEEDS, seeds.toArray(new Class[seeds.size()]));
+		bundle.put(SEEDS, seeds.toArray(new Class[0]));
 		bundle.put(CUR_SEED_EFFECT, curSeedEffect);
 	}
 
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle(bundle);
-		if (bundle.contains(SEEDS)) {
+		if (bundle.contains(SEEDS) && bundle.getClassArray(SEEDS) != null) {
 			Collections.addAll(seeds, bundle.getClassArray(SEEDS));
 		}
 		curSeedEffect = bundle.getClass(CUR_SEED_EFFECT);
@@ -308,7 +315,7 @@ public class SandalsOfNature extends Artifact {
 				if (seeds.size() >= 3+(level()*3)){
 					seeds.clear();
 					upgrade();
-
+					Catalog.countUses(SandalsOfNature.class, level() == 3 ? 4 : 3);
 					if (level() >= 1 && level() <= 3) {
 						GLog.p( Messages.get(SandalsOfNature.class, "levelup") );
 					}
@@ -321,7 +328,7 @@ public class SandalsOfNature extends Artifact {
 		}
 	};
 
-	protected CellSelector.Listener cellSelector = new CellSelector.Listener(){
+	public CellSelector.Listener cellSelector = new CellSelector.Listener(){
 
 		@Override
 		public void onSelect(Integer cell) {
@@ -343,6 +350,10 @@ public class SandalsOfNature extends Artifact {
 					plant.activate(Actor.findChar(cell));
 					Sample.INSTANCE.play(Assets.Sounds.PLANT);
 					Sample.INSTANCE.playDelayed(Assets.Sounds.TRAMPLE, 0.25f, 1, Random.Float( 0.96f, 1.05f ) );
+
+					if (Actor.findChar(cell) != null){
+						artifactProc(Actor.findChar(cell), visiblyUpgraded(), seedChargeReqs.get(curSeedEffect));
+					}
 
 					charge -= seedChargeReqs.get(curSeedEffect);
 					Talent.onArtifactUsed(Dungeon.hero);

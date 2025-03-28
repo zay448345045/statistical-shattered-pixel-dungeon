@@ -19,13 +19,13 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Waterskin;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.ArcaneBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Firebomb;
-import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Flashbang;
+import com.shatteredpixel.shatteredpixeldungeon.items.bombs.FlashBangBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.FrostBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.HolyBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Noisemaker;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.RegrowthBomb;
-import com.shatteredpixel.shatteredpixeldungeon.items.bombs.ShockBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.ShrapnelBomb;
+import com.shatteredpixel.shatteredpixeldungeon.items.bombs.SmokeBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.WoollyBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Berry;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Blandfruit;
@@ -76,6 +76,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.remains.BrokenHilt;
 import com.shatteredpixel.shatteredpixeldungeon.items.remains.BrokenStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.remains.CloakScrap;
 import com.shatteredpixel.shatteredpixeldungeon.items.remains.SealShard;
+import com.shatteredpixel.shatteredpixeldungeon.items.remains.TornPage;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
@@ -426,12 +427,12 @@ public class TestPotion extends TestGenerator {
             case 0: return Bomb.class;
             case 1: return ArcaneBomb.class;
             case 2: return Firebomb.class;
-            case 3: return Flashbang.class;
+            case 3: return FlashBangBomb.class;
             case 4: return FrostBomb.class;
             case 5: return HolyBomb.class;
             case 6: return Noisemaker.class;
             case 7: return RegrowthBomb.class;
-            case 8: return ShockBomb.class;
+            case 8: return SmokeBomb.class;
             case 9: return ShrapnelBomb.class;
             case 10: default: return WoollyBomb.class;
         }
@@ -515,6 +516,7 @@ public class TestPotion extends TestGenerator {
             case 2: return CloakScrap.class;
             case 3: return BowFragment.class;
             case 4: return BrokenHilt.class;
+            case 5: return TornPage.class;
         }
     }
 
@@ -546,7 +548,7 @@ public class TestPotion extends TestGenerator {
         if(cate == 9) return 10;
         if(cate == 10) return 10;
         if(cate == 11) return 13;
-        if(cate == 12) return 4;
+        if(cate == 12) return 5;
         if(cate == 13) return 15;
         return 11;
     }

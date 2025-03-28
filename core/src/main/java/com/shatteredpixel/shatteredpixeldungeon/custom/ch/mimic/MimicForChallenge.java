@@ -1188,4 +1188,20 @@ public class MimicForChallenge extends Mimic {
 
         return desc.toString();
     }
+
+
+    @Override
+    public void rollToDropLoot(){
+
+        if (items != null) {
+            for (Item item : items) {
+                if (item.quantity() == 0) {
+                    item.quantity(1);
+                }
+                Dungeon.level.drop( item, pos ).sprite.drop();
+            }
+            items = null;
+        }
+        super.rollToDropLoot();
+    }
 }
