@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.0.2'
+        classpath 'com.android.tools.build:gradle:8.8.0'
 //        classpath 'com.google.gms:google-services:4.3.13'
 //        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.1'
     }
@@ -19,13 +19,13 @@ allprojects {
         appVersionCode = 20250322
         appVersionName = '3.0.0-stat-1'
 
-        appJavaCompatibility = JavaVersion.VERSION_1_8
+        appJavaCompatibility = JavaVersion.VERSION_23
 
-        appAndroidCompileSDK = 31
+        appAndroidCompileSDK = 35
         appAndroidMinSDK = 19 //14
-        appAndroidTargetSDK = 31
+        appAndroidTargetSDK = 35
 
-        gdxVersion = '1.12.1'
+        gdxVersion = '1.13.1'
         gdxControllersVersion = '2.2.4-SNAPSHOT'
         robovmVersion = '2.3.21'
     }
