@@ -4,7 +4,7 @@ on:
   push:
     paths:
      - 'action.on' 
-    branches: [ "debug" ]
+    branches: [ "master" ]
 #  pull_request:
 #    branches: [ "master" ]
 
